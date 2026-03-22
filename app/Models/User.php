@@ -1,0 +1,424 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'phone',
+        'address',
+        'city',
+        'state',
+        'zip_code',
+        'country',
+        'profile_photo_path',
+        'email_verified_at',
+        'email_notifications',
+        'sms_notifications',
+        'push_notifications',
+        'bill_reminders',
+        'maintenance_updates',
+        'security_alerts',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
+        'last_login_at',
+        'last_login_ip',
+        'is_active',
+        'notes',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'last_login_at' => 'datetime',
+        'email_notifications' => 'boolean',
+        'sms_notifications' => 'boolean',
+        'push_notifications' => 'boolean',
+        'bill_reminders' => 'boolean',
+        'maintenance_updates' => 'boolean',
+        'security_alerts' => 'boolean',
+        'two_factor_confirmed_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'profile_photo_url',
+        'full_name',
+    ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically set name from first_name and last_name
+        static::saving(function ($user) {
+            if (!$user->name && ($user->first_name || $user->last_name)) {
+                $user->name = trim($user->first_name . ' ' . $user->last_name);
+            }
+        });
+    }
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    /**
+     * Get the URL to the user's profile photo.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo_path) {
+            return asset('storage/' . $this->profile_photo_path);
+        }
+
+        // Generate initials avatar as fallback
+        $name = $this->name ?: $this->email;
+        $initials = strtoupper(substr($name, 0, 1));
+        $color = $this->generateColorFromString($this->email);
+        
+        return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='{$color}'/><text x='50' y='50' font-size='40' text-anchor='middle' dy='.35em' fill='white' font-family='Arial, sans-serif'>{$initials}</text></svg>";
+    }
+
+    /**
+     * Generate a consistent color from a string.
+     *
+     * @param  string  $str
+     * @return string
+     */
+    private function generateColorFromString($str)
+    {
+        $colors = [
+            '#3498db', // Blue
+            '#2ecc71', // Green
+            '#9b59b6', // Purple
+            '#e74c3c', // Red
+            '#f39c12', // Orange
+            '#1abc9c', // Turquoise
+            '#34495e', // Dark Blue
+            '#d35400', // Pumpkin
+            '#27ae60', // Nephritis
+            '#8e44ad', // Wisteria
+        ];
+
+        $hash = crc32($str);
+        return $colors[$hash % count($colors)];
+    }
+
+    /**
+     * Get the user's roles.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
+    /**
+     * Get the user's permissions.
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'user_permission');
+    }
+
+    /**
+     * Get the maintenance requests assigned to this user.
+     */
+    public function assignedMaintenanceRequests()
+    {
+        return $this->hasMany(MaintenanceRequest::class, 'assigned_staff_id');
+    }
+
+    /**
+     * Get the meter readings taken by this user.
+     */
+    public function meterReadings()
+    {
+        return $this->hasMany(MeterReading::class, 'reader_id');
+    }
+
+    /**
+     * Get the reports generated by this user.
+     */
+    public function generatedReports()
+    {
+        return $this->hasMany(Report::class, 'generated_by');
+    }
+
+    /**
+     * Get the alerts for this user.
+     */
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class, 'user_id');
+    }
+
+    /**
+     * Get the activity logs for this user.
+     */
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'causer_id')
+            ->where('causer_type', self::class);
+    }
+
+    /**
+     * Get the payments processed by this user.
+     */
+    public function processedPayments()
+    {
+        return $this->hasMany(Payment::class, 'processed_by');
+    }
+
+    /**
+     * Get the leases created by this user.
+     */
+    public function createdLeases()
+    {
+        return $this->hasMany(Lease::class, 'created_by');
+    }
+
+    /**
+     * Get the bills created by this user.
+     */
+    public function createdBills()
+    {
+        return $this->hasMany(Bill::class, 'created_by');
+    }
+
+    /**
+     * Get the user's tokens for API authentication.
+     */
+    public function tokens()
+    {
+        return $this->hasMany(PersonalAccessToken::class);
+    }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param  string|array  $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        if (is_string($role)) {
+            return $this->roles->contains('name', $role);
+        }
+
+        if (is_array($role)) {
+            return $this->roles->whereIn('name', $role)->count() > 0;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the user has a specific permission.
+     *
+     * @param  string  $permission
+     * @return bool
+     */
+    public function hasPermission($permission)
+    {
+        // Check direct permissions
+        if ($this->permissions->contains('name', $permission)) {
+            return true;
+        }
+
+        // Check permissions through roles
+        foreach ($this->roles as $role) {
+            if ($role->permissions->contains('name', $permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the user is an administrator.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->hasRole('admin') || $this->hasRole('super_admin');
+    }
+
+    /**
+     * Check if the user is active.
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->is_active === true;
+    }
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to only include users with email notifications enabled.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithEmailNotifications($query)
+    {
+        return $query->where('email_notifications', true);
+    }
+
+    /**
+     * Get the user's initials.
+     *
+     * @return string
+     */
+    public function getInitialsAttribute()
+    {
+        $initials = '';
+        
+        if ($this->first_name) {
+            $initials .= strtoupper(substr($this->first_name, 0, 1));
+        }
+        
+        if ($this->last_name) {
+            $initials .= strtoupper(substr($this->last_name, 0, 1));
+        }
+        
+        if (empty($initials) && $this->name) {
+            $parts = explode(' ', $this->name);
+            foreach ($parts as $part) {
+                $initials .= strtoupper(substr($part, 0, 1));
+                if (strlen($initials) >= 2) break;
+            }
+        }
+        
+        if (empty($initials)) {
+            $initials = strtoupper(substr($this->email, 0, 1));
+        }
+        
+        return $initials;
+    }
+
+    /**
+     * Get the user's notification preferences.
+     *
+     * @return array
+     */
+    public function getNotificationPreferencesAttribute()
+    {
+        return [
+            'email' => $this->email_notifications,
+            'sms' => $this->sms_notifications,
+            'push' => $this->push_notifications,
+            'bill_reminders' => $this->bill_reminders,
+            'maintenance_updates' => $this->maintenance_updates,
+            'security_alerts' => $this->security_alerts,
+        ];
+    }
+
+    /**
+     * Record the user's last login.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function recordLogin($request)
+    {
+        $this->update([
+            'last_login_at' => now(),
+            'last_login_ip' => $request->ip(),
+        ]);
+    }
+
+    /**
+     * Get the user's address as a formatted string.
+     *
+     * @return string|null
+     */
+    public function getFormattedAddressAttribute()
+    {
+        if (!$this->address) {
+            return null;
+        }
+
+        $parts = array_filter([
+            $this->address,
+            $this->city,
+            $this->state,
+            $this->zip_code,
+            $this->country,
+        ]);
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * Determine if the user has two-factor authentication enabled.
+     *
+     * @return bool
+     */
+    public function hasTwoFactorEnabled()
+    {
+        return !empty($this->two_factor_secret);
+    }
+}

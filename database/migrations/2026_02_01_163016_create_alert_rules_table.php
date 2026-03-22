@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('alert_rules', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('type');
+            $table->string('condition');
+            $table->decimal('threshold_value', 12, 4)->nullable();
+            $table->string('threshold_field')->nullable();
+            $table->string('notification_method');
+            $table->json('recipients')->nullable();
+            $table->string('severity');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('alert_rules');
+    }
+};

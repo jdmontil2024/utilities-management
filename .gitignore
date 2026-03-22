@@ -1,0 +1,17 @@
+/vendor
+/node_modules
+.env
+.env.*
+!.env.example
+/storage
+/public/storage
+.DS_Store
+Thumbs.db
+composer.lock
+package-lock.json
+/.phpunit.cache
+/.idea
+/.vscode
+*.sql
+*.sql.gz
+docker-compose.yml.backup

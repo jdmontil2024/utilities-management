@@ -1,0 +1,55 @@
+A comprehensive property and utilities management system built with Laravel for property managers, landlords, and building owners.
+
+## 🚀 Features
+
+### Core Management
+- 🏢 Building and floor plan management
+- 🏠 Unit/room tracking with status monitoring
+- 👥 Tenant information and lease management
+- 📄 Digital lease agreements and document storage
+
+### Billing & Payments
+- 💰 Automated bill generation and distribution
+- 💳 Multiple payment method support (credit card, bank transfer, cash)
+- 📅 Payment tracking and late fee calculation
+- 🧾 Receipt generation and payment history
+
+### Utilities Tracking
+- ⚡ Electricity consumption monitoring
+- 💧 Water usage tracking with leak detection
+- 🔥 Gas consumption and safety monitoring
+- 📊 Consumption analysis and reporting
+
+### Maintenance
+- 🔧 Maintenance request management
+- 🛠️ Preventive maintenance scheduling
+- 👷 Vendor management and rating system
+- ⏱️ SLA tracking for maintenance requests
+
+### Reports & Analytics
+- 📈 Financial reports and revenue analysis
+- 📊 Occupancy and vacancy reports
+- 🔔 Smart alerts and notifications
+- 📋 Custom report generation
+
+## 🛠️ Technology Stack
+
+- **Backend:** Laravel 10.x
+- **Frontend:** Blade Templates, Vanilla JavaScript
+- **Database:** MySQL
+- **Authentication:** Laravel Session-based Auth
+- **Styling:** Custom CSS with responsive design
+
+## 📋 Prerequisites
+
+- PHP 8.1 or higher
+- Composer 2.x
+- MySQL 5.7 or higher
+- Node.js 16+ (for frontend assets)
+
+## ⚙️ Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/utilities-management.git
+cd utilities-management
