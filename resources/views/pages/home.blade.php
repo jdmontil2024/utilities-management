@@ -465,7 +465,7 @@
     <section class="hero">
         <div class="container">
             <h1>Manage Your Properties with Ease</h1>
-            <p>A comprehensive property management system for property managers, landlords, and building owners.</p>
+            <p>A comprehensive Property Management system for property managers, landlords, and building owners.</p>
             
             @auth
                 <a href="{{ route('dashboard') }}" class="btn" style="font-size: 18px; padding: 15px 30px;">
