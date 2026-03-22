@@ -606,7 +606,7 @@
             <div class="logo-section">
                 <a href="{{ route('dashboard') }}" class="logo-link">
                     <div class="logo-icon">P</div>
-                    <span>Property Manager</span>
+                    <span>Property Wise</span>
                 </a>
             </div>
 
