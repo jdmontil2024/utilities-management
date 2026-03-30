@@ -1,363 +1,231 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Utility Wise</title>
-    <!-- Fonts - Inter (exact same as original layout) -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Login | PROPMANAGE</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-main: #121212;
+            --bg-card: #1f1f1f;
+            --accent-green: #10b981;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #2d2d2d;
         }
 
-        /* Main background: copy of main-content background (#f8f9fa) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;  /* exact .main-content background */
-            min-height: 100vh;
+            height: 100vh;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #4b5563; /* default text color from original */
         }
 
-        .login-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            overflow: hidden;
+        /* --- LOGIN CARD --- */
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             width: 100%;
             max-width: 420px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center; /* Center branding elements */
         }
 
-        /* Header: exact navbar color design (#2c3e50 background + #3498db logo accent) */
-        .login-header {
-            background: #2c3e50;  /* solid navbar background */
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        /* "P" logo box as in main layout, using #3498db */
-        .login-header::before {
-            content: "P";
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #3498db;  /* logo-icon blue */
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 20px;
-            line-height: 40px;
-            text-align: center;
-            margin-bottom: 10px;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .login-header h1 {
-            font-size: 28px;
-            margin: 5px 0 6px 0;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: white;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .login-header p {
-            opacity: 0.9;
-            font-size: 15px;
-            font-weight: 400;
-            color: #ecf0f1; /* light text from nav quick-links */
-        }
-
-        .login-body {
-            padding: 35px 30px;
-            background: white;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1f2937;  /* dark heading color from original */
-            font-size: 14px;
-            letter-spacing: -0.01em;
-            font-family: 'Inter', sans-serif;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-            color: #4b5563;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #3498db;  /* focus color matches logo/nav accent */
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-
-        input::placeholder {
-            color: #9ca3af;
-            font-weight: 400;
-            opacity: 0.7;
-        }
-
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            color: #4b5563;  /* main text color */
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .checkbox input {
-            width: auto;
-        }
-
-        .forgot-link {
-            color: #3498db;
+        /* --- LOGO INSIDE CARD --- */
+        .card-brand {
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2.5rem;
         }
 
-        .forgot-link:hover {
-            text-decoration: underline;
-            color: #2c3e50;  /* dark hover from nav */
+        .intricate-logo-p {
+            position: relative;
+            width: 50px; 
+            height: 50px;
+            background: #111111;
+            border: 2px solid var(--accent-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            overflow: hidden;
         }
 
-        .login-button {
+        .intricate-logo-p .svg-icon {
+            width: 75%;
+            height: 75%;
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
+        }
+
+        .intricate-logo-p .reflection {
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                135deg,
+                rgba(16, 185, 129, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(16, 185, 129, 0) 100%
+            );
+            transform: rotate(25deg);
+            animation: glossAuto 5s infinite ease-in-out;
+        }
+
+        @keyframes glossAuto {
+            0%, 15% { top: -100%; left: -100%; }
+            35%, 100% { top: 100%; left: 100%; }
+        }
+
+        .brand-text {
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: baseline;
+        }
+        .brand-text .prop { color: #ffffff; font-weight: 700; }
+        .brand-text .manage { color: var(--accent-green); font-weight: 500; }
+
+        /* --- ORIGINAL FORM STYLES (RETAINED) --- */
+        .login-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .login-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .form-group { 
+            margin-bottom: 1.5rem; 
+            text-align: left; /* Ensure inputs stay left-aligned */
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 15px;
-            background: #3498db;  /* solid blue from logo/nav accent */
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
             color: white;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent-green);
+            color: #121212;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
+            padding: 14px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            letter-spacing: -0.01em;
+            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 0.5rem;
         }
 
-        .login-button:hover {
-            background: #2c3e50;  /* navbar dark on hover */
+        .btn-submit:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
         }
 
-        .login-button:active {
-            transform: translateY(1px);
-        }
-
-        .divider {
+        .forgot-password {
+            display: block;
             text-align: center;
-            margin: 30px 0 20px;
-            position: relative;
-            color: #95a5a6;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 45%;
-            height: 1px;
-            background: #e0e6ed;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 15px;
-            color: #4b5563;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .register-link a {
-            color: #3498db;
-            font-weight: 600;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
             text-decoration: none;
-        }
-
-        .register-link a:hover {
-            color: #2c3e50;
-            text-decoration: underline;
-        }
-
-        /* Messages styled but left with original classes (functionality untouched) */
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #dc2626;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #28a745;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-        }
-
-        .back-home {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .back-home a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 500;
+            font-size: 0.85rem;
             transition: color 0.2s;
-            font-family: 'Inter', sans-serif;
         }
 
-        .back-home a:hover {
-            color: #3498db;
-        }
+        .forgot-password:hover { color: var(--accent-green); }
+
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <!-- Header uses navbar colors: #2c3e50 background + #3498db logo accent -->
-        <div class="login-header">
-            <h1>Property Wise</h1>
-            <p>Sign in to manage your properties</p>
-        </div>
 
-        <div class="login-body">
-            <!-- Messages: kept exactly as original blade structure, only styles applied -->
-            @if(session('status'))
-                <div class="success-message">
-                    <span>✓</span> {{ session('status') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="error-message">
-                    <span>⚠️</span> {{ $errors->first() }}
-                </div>
-            @endif
-
-            <!-- Form with original Laravel directives, untouched functionality -->
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your email">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
-                </div>
-
-                <div class="remember-forgot">
-                    <label class="checkbox">
-                        <input type="checkbox" name="remember">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="login-button">Sign In</button>
-            </form>
-
-            <div class="divider">or</div>
-
-            <div class="back-home">
-                <a href="{{ url('/') }}">
-                    ← Back to Home
-                </a>
+    <div class="login-card">
+        <div class="card-brand">
+            <div class="intricate-logo-p">
+                <svg class="svg-icon" viewBox="0 0 100 100">
+                    <path d="M25,20 L25,80 M25,20 Q50,5 75,20 Q100,35 75,50 L25,50 M50,20 L50,80" />
+                    <path d="M25,60 L40,80 L55,60 L70,80 L85,60" />
+                    <path d="M70,80 L90,80 M80,80 L80,75 M85,80 L85,75 M75,80 L75,75" />
+                    <circle cx="50" cy="35" r="4" fill="var(--accent-green)" stroke="none"/>
+                </svg>
+                <div class="reflection"></div>
+            </div>
+            <div class="brand-text">
+                <span class="prop">PROP</span><span class="manage">MANAGE</span>
             </div>
         </div>
+
+        <h2>Sign In</h2>
+        <p>Enter your credentials to manage your units.</p>
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="you@example.com" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Login to Dashboard</button>
+        </form>
+
+        <a href="{{ route('password.request') }}" class="forgot-password">Forgot your password?</a>
     </div>
 
-    <!-- Original functionality scripts (unchanged) -->
-    <script>
-        // Add form validation (exactly as original)
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if (!email || !password) {
-                e.preventDefault();
-                alert('Please fill in all fields');
-                return false;
-            }
-            
-            // Add loading state
-            const button = document.querySelector('.login-button');
-            button.innerHTML = 'Signing in...';
-            button.disabled = true;
-        });
-
-        // Auto-focus email field
-        document.getElementById('email').focus();
-    </script>
 </body>
 </html>

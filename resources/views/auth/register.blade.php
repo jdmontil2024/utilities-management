@@ -1,333 +1,242 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Property Wise</title>
-    <!-- Fonts - Inter with all weights (exact match from login page) -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Create Account | PROPMANAGE</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-main: #121212;
+            --bg-card: #1f1f1f;
+            --accent-green: #10b981;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #2d2d2d;
         }
 
-        /* Main background: copy of main-content background (#f8f9fa) - exactly like login */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;  /* exact .main-content background */
             min-height: 100vh;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #4b5563; /* default text color from original */
+            padding: 40px 20px;
         }
 
-        .register-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            overflow: hidden;
+        /* --- REGISTER CARD --- */
+        .register-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             width: 100%;
-            max-width: 480px;  /* exactly like login width */
+            max-width: 480px; /* Slightly wider for registration forms */
+            padding: 3rem 2.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
         }
 
-        /* Header: exact navbar color design (#2c3e50 background + #3498db logo accent) - like login */
-        .register-header {
-            background: #2c3e50;  /* solid navbar background */
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
+        /* --- CARD BRANDING --- */
+        .card-brand {
+            text-decoration: none;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2.5rem;
+        }
+
+        .intricate-logo-p {
             position: relative;
+            width: 50px; 
+            height: 50px;
+            background: #111111;
+            border: 2px solid var(--accent-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            overflow: hidden;
         }
 
-        /* "P" logo box as in login page (using #3498db) */
-        .register-header::before {
-            content: "P";
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #3498db;  /* logo-icon blue */
-            border-radius: 8px;
+        .intricate-logo-p .svg-icon {
+            width: 75%;
+            height: 75%;
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
+        }
+
+        .intricate-logo-p .reflection {
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                135deg,
+                rgba(16, 185, 129, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(16, 185, 129, 0) 100%
+            );
+            transform: rotate(25deg);
+            animation: glossAuto 5s infinite ease-in-out;
+        }
+
+        @keyframes glossAuto {
+            0%, 15% { top: -100%; left: -100%; }
+            35%, 100% { top: 100%; left: 100%; }
+        }
+
+        .brand-text {
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: baseline;
+        }
+        .brand-text .prop { color: #ffffff; font-weight: 700; }
+        .brand-text .manage { color: var(--accent-green); font-weight: 500; }
+
+        /* --- FORM STYLES --- */
+        .register-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
             font-weight: 700;
-            font-size: 20px;
-            line-height: 40px;
-            text-align: center;
-            margin-bottom: 10px;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-align: left;
         }
 
-        .register-header h1 {
-            font-size: 28px;
-            margin: 5px 0 6px 0;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: white;
-            font-family: 'Inter', sans-serif;
+        .register-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-align: left;
         }
 
-        .register-header p {
-            opacity: 0.9;
-            font-size: 15px;
-            font-weight: 400;
-            color: #ecf0f1; /* light text from nav quick-links */
+        .form-group { 
+            margin-bottom: 1.25rem; 
+            text-align: left;
         }
-
-        .register-body {
-            padding: 35px 30px;
-            background: white;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
+        
+        .form-label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1f2937;  /* dark heading color from original */
-            font-size: 14px;
-            letter-spacing: -0.01em;
-            font-family: 'Inter', sans-serif;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
-        input {
+        .form-input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e6ed;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-            color: #4b5563;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #3498db;  /* focus color matches logo/nav accent */
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-
-        input::placeholder {
-            color: #9ca3af;
-            font-weight: 400;
-            opacity: 0.7;
-        }
-
-        /* Name fields grid - same spacing as login but with two columns */
-        .name-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 0;
-        }
-
-        .register-button {
-            width: 100%;
-            padding: 15px;
-            background: #3498db;  /* solid blue from logo/nav accent */
+            padding: 12px 16px;
             color: white;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent-green);
+            color: #121212;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
+            padding: 14px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            letter-spacing: -0.01em;
-            margin-top: 10px;
+            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 1rem;
         }
 
-        .register-button:hover {
-            background: #2c3e50;  /* navbar dark on hover */
-        }
-
-        .register-button:active {
-            transform: translateY(1px);
+        .btn-submit:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
         }
 
         .login-link {
+            display: block;
             text-align: center;
-            margin-top: 25px;
-            font-size: 15px;
-            color: #4b5563;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .login-link a {
-            color: #3498db;
-            font-weight: 600;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
             text-decoration: none;
-        }
-
-        .login-link a:hover {
-            color: #2c3e50;
-            text-decoration: underline;
-        }
-
-        .back-home {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .back-home a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 500;
+            font-size: 0.85rem;
             transition: color 0.2s;
-            font-family: 'Inter', sans-serif;
         }
 
-        .back-home a:hover {
-            color: #3498db;
-        }
+        .login-link:hover { color: var(--accent-green); }
 
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #dc2626;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-        }
-
-        /* Exactly match login page styles */
-        .divider {
-            text-align: center;
-            margin: 30px 0 20px;
-            position: relative;
-            color: #95a5a6;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 45%;
-            height: 1px;
-            background: #e0e6ed;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <!-- Header exactly like login page -->
-        <div class="register-header">
-            <h1>Property Wise</h1>
-            <p>Create your account</p>
-        </div>
 
-        <div class="register-body">
-            @if($errors->any())
-                <div class="error-message">
-                    <span>⚠️</span> {{ $errors->first() }}
-                </div>
-            @endif
-
-            <!-- Form with original Laravel directives, untouched functionality -->
-            <form method="POST" action="{{ route('register') }}">
-                @csrf
-
-                <!-- Two-column name fields (first/last) - design matches login spacing -->
-                <div class="name-fields">
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required placeholder="John">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="last_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required placeholder="Doe">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="john@example.com">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="At least 8 characters">
-                </div>
-
-                <div class="form-group">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Repeat your password">
-                </div>
-
-                <button type="submit" class="register-button">Create Account</button>
-            </form>
-
-            <div class="login-link">
-                Already have an account? <a href="{{ route('login') }}">Sign in here</a>
+    <div class="register-card">
+        <div class="card-brand">
+            <div class="intricate-logo-p">
+                <svg class="svg-icon" viewBox="0 0 100 100">
+                    <path d="M25,20 L25,80 M25,20 Q50,5 75,20 Q100,35 75,50 L25,50 M50,20 L50,80" />
+                    <path d="M25,60 L40,80 L55,60 L70,80 L85,60" />
+                    <path d="M70,80 L90,80 M80,80 L80,75 M85,80 L85,75 M75,80 L75,75" />
+                    <circle cx="50" cy="35" r="4" fill="var(--accent-green)" stroke="none"/>
+                </svg>
+                <div class="reflection"></div>
             </div>
-
-            <div class="back-home">
-                <a href="{{ url('/') }}">
-                    ← Back to Home
-                </a>
+            <div class="brand-text">
+                <span class="prop">PROP</span><span class="manage">MANAGE</span>
             </div>
         </div>
+
+        <h2>Create Account</h2>
+        <p>Join our platform to streamline your property management.</p>
+
+        <form method="POST" action="{{ route('register') }}">
+            @csrf
+            
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-input" placeholder="John Doe" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirmation" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Start Managing Now</button>
+        </form>
+
+        <a href="{{ route('login') }}" class="login-link">Already have an account? Sign in</a>
     </div>
 
-    <!-- Original functionality scripts (unchanged) -->
-    <script>
-        // Password validation - exactly as original but with updated selectors
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('password_confirmation').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-                return false;
-            }
-            
-            if (password.length < 8) {
-                e.preventDefault();
-                alert('Password must be at least 8 characters long!');
-                return false;
-            }
-            
-            // Add loading state
-            const button = document.querySelector('.register-button');
-            button.innerHTML = 'Creating Account...';
-            button.disabled = true;
-        });
-
-        // Auto-focus first name field
-        document.getElementById('first_name').focus();
-    </script>
 </body>
 </html>

@@ -5,393 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Utility Wise - Utilities Management System')</title>
+    <title>@yield('title', 'PROPMANAGE | System')</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Fonts - Inter with all weights -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* RESET & BASE */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-main: #121212;
+            --bg-sidebar: #181818;
+            --bg-card: #1f1f1f;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --text-primary: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #2d2d2d;
+            --sidebar-width: 260px;
+            --header-height: 70px;
         }
+
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
             height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #4b5563;
-            background: #f8f9fa;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            color: #1f2937;
-            line-height: 1.2;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        /* Main Navigation */
-        .main-nav {
-            background: #2c3e50;
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);  /* ← BOLD SHADOW */
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 0 30px;
-        }
-
-        /* Logo & Brand */
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-link {
-            color: white;
-            text-decoration: none;
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            letter-spacing: -0.02em;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #3498db;
-            border-radius: 8px;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-        }
-
-        /* Search Bar */
-        .search-container {
-            flex-grow: 1;
-            margin: 0 40px;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .search-form {
-            position: relative;
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 20px;
-            padding-right: 45px;
-            border: none;
-            border-radius: 30px;
-            font-size: 14px;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            font-weight: 400;
-            background: rgba(255,255,255,0.15);
-            color: white;
-            backdrop-filter: blur(5px);
-        }
-
-        .search-input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-
-        .search-button {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.8);
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        /* User Menu */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .quick-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .quick-link {
-            color: #ecf0f1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 6px 10px;
-            border-radius: 30px;
-            transition: background 0.2s;
-        }
-
-        .quick-link:hover {
-            background: rgba(255,255,255,0.1);
-            text-decoration: none;
-            color: white;
-        }
-
-        /* Notifications */
-        .notifications {
-            position: relative;
-        }
-
-        .notifications-link {
-            color: #ecf0f1;
-            text-decoration: none;
-            position: relative;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -8px;
-            background: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        /* User Dropdown */
-        .user-dropdown {
-            position: relative;
-        }
-
-        .user-dropdown-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 15px 6px 8px;
-            border-radius: 40px;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            backdrop-filter: blur(5px);
-            transition: background 0.2s;
-        }
-
-        .user-dropdown-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: #3498db;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            border: 2px solid rgba(255,255,255,0.5);
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background: white;
-            color: #333;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.2);
-            min-width: 240px;
-            z-index: 1000;
-            margin-top: 10px;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
         }
 
-        .dropdown-menu.show {
-            display: block;
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
         }
 
-        .dropdown-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        .dropdown-user-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-            font-size: 0.95rem;
-            color: #1f2937;
-        }
-
-        .dropdown-user-email {
-            font-size: 0.8rem;
-            color: #6b7280;
-        }
-
-        .dropdown-items {
-            padding: 8px 0;
-        }
-
-        .dropdown-item {
-            display: block;
-            padding: 10px 20px;
-            color: #374151;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        .dropdown-item:hover {
-            background: #f3f4f6;
-            text-decoration: none;
-            color: #374151;
-        }
-
-        .dropdown-item span {
-            margin-right: 10px;
-        }
-
-        .dropdown-divider {
-            border-top: 1px solid #edf2f7;
-            margin: 8px 0;
-        }
-
-        .logout-form {
-            margin: 0;
-            padding: 0;
-        }
-
-        .logout-btn {
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            padding: 10px 20px;
-            color: #dc2626;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #f3f4f6;
-        }
-
-        /* Sidebar */
+        /* SIDEBAR */
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 73px;
-            bottom: 0;
-            width: 260px;
-            background: #34495e;  /* ← CHANGED FROM #2c3e50 TO #34495e (lighter) */
-            color: white;
-            z-index: 999;
-            overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,.2);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            width: var(--sidebar-width);
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            flex-shrink: 0;
         }
 
-        /* Sidebar Date & Time Widget */
-        .sidebar-datetime {
-            padding: 20px 20px 10px 20px;
-            border-bottom: 1px solid #34495e;
-            margin-bottom: 15px;
-            text-align: center;
+        .brand-section {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .sidebar-date {
-            font-size: 13px;
-            font-weight: 500;
-            color: #ecf0f1;
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-        }
-
-        .sidebar-time {
-            font-size: 16px;
-            font-weight: 700;
-            color: #3498db;
-            font-family: 'Inter', monospace;
-            letter-spacing: 1px;
-            background: rgba(52, 152, 219, 0.1);
-            padding: 8px 12px;
+        /* --- SHARED INTRICATE BOX DESIGN --- */
+        .intricate-box {
+            position: relative;
+            width: 38px; 
+            height: 38px;
+            background: #111111;
+            border: 1.5px solid var(--accent-green);
             border-radius: 8px;
-            display: inline-block;
-            border: 1px solid #34495e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+            flex-shrink: 0;
+            overflow: hidden;
+            transition: transform 0.2s ease;
         }
 
+        .intricate-box .svg-icon {
+            width: 75%;
+            height: 75%;
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
+        }
+
+        /* Profile Specific Icon Styling */
+        .svg-profile {
+            width: 65%;
+            height: 65%;
+            stroke-width: 3;
+        }
+
+        .reflection {
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                135deg,
+                rgba(16, 185, 129, 0) 0%,
+                rgba(16, 185, 129, 0.05) 40%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(16, 185, 129, 0.05) 60%,
+                rgba(16, 185, 129, 0) 100%
+            );
+            transform: rotate(25deg);
+            z-index: 10;
+        }
+
+        /* Interaction triggers */
+        .brand-link:hover .intricate-box .reflection,
+        .user-dropdown-btn:hover .intricate-box .reflection {
+            animation: glossSwipe 1.2s ease forwards;
+        }
+
+        .user-dropdown-btn:hover .intricate-box {
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes glossSwipe {
+            0% { top: -100%; left: -100%; }
+            100% { top: 100%; left: 100%; }
+        }
+
+        .brand-link {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .brand-text .prop { color: #ffffff; font-weight: 700; }
+        .brand-text .manage { color: var(--accent-green); font-weight: 500; }
+
+        /* SIDEBAR MENU */
         .sidebar-menu {
-            padding: 0 0 20px 0;
-        }
-
-        .sidebar-section {
-            margin-bottom: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem 0.75rem;
         }
 
         .sidebar-section-title {
-            padding: 0 20px;
-            margin-bottom: 8px;
-            color: #95a5a6;
-            font-size: 0.7rem;
+            padding: 0 1rem;
+            margin: 1.5rem 0 0.75rem 0;
+            color: var(--text-muted);
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
             font-weight: 700;
         }
 
@@ -399,73 +170,144 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 20px;
-            color: #ecf0f1;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
             text-decoration: none;
-            transition: background 0.2s;
-            font-size: 0.95rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
         }
 
         .sidebar-link:hover {
-            background: #34495e;
-            text-decoration: none;
-            color: white;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.02) 100%);
+            color: var(--text-primary);
         }
 
         .sidebar-link.active {
-            background: #3498db;
-            border-left: 4px solid #f1c40f;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            font-weight: 600;
         }
 
-        .sidebar-link span:first-child {
-            font-size: 1.2rem;
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
-        /* Sidebar scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 8px;
+        /* TOP NAVIGATION */
+        .top-nav {
+            height: var(--header-height);
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
         }
 
-        .sidebar::-webkit-scrollbar-track {
-            background: #34495e;  /* ← CHANGED FROM #2c3e50 TO #34495e */
+        .search-input {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            width: 300px;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            width: 350px;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #34495e;
-            border-radius: 4px;
+        .top-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #3d566e;
+        /* CONTENT AREA */
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem;
         }
 
-        /* Main Content */
-        .main-content {
-            margin-top: 73px;
-            margin-left: 260px;
-            min-height: calc(100vh - 73px);
-            background:linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+        /* UPDATED USER DROPDOWN BUTTON */
+        .user-dropdown { position: relative; }
+
+        .user-dropdown-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 4px;
+            border-radius: 10px;
+            transition: 0.2s;
         }
 
-        .page-content {
-            padding: 25px 30px;
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-            width: 100%;
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .container-fluid {
-            width: 100%;
-            padding: 0 15px;
-            margin: 0 auto;
+        .user-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 55px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 220px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 1001;
+        }
+
+        .dropdown-menu.show { display: block; animation: menuFade 0.2s ease; }
+
+        @keyframes menuFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
 
         /* Toast Notifications */
         .toast-container {
@@ -476,244 +318,53 @@
         }
 
         .toast {
-            background: white;
-            border-radius: 4px;
-            padding: 15px 20px;
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-green);
+            color: white;
+            padding: 16px 20px;
             margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             display: flex;
-            align-items: center;
+            justify-content: space-between;
             min-width: 300px;
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
-            color: #4b5563;
         }
 
-        .toast-success {
-            border-left: 4px solid #28a745;
-        }
-
-        .toast-error {
-            border-left: 4px solid #dc3545;
-        }
-
-        .toast-warning {
-            border-left: 4px solid #ffc107;
-        }
-
-        .toast-info {
-            border-left: 4px solid #17a2b8;
-        }
-
-        .toast-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            color: #666;
-            margin-left: 10px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(0,0,0,.1);
-            border-radius: 50%;
-            border-top-color: #3498db;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Form elements */
-        input, select, textarea, button {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #9ca3af;
-            font-weight: 400;
-            opacity: 0.7;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 15px;
-                flex-wrap: wrap;
-            }
-
-            .logo-section {
-                width: 100%;
-                justify-content: space-between;
-                margin-bottom: 10px;
-            }
-
-            .search-container {
-                margin: 10px 0;
-                max-width: 100%;
-            }
-
-            .user-menu {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .quick-links {
-                display: none;
-            }
-
-            .sidebar {
-                width: 0;
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .page-content {
-                padding: 20px 15px;
-            }
+            .sidebar { display: none; }
         }
     </style>
-
-    <!-- Page-specific styles -->
     @stack('styles')
 </head>
 <body>
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <!-- Logo & Brand -->
-            <div class="logo-section">
-                <a href="{{ route('dashboard') }}" class="logo-link">
-                    <div class="logo-icon">P</div>
-                    <span>Property Wise</span>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand-section">
+                <a href="{{ route('dashboard') }}" class="brand-link">
+                    <div class="intricate-box">
+                        <svg class="svg-icon" viewBox="0 0 100 100">
+                            <path d="M25,20 L25,80 M25,20 Q50,5 75,20 Q100,35 75,50 L25,50 M50,20 L50,80" />
+                            <path d="M25,60 L40,80 L55,60 L70,80 L85,60" />
+                            <path d="M70,80 L90,80 M80,80 L80,75 M85,80 L85,75 M75,80 L75,75" />
+                            <circle cx="50" cy="35" r="4" fill="var(--accent-green)" stroke="none"/>
+                        </svg>
+                        <div class="reflection"></div>
+                    </div>
+                    
+                    <div class="brand-text">
+                        <span class="prop">PROP</span>
+                        <span class="manage">MANAGE</span>
+                    </div>
                 </a>
             </div>
 
-            <!-- Search Bar -->
-            <div class="search-container">
-                <form action="{{ route('search') }}" method="GET" class="search-form">
-                    <input type="text" 
-                           name="q" 
-                           placeholder="Search buildings, tenants, units..." 
-                           class="search-input"
-                           value="{{ request('q') }}">
-                    <button type="submit" class="search-button">🔍</button>
-                </form>
-            </div>
+            <div class="sidebar-menu">
+                <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <span>📊</span> Dashboard
+                </a>
 
-            <!-- User Menu -->
-            <div class="user-menu">
-                <!-- Quick Links -->
-                <div class="quick-links">
-                    <a href="{{ route('dashboard') }}" class="quick-link">
-                        <span>📊</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="{{ route('calendar') }}" class="quick-link">
-                        <span>📅</span>
-                        <span>Calendar</span>
-                    </a>
-                    <a href="{{ route('map') }}" class="quick-link">
-                        <span>🗺️</span>
-                        <span>Map</span>
-                    </a>
-                </div>
-
-                <!-- Notifications -->
-                <div class="notifications">
-                    <a href="{{ route('notifications') }}" class="notifications-link">
-                        🔔
-                        @php
-                            $unreadCount = \App\Models\Alert::where('is_read', false)->count();
-                        @endphp
-                        @if($unreadCount > 0)
-                            <span class="notification-badge">
-                                {{ $unreadCount > 9 ? '9+' : $unreadCount }}
-                            </span>
-                        @endif
-                    </a>
-                </div>
-
-                <!-- User Dropdown -->
-                <div class="user-dropdown">
-                    <button onclick="toggleUserMenu()" class="user-dropdown-btn">
-                        <div class="user-avatar">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-                        <span>{{ auth()->user()->name }}</span>
-                        <span style="font-size: 0.8rem; opacity: 0.8;">▼</span>
-                    </button>
-                    
-                    <div class="dropdown-menu" id="userMenu">
-                        <div class="dropdown-header">
-                            <div class="dropdown-user-name">{{ auth()->user()->name }}</div>
-                            <div class="dropdown-user-email">{{ auth()->user()->email }}</div>
-                        </div>
-                        
-                        <div class="dropdown-items">
-                            <a href="{{ route('profile.edit') }}" class="dropdown-item">
-                                <span>👤</span> My Profile
-                            </a>
-                            <a href="{{ route('profile.notifications') }}" class="dropdown-item">
-                                <span>🔔</span> Notifications
-                            </a>
-                            <a href="{{ route('settings.index') }}" class="dropdown-item">
-                                <span>⚙️</span> Settings
-                            </a>
-                            <a href="{{ route('help') }}" class="dropdown-item">
-                                <span>❓</span> Help
-                            </a>
-                        </div>
-                        
-                        <div class="dropdown-divider"></div>
-                        
-                        <div class="dropdown-items">
-                            <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                                @csrf
-                                <button type="submit" class="logout-btn">
-                                    <span>🚪</span> Logout
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Date & Time Widget -->
-        <div class="sidebar-datetime">
-            <div class="sidebar-date" id="sidebarDate">{{ now()->format('l, F j, Y') }}</div>
-            <div class="sidebar-time" id="sidebarTime"></div>
-        </div>
-
-        <div class="sidebar-menu">
-            <!-- Core Section -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Core</div>
+                <div class="sidebar-section-title">Core Management</div>
                 <a href="{{ route('buildings.index') }}" class="sidebar-link {{ request()->routeIs('buildings.*') ? 'active' : '' }}">
                     <span>🏢</span> Buildings
                 </a>
@@ -723,188 +374,101 @@
                 <a href="{{ route('tenants.index') }}" class="sidebar-link {{ request()->routeIs('tenants.*') ? 'active' : '' }}">
                     <span>👥</span> Tenants
                 </a>
-            </div>
 
-            <!-- Billing Section -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Billing</div>
+                <div class="sidebar-section-title">Operations</div>
                 <a href="{{ route('leases.index') }}" class="sidebar-link {{ request()->routeIs('leases.*') ? 'active' : '' }}">
-                    <span>📄</span> Leases
+                    <span>📜</span> Leases
                 </a>
                 <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') ? 'active' : '' }}">
-                    <span>💰</span> Bills
+                    <span>💳</span> Billing
                 </a>
-            </div>
-
-            <!-- Maintenance Section -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Maintenance</div>
                 <a href="{{ route('maintenance-requests.index') }}" class="sidebar-link {{ request()->routeIs('maintenance-requests.*') ? 'active' : '' }}">
-                    <span>🔧</span> Maintenance
+                    <span>🛠️</span> Maintenance
                 </a>
-                <a href="{{ route('preventive-maintenances.index') }}" class="sidebar-link {{ request()->routeIs('preventive-maintenances.*') ? 'active' : '' }}">
-                    <span>🛠️</span> Preventive
-                </a>
-                <a href="{{ route('vendors.index') }}" class="sidebar-link {{ request()->routeIs('vendors.*') ? 'active' : '' }}">
-                    <span>👷</span> Vendors
-                </a>
-            </div>
 
-            <!-- Utilities Section -->
-            <div class="sidebar-section">
                 <div class="sidebar-section-title">Utilities</div>
                 <a href="{{ route('meter-readings.index') }}" class="sidebar-link {{ request()->routeIs('meter-readings.*') ? 'active' : '' }}">
-                    <span>📊</span> Meter Readings
+                    <span>🔌</span> Meter Readings
                 </a>
-                <a href="{{ route('consumptions.index') }}" class="sidebar-link {{ request()->routeIs('consumptions.*') ? 'active' : '' }}">
-                    <span>⚡</span> Consumptions
-                </a>
-            </div>
-
-            <!-- Reports Section -->
-            <div class="sidebar-section">
-                <div class="sidebar-section-title">Reports</div>
                 <a href="{{ route('reports.index') }}" class="sidebar-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                     <span>📈</span> Reports
                 </a>
             </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="top-nav">
+                <form action="{{ route('search') }}" method="GET">
+                    <input type="text" name="q" placeholder="Quick search..." class="search-input" value="{{ request('q') }}">
+                </form>
+
+                <div class="top-nav-actions">
+                    <div class="notifications-icon" style="cursor:pointer; color: var(--text-muted); font-size: 1.2rem;">🔔</div>
+                    
+                    <div class="user-dropdown">
+                        <button onclick="toggleUserMenu()" class="user-dropdown-btn">
+                            <div class="user-info">
+                                <span class="user-name">{{ auth()->user()->name }}</span>
+                                <span class="user-role">Administrator</span>
+                            </div>
+                            <div class="intricate-box">
+                                <svg class="svg-icon svg-profile" viewBox="0 0 100 100">
+                                    <path d="M50,50 C61.0457,50 70,41.0457 70,30 C70,18.9543 61.0457,10 50,10 C38.9543,10 30,18.9543 30,30 C30,41.0457 38.9543,50 50,50 Z" />
+                                    <path d="M20,85 C20,71.1929 33.4315,60 50,60 C66.5685,60 80,71.1929 80,85" />
+                                    <circle cx="50" cy="45" r="3" fill="var(--accent-green)" stroke="none"/>
+                                </svg>
+                                <div class="reflection"></div>
+                            </div>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="userMenu">
+                            <a href="{{ route('profile.edit') }}" class="dropdown-item">👤 Profile</a>
+                            <a href="{{ route('settings.index') }}" class="dropdown-item">⚙️ Settings</a>
+                            <hr style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item" style="width:100%; text-align:left; background:none; border:none; color:#f87171; cursor:pointer;">
+                                    🚪 Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-area">
+                @yield('content')
+            </main>
         </div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        @yield('content')
-    </main>
-
-    <!-- Global Utilities Script -->
     <script>
-        // Toggle user dropdown
         function toggleUserMenu() {
-            const menu = document.getElementById('userMenu');
-            menu.classList.toggle('show');
+            document.getElementById('userMenu').classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('userMenu');
-            const button = event.target.closest('.user-dropdown-btn');
-            
-            if (menu && menu.classList.contains('show') && !menu.contains(event.target) && !button) {
-                menu.classList.remove('show');
-            }
-        });
-
-        // Update sidebar clock
-        function updateSidebarClock() {
-            const now = new Date();
-            const timeElement = document.getElementById('sidebarTime');
-            const dateElement = document.getElementById('sidebarDate');
-            
-            if (timeElement) {
-                // Format: HH:MM:SS AM/PM
-                let hours = now.getHours();
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                
-                hours = hours % 12;
-                hours = hours ? hours : 12; // 0 should be 12
-                hours = hours.toString().padStart(2, '0');
-                
-                timeElement.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-            }
-            
-            // Update date every minute to ensure it's accurate
-            if (dateElement) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                dateElement.textContent = now.toLocaleDateString('en-US', options);
+        window.onclick = function(event) {
+            if (!event.target.closest('.user-dropdown')) {
+                const menu = document.getElementById('userMenu');
+                if (menu) menu.classList.remove('show');
             }
         }
 
-        // Toast notification system
-        window.Utilities = {
-            showToast: function(message, type = 'success') {
-                const container = document.querySelector('.toast-container');
-                
-                const toast = document.createElement('div');
-                toast.className = `toast toast-${type}`;
-                toast.innerHTML = `
-                    <div style="flex-grow: 1;">${message}</div>
-                    <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
-                `;
-
-                container.appendChild(toast);
-
-                setTimeout(() => {
-                    if (toast.parentElement) {
-                        toast.remove();
-                    }
-                }, 5000);
-            },
-
-            formatCurrency: function(amount) {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(amount);
-            },
-
-            formatDate: function(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-            }
+        const showToast = (msg, type = 'success') => {
+            const container = document.querySelector('.toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if(type === 'error') toast.style.borderLeftColor = '#ef4444';
+            toast.innerHTML = `<span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
         };
 
-        // Auto-show toasts for session messages
-        @if(session('success'))
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("success") }}', 'success');
-            });
-        @endif
-        
-        @if(session('error'))
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("error") }}', 'error');
-            });
-        @endif
-
-        @if(session('warning'))
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("warning") }}', 'warning');
-            });
-        @endif
-
-        @if(session('info'))
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("info") }}', 'info');
-            });
-        @endif
-
-        // Set active sidebar link based on current URL
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            
-            sidebarLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Start the clock
-            updateSidebarClock();
-            setInterval(updateSidebarClock, 1000);
-        });
+        @if(session('success')) showToast("{{ session('success') }}"); @endif
+        @if(session('error')) showToast("{{ session('error') }}", 'error'); @endif
     </script>
-
-    <!-- Page-specific scripts -->
     @stack('scripts')
 </body>
 </html>
