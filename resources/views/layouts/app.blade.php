@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
             --bg-main: #121212;
@@ -81,7 +83,7 @@
         }
 
         .intricate-box .svg-icon {
-            width: 75%;
+            width: 75%; /* Restored for original logo complexity */
             height: 75%;
             fill: none;
             stroke: var(--accent-green);
@@ -91,11 +93,12 @@
             filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
         }
 
-        /* Profile Specific Icon Styling */
-        .svg-profile {
-            width: 65%;
-            height: 65%;
-            stroke-width: 3;
+        /* Adjustments for Lucide icons inside intricate boxes */
+        .user-dropdown-btn .intricate-box .svg-icon-lucide {
+            width: 55%;
+            height: 55%;
+            stroke-width: 2;
+            stroke: var(--accent-green);
         }
 
         .reflection {
@@ -116,15 +119,9 @@
             z-index: 10;
         }
 
-        /* Interaction triggers */
         .brand-link:hover .intricate-box .reflection,
         .user-dropdown-btn:hover .intricate-box .reflection {
             animation: glossSwipe 1.2s ease forwards;
-        }
-
-        .user-dropdown-btn:hover .intricate-box {
-            transform: translateY(-1px);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
 
         @keyframes glossSwipe {
@@ -180,7 +177,13 @@
             margin-bottom: 4px;
             position: relative;
             overflow: hidden;
-            border: 1px solid transparent;
+        }
+
+        .nav-icon {
+            width: 18px;
+            height: 18px;
+            stroke-width: 1.5px;
+            transition: all 0.3s ease;
         }
 
         .sidebar-link:hover {
@@ -188,11 +191,19 @@
             color: var(--text-primary);
         }
 
+        .sidebar-link:hover .nav-icon {
+            color: var(--text-primary);
+        }
+
         .sidebar-link.active {
             background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%);
             color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.1);
             font-weight: 600;
+        }
+
+        .sidebar-link.active .nav-icon {
+            color: var(--accent-green);
+            filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
         }
 
         /* MAIN WRAPPER */
@@ -203,7 +214,7 @@
             min-width: 0;
         }
 
-        /* TOP NAVIGATION */
+        /* TOP NAVIGATION & SEARCH */
         .top-nav {
             height: var(--header-height);
             background-color: var(--bg-sidebar);
@@ -214,20 +225,37 @@
             padding: 0 2rem;
         }
 
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+            stroke-width: 2px;
+        }
+
         .search-input {
             background: var(--bg-main);
             border: 1px solid var(--border);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 16px 10px 40px;
             border-radius: 20px;
-            width: 300px;
+            width: 320px;
             font-size: 0.85rem;
             transition: 0.3s;
         }
+
         .search-input:focus {
             outline: none;
             border-color: var(--accent-green);
-            width: 350px;
+            width: 400px;
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
@@ -237,14 +265,7 @@
             gap: 24px;
         }
 
-        /* CONTENT AREA */
-        .content-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 2rem;
-        }
-
-        /* UPDATED USER DROPDOWN BUTTON */
+        /* USER DROPDOWN */
         .user-dropdown { position: relative; }
 
         .user-dropdown-btn {
@@ -257,26 +278,23 @@
             gap: 14px;
             padding: 4px;
             border-radius: 10px;
-            transition: 0.2s;
         }
 
         .user-info {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: flex-end;
         }
 
         .user-name {
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--text-primary);
         }
 
         .user-role {
             font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .dropdown-menu {
@@ -303,13 +321,21 @@
             padding: 12px 20px;
             color: var(--text-primary);
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 0.9rem;
         }
 
         .dropdown-item:hover { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
 
-        /* Toast Notifications */
+        /* CONTENT AREA */
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
         .toast-container {
             position: fixed;
             top: 20px;
@@ -361,49 +387,60 @@
 
             <div class="sidebar-menu">
                 <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <span>📊</span> Dashboard
+                    <i data-lucide="layout-dashboard" class="nav-icon"></i> Dashboard
                 </a>
 
                 <div class="sidebar-section-title">Core Management</div>
                 <a href="{{ route('buildings.index') }}" class="sidebar-link {{ request()->routeIs('buildings.*') ? 'active' : '' }}">
-                    <span>🏢</span> Buildings
+                    <i data-lucide="building-2" class="nav-icon"></i> Buildings
                 </a>
                 <a href="{{ route('units.index') }}" class="sidebar-link {{ request()->routeIs('units.*') ? 'active' : '' }}">
-                    <span>🏠</span> Units
+                    <i data-lucide="door-open" class="nav-icon"></i> Units
                 </a>
                 <a href="{{ route('tenants.index') }}" class="sidebar-link {{ request()->routeIs('tenants.*') ? 'active' : '' }}">
-                    <span>👥</span> Tenants
+                    <i data-lucide="users" class="nav-icon"></i> Tenants
                 </a>
 
                 <div class="sidebar-section-title">Operations</div>
                 <a href="{{ route('leases.index') }}" class="sidebar-link {{ request()->routeIs('leases.*') ? 'active' : '' }}">
-                    <span>📜</span> Leases
-                </a>
-                <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') ? 'active' : '' }}">
-                    <span>💳</span> Billing
+                    <i data-lucide="scroll-text" class="nav-icon"></i> Leases
                 </a>
                 <a href="{{ route('maintenance-requests.index') }}" class="sidebar-link {{ request()->routeIs('maintenance-requests.*') ? 'active' : '' }}">
-                    <span>🛠️</span> Maintenance
+                    <i data-lucide="wrench" class="nav-icon"></i> Maintenance
+                </a>
+                <a href="{{ route('bills.index') }}" class="sidebar-link {{ request()->routeIs('bills.*') ? 'active' : '' }}">
+                    <i data-lucide="wallet" class="nav-icon"></i> Accounting
                 </a>
 
                 <div class="sidebar-section-title">Utilities</div>
                 <a href="{{ route('meter-readings.index') }}" class="sidebar-link {{ request()->routeIs('meter-readings.*') ? 'active' : '' }}">
-                    <span>🔌</span> Meter Readings
+                    <i data-lucide="gauge" class="nav-icon"></i> Meter Readings
                 </a>
                 <a href="{{ route('reports.index') }}" class="sidebar-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                    <span>📈</span> Reports
+                    <i data-lucide="bar-chart-3" class="nav-icon"></i> Reports
+                </a>
+                <a href="{{ route('settings.index') }}" class="sidebar-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                    <i data-lucide="settings-2" class="nav-icon"></i> Settings
                 </a>
             </div>
         </aside>
 
         <div class="main-wrapper">
             <header class="top-nav">
-                <form action="{{ route('search') }}" method="GET">
-                    <input type="text" name="q" placeholder="Quick search..." class="search-input" value="{{ request('q') }}">
-                </form>
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <form action="{{ route('search') }}" method="GET">
+                        <input type="text" name="q" placeholder="Global search properties, tenants, leases..." class="search-input" value="{{ request('q') }}">
+                    </form>
+                </div>
 
                 <div class="top-nav-actions">
-                    <div class="notifications-icon" style="cursor:pointer; color: var(--text-muted); font-size: 1.2rem;">🔔</div>
+                    <div class="notifications-icon" style="cursor:pointer; color: var(--text-muted);">
+                        <i data-lucide="bell" style="width: 20px; height: 20px; stroke-width: 1.5px;"></i>
+                    </div>
+                    <div class="mail-icon" style="cursor:pointer; color: var(--text-muted);">
+                        <i data-lucide="mail" style="width: 20px; height: 20px; stroke-width: 1.5px;"></i>
+                    </div>
                     
                     <div class="user-dropdown">
                         <button onclick="toggleUserMenu()" class="user-dropdown-btn">
@@ -412,23 +449,23 @@
                                 <span class="user-role">Administrator</span>
                             </div>
                             <div class="intricate-box">
-                                <svg class="svg-icon svg-profile" viewBox="0 0 100 100">
-                                    <path d="M50,50 C61.0457,50 70,41.0457 70,30 C70,18.9543 61.0457,10 50,10 C38.9543,10 30,18.9543 30,30 C30,41.0457 38.9543,50 50,50 Z" />
-                                    <path d="M20,85 C20,71.1929 33.4315,60 50,60 C66.5685,60 80,71.1929 80,85" />
-                                    <circle cx="50" cy="45" r="3" fill="var(--accent-green)" stroke="none"/>
-                                </svg>
+                                <i data-lucide="user" class="svg-icon-lucide"></i>
                                 <div class="reflection"></div>
                             </div>
                         </button>
                         
                         <div class="dropdown-menu" id="userMenu">
-                            <a href="{{ route('profile.edit') }}" class="dropdown-item">👤 Profile</a>
-                            <a href="{{ route('settings.index') }}" class="dropdown-item">⚙️ Settings</a>
+                            <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                                <i data-lucide="user-cog" style="width: 16px;"></i> Profile
+                            </a>
+                            <a href="{{ route('settings.index') }}" class="dropdown-item">
+                                <i data-lucide="settings" style="width: 16px;"></i> Settings
+                            </a>
                             <hr style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="dropdown-item" style="width:100%; text-align:left; background:none; border:none; color:#f87171; cursor:pointer;">
-                                    🚪 Logout
+                                    <i data-lucide="log-out" style="width: 16px; stroke: #f87171;"></i> Logout
                                 </button>
                             </form>
                         </div>
@@ -445,6 +482,8 @@
     <div class="toast-container"></div>
 
     <script>
+        lucide.createIcons();
+
         function toggleUserMenu() {
             document.getElementById('userMenu').classList.toggle('show');
         }

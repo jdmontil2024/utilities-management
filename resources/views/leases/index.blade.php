@@ -1,25 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="dashboard-wrapper" style="background-color: #121212; min-height: 100vh; padding: 2rem; color: #ffffff; font-family: 'Inter', sans-serif;">
+<div class="dashboard-wrapper">
     
-    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d2d2d; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="header-left">
-            <h1 class="page-title" style="font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff;">Lease Agreements</h1>
-            <p class="page-subtitle" style="color: #a0a0a0; margin-top: 0.25rem;">Jennifer Montil • Resident Community Management</p>
+            <h1 class="page-title">Lease Agreements</h1>
+            <p class="page-subtitle">Jennifer Montil • Resident Community Management</p>
         </div>
         <div class="header-right">
             <a href="{{ route('leases.create') }}" class="btn-emerald-action">
-                + New Lease
+                <i data-lucide="file-plus" style="width: 18px; height: 18px; margin-right: 8px;"></i> 
+                New Lease
             </a>
         </div>
     </div>
 
-    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-header">
-                <div class="stat-icon-wrapper">📄</div>
-                <div class="stat-trend positive">Total</div>
+                <div class="stat-icon-wrapper">
+                    <i data-lucide="file-text" class="stat-icon"></i>
+                </div>
+                <div class="stat-trend">Total</div>
             </div>
             <div class="stat-body">
                 <span class="stat-value">{{ $leases->total() }}</span>
@@ -29,8 +32,10 @@
 
         <div class="stat-card">
             <div class="stat-header">
-                <div class="stat-icon-wrapper">✅</div>
-                <div class="stat-trend positive">Current</div>
+                <div class="stat-icon-wrapper">
+                    <i data-lucide="check-circle" class="stat-icon"></i>
+                </div>
+                <div class="stat-trend">Current</div>
             </div>
             <div class="stat-body">
                 <span class="stat-value">{{ $leases->where('lease_status', 'active')->count() }}</span>
@@ -40,8 +45,10 @@
 
         <div class="stat-card">
             <div class="stat-header">
-                <div class="stat-icon-wrapper">⏳</div>
-                <div class="stat-trend {{ ($expiringSoonCount ?? 0) > 0 ? 'warning' : '' }}">Attention</div>
+                <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.1);">
+                    <i data-lucide="clock" class="stat-icon" style="color: #f59e0b;"></i>
+                </div>
+                <div class="stat-trend warning">Attention</div>
             </div>
             <div class="stat-body">
                 <span class="stat-value">{{ $expiringSoonCount ?? 0 }}</span>
@@ -51,8 +58,10 @@
 
         <div class="stat-card">
             <div class="stat-header">
-                <div class="stat-icon-wrapper">💰</div>
-                <div class="stat-trend positive">Monthly</div>
+                <div class="stat-icon-wrapper">
+                    <i data-lucide="landmark" class="stat-icon"></i>
+                </div>
+                <div class="stat-trend">Monthly</div>
             </div>
             <div class="stat-body">
                 <span class="stat-value">₱{{ number_format(($totalMonthlyRent ?? $leases->sum('monthly_rent')) / 1000, 1) }}K</span>
@@ -61,8 +70,8 @@
         </div>
     </div>
 
-    <div class="content-card" style="margin-bottom: 2rem;">
-        <div class="card-header" style="padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d2d2d;">
+    <div class="content-card">
+        <div class="card-header">
             <form action="{{ route('leases.index') }}" method="GET" style="display: flex; gap: 1rem; flex-grow: 1;">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search Lease # or Tenant..." class="dark-input">
                 <select name="building_id" class="dark-filter" onchange="this.form.submit()">
@@ -75,42 +84,49 @@
                 </select>
             </form>
             <div class="view-switcher">
-                <button onclick="toggleView('grid')" id="gridBtn" class="view-btn active">Grid</button>
-                <button onclick="toggleView('table')" id="tableBtn" class="view-btn">Table</button>
+                <button onclick="toggleView('grid')" id="gridBtn" class="view-btn active">
+                    <i data-lucide="layout-grid" style="width: 16px;"></i>
+                </button>
+                <button onclick="toggleView('list')" id="tableBtn" class="view-btn">
+                    <i data-lucide="list" style="width: 16px;"></i>
+                </button>
             </div>
         </div>
 
-        <div class="card-body" style="padding: 1.5rem;">
+        <div class="card-body indented-body">
             @if($leases->count() > 0)
-                <div id="gridView" class="buildings-grid">
+                <div id="gridView" class="leases-grid">
                     @foreach($leases as $lease)
-                        <div class="building-item-card">
-                            <div class="building-thumb" style="background: #252525; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-                                <div class="tenant-avatar-circle" style="width: 60px; height: 60px; background: rgba(16,185,129,0.1); border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #10b981; font-weight: 700; text-align: center; padding: 5px;">
+                        <div class="lease-item-card">
+                            <div class="lease-thumb">
+                                <div class="unit-badge-circle">
                                     {{ $lease->unit->unit_number ?? '?' }}
                                 </div>
-                                <span class="type-badge" style="z-index: 1; margin-top: 10px; background: {{ $lease->lease_status === 'active' ? '#10b981' : '#ef4444' }};">
+                                <span class="status-badge {{ $lease->lease_status }}">
                                     {{ strtoupper($lease->lease_status) }}
                                 </span>
                             </div>
-                            <div class="building-details">
-                                <h3 style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <div class="lease-details">
+                                <h3 style="display: flex; justify-content: space-between; align-items: center;">
                                     {{ $lease->lease_number }}
-                                    <span style="color: #10b981; font-size: 0.9rem;">₱{{ number_format($lease->monthly_rent) }}</span>
+                                    <span style="color: var(--accent-emerald); font-size: 0.95rem;">₱{{ number_format($lease->monthly_rent) }}</span>
                                 </h3>
-                                <p style="margin-bottom: 8px; color: #fff; font-weight: 500;">👤 {{ $lease->tenant->full_name ?? 'No Tenant' }}</p>
+                                <p style="color: #fff; font-weight: 600; margin-top: 4px;">
+                                    <i data-lucide="user" style="width:14px; vertical-align: middle; margin-right: 4px; color: var(--text-muted);"></i>
+                                    {{ $lease->tenant->full_name ?? 'No Tenant' }}
+                                </p>
                                 
-                                <div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 15px; font-size: 0.8rem; color: #a0a0a0;">
-                                    <span>🏢 {{ $lease->unit->building->name ?? 'N/A' }}</span>
-                                    <span>📅 {{ \Carbon\Carbon::parse($lease->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($lease->end_date)->format('M d, Y') }}</span>
+                                <div class="lease-info-stack">
+                                    <span><i data-lucide="building-2"></i> {{ $lease->unit->building->name ?? 'N/A' }}</span>
+                                    <span><i data-lucide="calendar"></i> {{ \Carbon\Carbon::parse($lease->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($lease->end_date)->format('M d, Y') }}</span>
                                 </div>
 
                                 <div class="action-footer">
-                                    <a href="{{ route('leases.show', $lease) }}" class="icon-link">👁️ View</a>
-                                    <a href="{{ route('leases.edit', $lease) }}" class="icon-link">✏️ Edit</a>
-                                    <form action="{{ route('leases.destroy', $lease) }}" method="POST" onsubmit="return confirmDelete(event, this, '{{ $lease->lease_number }}')">
+                                    <a href="{{ route('leases.show', $lease) }}" class="icon-link"><i data-lucide="eye" style="width:16px;"></i></a>
+                                    <a href="{{ route('leases.edit', $lease) }}" class="icon-link"><i data-lucide="pencil" style="width:16px;"></i></a>
+                                    <form action="{{ route('leases.destroy', $lease) }}" method="POST" onsubmit="return confirmDelete(event, this, '{{ $lease->lease_number }}')" style="flex: 1;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="icon-link delete-btn">🗑️</button>
+                                        <button type="submit" class="icon-link delete-btn" style="width: 100%;"><i data-lucide="trash-2" style="width:16px;"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -124,7 +140,7 @@
                             <tr>
                                 <th>Lease Details</th>
                                 <th>Unit & Building</th>
-                                <th>Monthly Rent</th>
+                                <th>Rent</th>
                                 <th>Status</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
@@ -132,29 +148,30 @@
                         <tbody>
                             @foreach($leases as $lease)
                                 <tr>
-                                    <td style="font-weight: 600; color: #fff;">
-                                        {{ $lease->lease_number }}
-                                        <div style="font-size: 0.7rem; color: #666; font-weight: 400;">{{ $lease->tenant->full_name ?? 'N/A' }}</div>
-                                    </td>
-                                    <td style="color: #a0a0a0;">{{ $lease->unit->building->name ?? 'N/A' }} (Unit {{ $lease->unit->unit_number ?? '-' }})</td>
-                                    <td style="color: #10b981;">₱{{ number_format($lease->monthly_rent) }}</td>
                                     <td>
-                                        <span class="type-pill" style="color: {{ $lease->lease_status === 'active' ? '#10b981' : '#ef4444' }};">
+                                        <div style="font-weight: 600; color: #fff;">{{ $lease->lease_number }}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $lease->tenant->full_name ?? 'N/A' }}</div>
+                                    </td>
+                                    <td style="color: var(--text-muted);">
+                                        {{ $lease->unit->building->name ?? 'N/A' }}
+                                        <span style="display:block; font-size: 0.75rem;">Unit {{ $lease->unit->unit_number ?? '-' }}</span>
+                                    </td>
+                                    <td style="color: var(--accent-emerald); font-weight: 600;">₱{{ number_format($lease->monthly_rent) }}</td>
+                                    <td>
+                                        <span class="status-pill {{ $lease->lease_status }}">
                                             {{ strtoupper($lease->lease_status) }}
                                         </span>
                                     </td>
                                     <td style="text-align: right;">
-                                        <a href="{{ route('leases.show', $lease) }}" style="margin-left: 10px; text-decoration: none;">👁️</a>
-                                        <a href="{{ route('leases.edit', $lease) }}" style="margin-left: 10px; text-decoration: none;">✏️</a>
+                                        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                                            <a href="{{ route('leases.show', $lease) }}" style="color: var(--text-muted);"><i data-lucide="eye" style="width:18px;"></i></a>
+                                            <a href="{{ route('leases.edit', $lease) }}" style="color: var(--text-muted);"><i data-lucide="pencil" style="width:18px;"></i></a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            @else
-                <div style="text-align: center; padding: 3rem; color: #a0a0a0;">
-                    <p>No leases found matching your criteria.</p>
                 </div>
             @endif
         </div>
@@ -162,46 +179,103 @@
 </div>
 
 <style>
-    /* Exact style port from the Tenants/Units page provided */
-    .stat-card { background: #1d1d1d; border: 1px solid #2d2d2d; border-radius: 12px; padding: 1.5rem; height: 140px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; transition: 0.3s; }
-    .stat-card:hover { border-color: #10b981; transform: translateY(-3px); }
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    .page-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* STAT CARDS - SYSTEM STANDARD */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card { 
+        background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; 
+        padding: 1.5rem; height: 160px; display: flex; flex-direction: column; box-sizing: border-box; 
+    }
     .stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .stat-icon-wrapper { font-size: 1.5rem; background: rgba(16, 185, 129, 0.1); padding: 0.5rem; border-radius: 8px; line-height: 1; }
-    .stat-trend { font-size: 0.7rem; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 10px; font-weight: 700; text-transform: uppercase; }
-    .stat-trend.warning { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
-    .stat-value { display: block; font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1.1; }
-    .stat-label { color: #a0a0a0; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; margin-top: 4px; display: block; }
+    .stat-icon-wrapper { 
+        background: rgba(16, 185, 129, 0.1); width: 38px; height: 38px; border-radius: 8px; 
+        display: flex; align-items: center; justify-content: center; 
+    }
+    .stat-icon { width: 20px; height: 20px; color: var(--accent-emerald); stroke-width: 2px; }
+    .stat-body { margin-top: 1.25rem; } 
+    .stat-value { display: block; font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1; }
+    .stat-label { color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1px; margin-top: 6px; display: block; }
+    .stat-trend { font-size: 0.7rem; color: var(--accent-emerald); background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+    .stat-trend.warning { color: var(--accent-warning); background: rgba(245, 158, 11, 0.1); }
 
-    .content-card { background: #1d1d1d; border: 1px solid #2d2d2d; border-radius: 12px; overflow: hidden; }
-    .dark-filter, .dark-input { background: #181818; border: 1px solid #2d2d2d; color: #fff; padding: 8px 15px; border-radius: 8px; outline: none; }
-    .btn-emerald-action { background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; transition: 0.2s; border: none; display: inline-block; }
+    /* Content Card & Indentation */
+    .content-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+    .card-header { padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .indented-body { padding: 1.5rem 1.5rem 1.5rem 2.5rem; }
+
+    .btn-emerald-action { 
+        background: var(--accent-emerald); color: white; padding: 10px 20px; border-radius: 8px; 
+        text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; transition: 0.2s; 
+    }
+
+    /* Grid Items */
+    .leases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .lease-item-card { background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: 0.3s; }
+    .lease-item-card:hover { border-color: var(--accent-emerald); transform: translateY(-4px); }
     
-    .buildings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    .building-item-card { background: #181818; border-radius: 12px; border: 1px solid #2d2d2d; overflow: hidden; transition: 0.3s; }
-    .building-item-card:hover { border-color: #10b981; transform: translateY(-4px); }
-    .building-thumb { height: 150px; background-size: cover; background-position: center; padding: 1rem; }
-    .type-badge { color: #fff; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; }
-    .building-details { padding: 1.25rem; }
-    .building-details h3 { font-size: 1.1rem; margin: 0; color: #fff; font-weight: 700; }
-    .building-details p { color: #a0a0a0; font-size: 0.85rem; margin: 5px 0 15px 0; }
+    .lease-thumb { 
+        height: 120px; background: #222; display: flex; flex-direction: column; 
+        align-items: center; justify-content: center; position: relative; 
+    }
+    .unit-badge-circle { 
+        width: 60px; height: 60px; background: rgba(16, 185, 129, 0.05); 
+        border: 2px dashed var(--border-color); border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 1.1rem; color: #fff; font-weight: 700; 
+    }
     
-    .action-footer { display: flex; gap: 10px; border-top: 1px solid #2d2d2d; padding-top: 1rem; }
-    .icon-link { background: #2d2d2d; border: none; padding: 8px; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.8rem; color: #fff; flex: 1; text-align: center; }
-    .delete-btn:hover { background: #ef4444; color: white; }
+    .status-badge { font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; color: #fff; margin-top: 10px; }
+    .status-badge.active { background: var(--accent-emerald); }
+    .status-badge.expired, .status-badge.inactive { background: var(--accent-red); }
+    
+    .lease-details { padding: 1.25rem; }
+    .lease-details h3 { font-size: 1.05rem; margin: 0; color: #fff; font-weight: 700; }
+    .lease-details p { color: var(--text-muted); font-size: 0.85rem; margin: 5px 0 12px 0; }
+    
+    .lease-info-stack { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; font-size: 0.8rem; color: var(--text-muted); }
+    .lease-info-stack span { display: flex; align-items: center; }
+    .lease-info-stack i { width: 14px; height: 14px; margin-right: 8px; opacity: 0.7; }
 
-    .view-switcher { background: #181818; padding: 4px; border-radius: 8px; border: 1px solid #2d2d2d; display: flex; }
-    .view-btn { background: transparent; border: none; color: #a0a0a0; padding: 5px 15px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
-    .view-btn.active { background: #10b981; color: white; }
+    .action-footer { display: flex; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 1rem; }
+    .icon-link { background: #262626; border: none; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; text-decoration: none; flex: 1; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+    .icon-link:hover { background: var(--accent-emerald); }
+    .delete-btn:hover { background: var(--accent-red); }
 
+    .dark-filter, .dark-input { background: var(--bg-surface); border: 1px solid var(--border-color); color: #fff; padding: 8px 15px; border-radius: 8px; outline: none; }
+    .view-switcher { background: var(--bg-surface); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; }
+    .view-btn { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .view-btn.active { background: var(--accent-emerald); color: white; }
+
+    /* Table Styles */
     .dark-table { width: 100%; border-collapse: collapse; }
-    .dark-table th { text-align: left; color: #a0a0a0; font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 1px solid #2d2d2d; }
-    .dark-table td { padding: 15px; border-bottom: 1px solid #2d2d2d; font-size: 0.9rem; }
-    .type-pill { background: #2d2d2d; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+    .dark-table th { text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 1px solid var(--border-color); }
+    .dark-table td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    .status-pill { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; background: #2d2d2d; }
+    .status-pill.active { color: var(--accent-emerald); }
+    .status-pill.expired, .status-pill.inactive { color: var(--accent-red); }
     .hidden { display: none; }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.lucide) { lucide.createIcons(); }
+
     window.toggleView = function(view) {
         const grid = document.getElementById('gridView');
         const table = document.getElementById('tableView');
@@ -219,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gBtn.classList.remove('active');
             tBtn.classList.add('active');
         }
+        lucide.createIcons();
     };
 });
 
