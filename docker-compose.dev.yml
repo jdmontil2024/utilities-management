@@ -1,0 +1,53 @@
+services:
+    app:
+        image: sail-8.3/app
+        container_name: dev-app
+        ports:
+            - "8083:80"
+            - "5175:5175"
+        volumes:
+            - .:/var/www/html
+        networks:
+            - dev-network
+        depends_on:
+            - db
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_DATABASE=utilities_system_dev
+            - DB_USERNAME=sail
+            - DB_PASSWORD=password
+
+    db:
+        image: postgres:15-alpine
+        container_name: dev-db
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: utilities_system_dev
+            POSTGRES_USER: sail
+            POSTGRES_PASSWORD: password
+        volumes:
+            - dev-db-data:/var/lib/postgresql/data
+        networks:
+            - dev-network
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: dev-pgadmin
+        ports:
+            - "8087:80"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        networks:
+            - dev-network
+
+networks:
+    dev-network:
+        driver: bridge
+
+volumes:
+    dev-db-data:

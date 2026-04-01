@@ -1,0 +1,51 @@
+services:
+    app:
+        image: sail-8.3/app
+        container_name: staging-app
+        ports:
+            - "8090:80"
+            - "5176:5175"
+        volumes:
+            - .:/var/www/html
+        networks:
+            - staging-network
+        depends_on:
+            - db
+        environment:
+            - APP_ENV=staging
+            - APP_DEBUG=false
+            - DB_DATABASE=utilities_system_staging
+            - DB_USERNAME=sail
+            - DB_PASSWORD=password
+
+    db:
+        image: postgres:15-alpine
+        container_name: staging-db
+        ports:
+            - "5433:5432"
+        environment:
+            POSTGRES_DB: utilities_system_staging
+            POSTGRES_USER: sail
+            POSTGRES_PASSWORD: password
+        volumes:
+            - staging-db-data:/var/lib/postgresql/data
+        networks:
+            - staging-network
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: staging-pgadmin
+        ports:
+            - "8092:80"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        networks:
+            - staging-network
+
+networks:
+    staging-network:
+        driver: bridge
+
+volumes:
+    staging-db-data:

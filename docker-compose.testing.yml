@@ -1,0 +1,65 @@
+services:
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.3
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP:-1000}'
+        image: sail-8.3/app
+        ports: []
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: 'off'
+            XDEBUG_CONFIG: ''
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail-testing
+        depends_on:
+            pgsql:
+                condition: service_healthy  # Wait for PostgreSQL to be healthy
+        command: >
+          sh -c "while ! pg_isready -h pgsql -U sail -d utilities_system_test; do sleep 1; done &&
+                 php artisan migrate:fresh --seed &&
+                 php artisan test"
+        restart: unless-stopped
+
+    pgsql:
+        image: 'postgres:15-alpine'
+        ports: []
+        environment:
+            POSTGRES_DB: '${DB_DATABASE:-utilities_system_test}'
+            POSTGRES_USER: '${DB_USERNAME:-sail}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-password}'
+        volumes:
+            - 'sail-pgsql-test:/var/lib/postgresql/data'
+        networks:
+            - sail-testing
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-sail} -d ${DB_DATABASE:-utilities_system_test}"]
+            interval: 2s
+            timeout: 5s
+            retries: 10
+        restart: unless-stopped
+
+    pgadmin:
+        image: dpage/pgadmin4
+        profiles: ["never"]
+        ports:
+            - '8093:80'
+        environment:
+            PGADMIN_DEFAULT_EMAIL: '${PGADMIN_EMAIL:-admin@admin.com}'
+            PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_PASSWORD:-root}'
+        networks:
+            - sail-testing
+        depends_on:
+            - pgsql
+
+networks:
+    sail-testing:
+        driver: bridge
+
+volumes:
+    sail-pgsql-test:
+        driver: local
