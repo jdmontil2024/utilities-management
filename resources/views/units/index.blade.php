@@ -108,7 +108,7 @@
                                     Unit {{ $unit->unit_number }}
                                     <span style="color: var(--accent-emerald); font-size: 1rem;">₱{{ number_format($unit->monthly_rent) }}</span>
                                 </h3>
-                                <p>📍 {{ $unit->building->name }}</p>
+                                <p> {{ $unit->building->name }}</p>
                                 
                                 <div class="unit-specs">
                                     <span><i data-lucide="bed" style="width:14px; margin-right:4px;"></i> {{ $unit->bedrooms ?? 0 }} Bed</span>
