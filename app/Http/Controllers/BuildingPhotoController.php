@@ -7,112 +7,154 @@ use App\Models\BuildingPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BuildingPhotoController extends Controller
 {
+    /**
+     * Upload photos for a building
+     */
     public function upload(Request $request, Building $building)
     {
-        $request->validate([
-            'photos.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB
-            'category' => 'required|string|max:50',
-            'description' => 'nullable|string|max:255'
-        ]);
-        
-        $uploadedPhotos = [];
-        
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $file) {
-                // Generate unique filename
-                $filename = 'photo_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        try {
+            $request->validate([
+                'photos.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'category' => 'required|string|max:50',
+                'description' => 'nullable|string|max:255'
+            ]);
+            
+            $uploadedPhotos = [];
+            
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $file) {
+                    $filename = 'photo_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('building_photos', $filename, 'public');
+                    
+                    $photo = BuildingPhoto::create([
+                        'building_id' => $building->id,
+                        'path' => $path,
+                        'filename' => $filename,
+                        'original_name' => $file->getClientOriginalName(),
+                        'category' => $request->category,
+                        'description' => $request->description,
+                        'uploaded_by' => Auth::user()->name ?? 'System',
+                        'is_primary' => false
+                    ]);
+                    
+                    // Add URL for JSON response (DO NOT save to database)
+                    $photoData = $photo->toArray();
+                    $photoData['url'] = asset('storage/' . $path);
+                    $uploadedPhotos[] = (object)$photoData;
+                }
                 
-                // Store file in storage/app/public/building_photos
-                $path = $file->storeAs('building_photos', $filename, 'public');
+                if ($building->photos()->count() === count($uploadedPhotos)) {
+                    $building->photos()->first()->update(['is_primary' => true]);
+                }
                 
-                // Create photo record
-                $photo = BuildingPhoto::create([
-                    'building_id' => $building->id,
-                    'path' => $path,
-                    'filename' => $filename,
-                    'original_name' => $file->getClientOriginalName(),
-                    'category' => $request->category,
-                    'description' => $request->description,
-                    'uploaded_by' => Auth::user()->name,
-                    'is_primary' => false
+                return response()->json([
+                    'success' => true,
+                    'message' => count($uploadedPhotos) . ' photo(s) uploaded successfully!',
+                    'photos' => $uploadedPhotos
                 ]);
-                
-                $uploadedPhotos[] = $photo;
             }
             
-            // If this is the first photo, set it as primary
-            if ($building->photos()->count() === count($uploadedPhotos)) {
-                $uploadedPhotos[0]->update(['is_primary' => true]);
+            return response()->json([
+                'success' => false,
+                'message' => 'No photos were uploaded.'
+            ], 400);
+            
+        } catch (\Exception $e) {
+            Log::error('Photo upload error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Upload failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Set a photo as the primary photo for the building
+     */
+    public function setPrimary(Building $building, BuildingPhoto $photo)
+    {
+        try {
+            if ($photo->building_id !== $building->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Photo not found for this building.'
+                ], 404);
+            }
+            
+            $building->photos()->update(['is_primary' => false]);
+            $photo->update(['is_primary' => true]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Primary photo updated successfully.'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Set primary error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to set primary photo: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Delete a photo
+     */
+    public function destroy(Building $building, BuildingPhoto $photo)
+    {
+        try {
+            if ($photo->building_id !== $building->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Photo not found for this building.'
+                ], 404);
+            }
+            
+            if (Storage::disk('public')->exists($photo->path)) {
+                Storage::disk('public')->delete($photo->path);
+            }
+            
+            $wasPrimary = $photo->is_primary;
+            $photo->delete();
+            
+            if ($wasPrimary && $building->photos()->count() > 0) {
+                $building->photos()->first()->update(['is_primary' => true]);
             }
             
             return response()->json([
                 'success' => true,
-                'message' => count($uploadedPhotos) . ' photo(s) uploaded successfully!',
-                'photos' => $uploadedPhotos
+                'message' => 'Photo deleted successfully.'
             ]);
-        }
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'No photos were uploaded.'
-        ], 400);
-    }
-    
-    public function setPrimary(Building $building, BuildingPhoto $photo)
-    {
-        // Verify photo belongs to building
-        if ($photo->building_id !== $building->id) {
+            
+        } catch (\Exception $e) {
+            Log::error('Delete photo error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Photo not found for this building.'
-            ], 404);
+                'message' => 'Failed to delete photo: ' . $e->getMessage()
+            ], 500);
         }
-        
-        // Update all photos to not primary
-        $building->photos()->update(['is_primary' => false]);
-        
-        // Set this photo as primary
-        $photo->update(['is_primary' => true]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Primary photo updated successfully.'
-        ]);
     }
     
-    public function destroy(Building $building, BuildingPhoto $photo)
-    {
-        // Verify photo belongs to building
-        if ($photo->building_id !== $building->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Photo not found for this building.'
-            ], 404);
-        }
-        
-        // Delete file from storage
-        Storage::disk('public')->delete($photo->path);
-        
-        // Delete record from database
-        $photo->delete();
-        
-        // If this was the primary photo and there are other photos, set a new primary
-        if ($photo->is_primary && $building->photos()->count() > 0) {
-            $building->photos()->first()->update(['is_primary' => true]);
-        }
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Photo deleted successfully.'
-        ]);
-    }
-    
+    /**
+     * Get all photos for a building
+     */
     public function index(Building $building)
     {
         $photos = $building->photos()->latest()->get();
+        
+        // Add URL for JSON response
+        $photoData = [];
+        foreach ($photos as $photo) {
+            $data = $photo->toArray();
+            $data['url'] = asset('storage/' . $photo->path);
+            $photoData[] = (object)$data;
+        }
+        
         $categoryLabels = [
             'exterior' => 'Exterior',
             'lobby' => 'Lobby',
@@ -125,11 +167,11 @@ class BuildingPhotoController extends Controller
         if (request()->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'photos' => $photos
+                'photos' => $photoData,
+                'categoryLabels' => $categoryLabels
             ]);
         }
         
-        // Return HTML for AJAX reload
         return view('partials.building-photos', compact('photos', 'categoryLabels', 'building'));
     }
 }

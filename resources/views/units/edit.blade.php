@@ -4,247 +4,255 @@
 
 @push('styles')
 <style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { 
+        padding-bottom: 1.5rem; 
+        margin-bottom: 2rem; 
+        border-bottom: 1px solid var(--border-color);
+    }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
     /* FORM CONTAINER */
     .form-container {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        max-width: 800px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 900px;
         margin: 0 auto;
-        border: 1px solid #dee2e6;
     }
 
+    /* FORM SECTIONS */
     .form-section {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 2rem;
     }
-
+    
     .section-title {
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
+    /* FORM GROUPS */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
     }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #2c3e50;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: border-color 0.3s;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-    }
-
+    
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
     }
-
-    .form-textarea {
-        min-height: 100px;
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-label .required {
+        color: var(--accent-red);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
+    }
+    
+    .form-control.error {
+        border-color: var(--accent-red);
+    }
+    
+    textarea.form-control {
         resize: vertical;
+        min-height: 100px;
     }
-
+    
+    select.form-control {
+        cursor: pointer;
+    }
+    
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-main);
+    }
+    
+    /* CHECKBOX GROUP */
     .checkbox-group {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 10px;
-        margin-top: 10px;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
     }
-
+    
+    .feature-checkbox {
+        background: var(--bg-surface);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .feature-checkbox:hover {
+        border-color: var(--accent-emerald);
+    }
+    
     .checkbox-label {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--text-main);
     }
-
+    
     .checkbox-label input[type="checkbox"] {
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: var(--accent-emerald);
     }
-
-    /* BUTTONS */
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: none;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: #4a5568;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #2d3748;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-primary:disabled {
-        background: #95a5a6;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    .btn-secondary {
-        background: #718096;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #4a5568;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-danger {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #c0392b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
-    }
-
-    .required {
-        color: #e74c3c;
-    }
-
-    .help-text {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-    }
-
-    .error-message {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    .feature-checkbox {
-        background: #f8f9fa;
-        padding: 12px;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
-        transition: all 0.2s;
-    }
-
-    .feature-checkbox:hover {
-        background: #e9ecef;
-    }
-
-    /* Currency input styling */
+    
+    /* CURRENCY INPUT */
     .currency-input {
         display: flex;
         align-items: center;
     }
-
+    
     .currency-prefix {
-        padding: 10px 15px;
-        background: #f8f9fa;
-        border: 1px solid #ddd;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
         border-right: none;
-        border-radius: 4px 0 0 4px;
+        border-radius: 6px 0 0 6px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+    
+    .currency-input .form-control {
+        border-radius: 0 6px 6px 0;
+    }
+    
+    /* HELP TEXT & ERRORS */
+    .help-text {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+    
+    .error-message {
+        font-size: 0.65rem;
+        color: var(--accent-red);
+        margin-top: 0.35rem;
+    }
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
         font-family: 'Inter', sans-serif;
     }
-
-    .currency-input .form-control {
-        border-radius: 0 4px 4px 0;
+    
+    .btn:hover:not(:disabled) {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
     }
-
-    /* Error styling */
-    .form-control.error {
-        border-color: #e74c3c;
+    
+    .btn-primary {
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
+        color: white;
     }
-
-    /* Responsive */
+    
+    .btn-primary:hover:not(:disabled) {
+        background: #0d9668;
+        border-color: #0d9668;
+        color: white;
+    }
+    
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+        background: var(--bg-surface);
+        border-color: var(--border-color);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .form-container {
-            padding: 20px;
-        }
-
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .checkbox-group {
-            grid-template-columns: 1fr;
-        }
-
-        .form-actions {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .form-container { padding: 1.25rem; }
+        .form-row { grid-template-columns: 1fr; gap: 1rem; }
+        .form-actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .checkbox-group { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">🚪 Edit Unit {{ $unit->unit_number }}</h1>
+            <h1 class="page-title">Edit Unit {{ $unit->unit_number }}</h1>
             <p class="page-subtitle">Update the details for this unit</p>
         </div>
     </div>
@@ -253,9 +261,9 @@
     <div class="form-container">
         <!-- Display validation errors -->
         @if ($errors->any())
-            <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #f5c6cb;">
-                <strong>Please fix the following errors:</strong>
-                <ul style="margin-top: 10px; margin-bottom: 0; padding-left: 20px;">
+            <div class="validation-status error" style="margin-bottom: 1.25rem; display: flex; flex-direction: column; align-items: flex-start;">
+                <strong>⚠️ Please fix the following errors:</strong>
+                <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.25rem;">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -270,8 +278,7 @@
             <!-- Building Selection -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🏢</div>
-                    <span>Building Selection</span>
+                    Building Selection
                 </div>
                 
                 <div class="form-group">
@@ -293,8 +300,7 @@
             <!-- Unit Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📋</div>
-                    <span>Unit Information</span>
+                    Unit Information
                 </div>
                 
                 <div class="form-row">
@@ -401,8 +407,7 @@
             <!-- Features & Amenities -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🎯</div>
-                    <span>Features & Amenities</span>
+                    Features & Amenities
                 </div>
                 
                 <div class="form-group">
@@ -510,8 +515,7 @@
             <!-- Financial Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>💰</div>
-                    <span>Financial Information</span>
+                    Financial Information
                 </div>
                 
                 <div class="form-row">
@@ -585,8 +589,7 @@
             <!-- Additional Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📝</div>
-                    <span>Additional Information</span>
+                    Additional Information
                 </div>
                 
                 <div class="form-group">
@@ -621,6 +624,16 @@
         </form>
     </div>
 </div>
+
+<style>
+    .validation-status.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+    }
+</style>
 @endsection
 
 @push('scripts')
@@ -667,7 +680,11 @@
                 
                 if (!isValid) {
                     e.preventDefault();
-                    Utilities.showToast('Please fill in all required fields', 'error');
+                    if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                        Utilities.showToast('Please fill in all required fields', 'error');
+                    } else {
+                        alert('Please fill in all required fields');
+                    }
                     return;
                 }
                 
@@ -675,7 +692,6 @@
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = 'Updating...';
-                    submitBtn.style.opacity = '0.7';
                 }
             });
         }

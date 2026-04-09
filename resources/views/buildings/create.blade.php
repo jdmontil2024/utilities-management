@@ -4,217 +4,231 @@
 
 @push('styles')
 <style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { 
+        padding-bottom: 1.5rem; 
+        margin-bottom: 2rem; 
+        border-bottom: 1px solid var(--border-color);
+    }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
     /* FORM CONTAINER */
     .form-container {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        max-width: 800px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 900px;
         margin: 0 auto;
-        border: 1px solid #dee2e6;
     }
 
+    /* FORM SECTIONS */
     .form-section {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 2rem;
     }
-
+    
     .section-title {
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
+    /* FORM GROUPS */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
     }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #2c3e50;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: border-color 0.3s;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-    }
-
+    
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
     }
-
-    .form-textarea {
-        min-height: 100px;
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-label .required {
+        color: var(--accent-red);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
+    }
+    
+    .form-control.error {
+        border-color: var(--accent-red);
+    }
+    
+    textarea.form-control {
         resize: vertical;
+        min-height: 100px;
     }
-
+    
+    select.form-control {
+        cursor: pointer;
+    }
+    
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-main);
+    }
+    
+    /* CHECKBOX GROUP */
     .checkbox-group {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
-        margin-top: 10px;
+        gap: 1rem;
+        margin-top: 0.5rem;
     }
-
+    
+    .feature-checkbox {
+        background: var(--bg-surface);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .feature-checkbox:hover {
+        border-color: var(--accent-emerald);
+    }
+    
     .checkbox-label {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--text-main);
     }
-
+    
     .checkbox-label input[type="checkbox"] {
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: var(--accent-emerald);
     }
-
+    
+    /* HELP TEXT & ERRORS */
+    .help-text {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+    
+    .error-message {
+        font-size: 0.65rem;
+        color: var(--accent-red);
+        margin-top: 0.35rem;
+    }
+    
     /* BUTTONS */
     .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: none;
-        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
         font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
         cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
     }
-
+    
+    .btn:hover {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
+    }
+    
     .btn-primary {
-        background: #4a5568;
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
         color: white;
     }
-
+    
     .btn-primary:hover {
-        background: #2d3748;
+        background: #0d9668;
+        border-color: #0d9668;
         color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
     }
-
+    
     .btn-secondary {
-        background: #718096;
-        color: white;
+        background: var(--bg-surface);
+        border-color: var(--border-color);
     }
-
-    .btn-secondary:hover {
-        background: #4a5568;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-danger {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #c0392b;
-    }
-
+    
     .form-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 10px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
+        gap: 1rem;
+        margin-top: 2rem;
     }
-
-    .required {
-        color: #e74c3c;
-    }
-
-    .help-text {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-    }
-
-    .error {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-        display: none;
-    }
-
-    .feature-checkbox {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
-    }
-
-    /* Error styling */
-    .form-control.error {
-        border-color: #e74c3c;
-    }
-
-    .error-message {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    /* Responsive */
+    
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .form-container {
-            padding: 20px;
-        }
-
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .form-actions {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .form-container { padding: 1.25rem; }
+        .form-row { grid-template-columns: 1fr; gap: 1rem; }
+        .form-actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .checkbox-group { flex-direction: column; }
+        .feature-checkbox { width: 100%; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">🏢 Create New Building</h1>
+            <h1 class="page-title">Create New Building</h1>
             <p class="page-subtitle">Fill in the details below to add a new building to your portfolio</p>
         </div>
     </div>
@@ -227,8 +241,7 @@
             <!-- Basic Information Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📋</div>
-                    <span>Basic Information</span>
+                    Basic Information
                 </div>
                 
                 <div class="form-group">
@@ -282,8 +295,7 @@
             <!-- Address Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📍</div>
-                    <span>Address Information</span>
+                    Address Information
                 </div>
                 
                 <div class="form-group">
@@ -344,8 +356,7 @@
             <!-- Building Specifications -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📐</div>
-                    <span>Building Specifications</span>
+                    Building Specifications
                 </div>
                 
                 <div class="form-row">
@@ -425,8 +436,7 @@
             <!-- Contact Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📞</div>
-                    <span>Contact Information</span>
+                    Contact Information
                 </div>
                 
                 <div class="form-row">
@@ -510,7 +520,7 @@
                         field.classList.add('error');
                         
                         // Add error message if not exists
-                        let errorMsg = field.parentNode.querySelector('.error-message');
+                        let errorMsg = field.parentNode.querySelector('.error-message:not(.server-error)');
                         if (!errorMsg) {
                             errorMsg = document.createElement('div');
                             errorMsg.className = 'error-message';
@@ -528,7 +538,11 @@
                 
                 if (!isValid) {
                     e.preventDefault();
-                    Utilities.showToast('Please fill in all required fields', 'error');
+                    if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                        Utilities.showToast('Please fill in all required fields', 'error');
+                    } else {
+                        alert('Please fill in all required fields');
+                    }
                     
                     // Scroll to first error
                     const firstError = form.querySelector('.error');

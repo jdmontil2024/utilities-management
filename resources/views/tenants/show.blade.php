@@ -4,325 +4,357 @@
 
 @push('styles')
 <style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+        --accent-pink: #ec4899;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
     /* TENANT HEADER */
     .tenant-header {
-        background: white;
-        color: #2c3e50;
-        padding: 30px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
     }
-
-    .tenant-title {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #2c3e50;
-    }
-
-    .tenant-location {
-        font-size: 15px;
-        color: #6c757d;
-        margin-bottom: 20px;
-    }
-
-    .tenant-location a {
-        color: #4a5568;
-        text-decoration: none;
-    }
-
-    .tenant-location a:hover {
-        color: #2d3748;
-        text-decoration: underline;
-    }
-
-    .tenant-meta {
-        display: flex;
-        gap: 15px;
-        font-size: 14px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    .meta-item {
-        background: #f8f9fa;
-        padding: 8px 15px;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
-    }
-
+    
     .header-content {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 1.5rem;
     }
-
-    .header-left {
-        flex: 1;
-        min-width: 300px;
+    
+    .header-left { flex: 1; min-width: 280px; }
+    
+    .tenant-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        color: var(--text-main);
     }
-
+    
+    .tenant-location {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .tenant-location a {
+        color: var(--accent-emerald);
+        text-decoration: none;
+    }
+    
+    .tenant-location a:hover {
+        text-decoration: underline;
+    }
+    
+    .tenant-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+    
+    .meta-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
+    }
+    
     /* STATS GRID */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
-
+    
     .stat-card {
-        background: white;
-        border-radius: 8px;
-        padding: 25px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
         text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
     }
-
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+        transition: left 0.3s ease;
+    }
+    
+    .stat-card:hover::before {
+        left: 100%;
+        animation: pulse 1.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0; left: -100%; }
+        50% { opacity: 1; left: 0%; }
+        100% { opacity: 0; left: 100%; }
+    }
+    
+    .stat-card:hover {
+        border-color: var(--accent-emerald);
+        transform: translateY(-3px);
+    }
+    
     .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #2c3e50;
         display: block;
-        margin-bottom: 10px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 0.5rem;
     }
-
+    
     .stat-label {
-        font-size: 13px;
-        color: #6c757d;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 500;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
     }
-
+    
     /* TAB CONTAINER */
     .tab-container {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
-        margin-bottom: 40px;
+        margin-bottom: 2rem;
     }
-
+    
     .tab-header {
         display: flex;
-        border-bottom: 1px solid #dee2e6;
-        background: #f8f9fa;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-surface);
         overflow-x: auto;
     }
-
+    
     .tab-button {
-        padding: 18px 30px;
-        border: none;
+        padding: 1rem 1.75rem;
         background: none;
+        border: none;
         cursor: pointer;
         font-weight: 500;
-        color: #6c757d;
+        color: var(--text-muted);
         transition: all 0.3s ease;
         border-bottom: 3px solid transparent;
-        white-space: nowrap;
-        font-size: 14px;
+        font-size: 0.85rem;
         font-family: 'Inter', sans-serif;
+        white-space: nowrap;
     }
-
+    
     .tab-button:hover {
-        background: #e9ecef;
-        color: #495057;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
     }
-
+    
     .tab-button.active {
-        color: #4a5568;
-        border-bottom-color: #4a5568;
-        background: white;
-        font-weight: 600;
+        color: var(--accent-emerald);
+        border-bottom-color: var(--accent-emerald);
     }
-
+    
     .tab-content {
-        padding: 30px;
+        padding: 1.75rem;
     }
-
+    
     .tab-pane {
         display: none;
     }
-
+    
     .tab-pane.active {
         display: block;
+        animation: fadeIn 0.3s ease;
     }
-
-    /* OVERVIEW GRID - 4-box layout */
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* OVERVIEW GRID */
     .overview-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
     }
-
+    
     .overview-box {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         height: fit-content;
     }
-
+    
     .overview-box-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        font-weight: 700;
-        color: #2c3e50;
-        font-size: 16px;
-        text-align: center;
-        letter-spacing: 0.3px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.9rem;
     }
-
+    
     .overview-box-content {
-        padding: 20px;
+        padding: 1.25rem;
         flex: 1;
     }
-
+    
     .info-item {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
-
+    
     .info-item:last-child {
         margin-bottom: 0;
         padding-bottom: 0;
         border-bottom: none;
     }
-
+    
     .info-label {
-        font-size: 12px;
-        color: #6c757d;
+        font-size: 0.7rem;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.3px;
-        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
     }
-
+    
     .info-value {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        word-break: break-word;
-    }
-
-    .info-value-sm {
-        font-size: 13px;
+        font-size: 0.9rem;
         font-weight: 500;
-        color: #495057;
-    }
-
-    .description-text {
-        color: #2c3e50;
-        font-size: 14px;
-        line-height: 1.8;
-        margin: 0;
+        color: var(--text-main);
         word-break: break-word;
     }
-
-    /* Responsive for overview grid */
-    @media (max-width: 992px) {
-        .overview-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    
+    .info-value-sm {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: var(--text-muted);
     }
-
-    @media (max-width: 576px) {
-        .overview-grid {
-            grid-template-columns: 1fr;
-        }
+    
+    .description-text {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin: 0;
     }
-
-    /* BADGES - No background */
+    
+    /* BADGES */
     .badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.7rem;
         font-weight: 500;
         text-align: center;
-        min-width: 100px;
         background: transparent;
         border: 1px solid;
+        min-width: 90px;
     }
-
+    
     .badge-success {
-        border-color: #155724;
-        color: #155724;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
+    
     .badge-warning {
-        border-color: #856404;
-        color: #856404;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
+    
     .badge-danger {
-        border-color: #721c24;
-        color: #721c24;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
+    
     .badge-secondary {
-        border-color: #495057;
-        color: #495057;
+        border-color: #6c757d;
+        color: #6c757d;
     }
-
+    
     .badge-info {
-        border-color: #0c5460;
-        color: #0c5460;
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
     }
-
+    
     /* STATUS BADGES for maintenance */
     .status-badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.7rem;
         font-weight: 500;
         text-align: center;
-        min-width: 100px;
         background: transparent;
         border: 1px solid;
+        min-width: 100px;
     }
-
+    
     .status-submitted {
-        border-color: #2c3e50;
-        color: #2c3e50;
+        border-color: var(--text-muted);
+        color: var(--text-muted);
     }
-
+    
     .status-assigned {
-        border-color: #856404;
-        color: #856404;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
+    
     .status-in_progress {
-        border-color: #004085;
-        color: #004085;
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
     }
-
+    
     .status-completed {
-        border-color: #155724;
-        color: #155724;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
+    
     .status-cancelled {
-        border-color: #721c24;
-        color: #721c24;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
+    
     /* PRIORITY BADGES */
     .priority-emergency {
-        border-color: #e74c3c;
-        color: #e74c3c;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
     
     .priority-high {
@@ -331,277 +363,247 @@
     }
     
     .priority-medium {
-        border-color: #f39c12;
-        color: #f39c12;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
     
     .priority-low {
-        border-color: #27ae60;
-        color: #27ae60;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
-    /* Overdue badge */
+    
     .overdue-badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 0.2rem 0.6rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.65rem;
         font-weight: 500;
-        text-align: center;
-        min-width: 70px;
-        border: 1px solid #e74c3c;
-        color: #e74c3c;
-        margin-left: 5px;
+        margin-left: 0.5rem;
+        border: 1px solid var(--accent-red);
+        color: var(--accent-red);
     }
-
-    /* Previous Unit Badge */
+    
     .previous-unit-badge {
         display: inline-block;
-        padding: 2px 8px;
+        padding: 0.15rem 0.5rem;
         border-radius: 12px;
-        font-size: 10px;
+        font-size: 0.6rem;
         font-weight: 500;
-        margin-left: 5px;
-        border: 1px solid #e67e22;
-        color: #e67e22;
-        background: transparent;
+        margin-left: 0.5rem;
+        border: 1px solid var(--accent-warning);
+        color: var(--accent-warning);
     }
-
+    
+    .days-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        border: 1px solid;
+    }
+    
+    .days-warning {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    
+    .days-danger {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
+    
+    .days-success {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    
+    /* FEATURES */
+    .features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .feature-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent-emerald);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        border: 1px solid var(--border-color);
+    }
+    
     /* BUTTONS */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: 1px solid #4a5568;
-        font-size: 14px;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
         font-weight: 500;
-        cursor: pointer;
+        color: var(--text-main);
         text-decoration: none;
-        transition: all 0.3s ease;
+        cursor: pointer;
+        transition: all 0.2s ease;
         font-family: 'Inter', sans-serif;
-        background: transparent;
-        color: #4a5568;
     }
-
+    
     .btn:hover {
-        background: #4a5568;
-        color: white;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
     }
-
+    
     .btn-sm {
-        padding: 6px 12px;
-        font-size: 12px;
-        border: 1px solid #4a5568;
-        background: transparent;
-        color: #4a5568;
-        border-radius: 4px;
-        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
         text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        line-height: 1;
-        height: 32px;
+        gap: 0.3rem;
     }
-
+    
     .btn-sm:hover {
-        background: #4a5568;
-        color: white;
-        text-decoration: none;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
-    .btn-danger {
-        border: 1px solid #2d3748;
-        color: #2d3748;
-    }
-
-    .btn-danger:hover {
-        background: #2d3748;
-        color: white;
-    }
-
+    
     .action-buttons {
         display: flex;
-        gap: 10px;
+        gap: 0.75rem;
         flex-wrap: wrap;
     }
-
-    /* Dropdown */
+    
+    /* DROPDOWN */
     .dropdown {
         position: relative;
         display: inline-block;
     }
-
+    
     .dropdown-menu {
         position: absolute;
         top: 100%;
         right: 0;
         z-index: 1000;
         display: none;
-        min-width: 220px;
-        padding: 8px 0;
-        margin-top: 5px;
-        background: white;
-        border-radius: 6px;
-        box-shadow: 0 8px 16px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        min-width: 200px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        margin-top: 0.25rem;
     }
-
+    
     .dropdown-menu.show {
         display: block;
     }
-
+    
     .dropdown-item {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        color: #2c3e50;
+        gap: 0.5rem;
+        padding: 0.6rem 1rem;
+        color: var(--text-main);
         text-decoration: none;
-        font-size: 14px;
+        font-size: 0.8rem;
         transition: all 0.2s ease;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
     }
-
+    
     .dropdown-item:hover {
-        background: #f8f9fa;
-        text-decoration: none;
-        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent-emerald);
     }
-
+    
     .dropdown-item.text-danger:hover {
-        background: #fef2f2;
-        color: #dc3545;
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--accent-red);
     }
-
+    
     .dropdown-divider {
-        margin: 8px 0;
+        margin: 0.5rem 0;
         border: 0;
-        border-top: 1px solid #dee2e6;
-    }
-
-    /* FEATURES */
-    .features-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 15px;
-    }
-
-    .feature-tag {
-        background: transparent;
-        color: #4a5568;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        border: 1px solid #4a5568;
-    }
-
-    /* DAYS BADGE - No background */
-    .days-badge {
-        display: inline-block;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-left: 10px;
-        background: transparent;
-        border: 1px solid;
+        border-top: 1px solid var(--border-color);
     }
     
-    .days-warning {
-        border-color: #856404;
-        color: #856404;
-    }
-    
-    .days-danger {
-        border-color: #721c24;
-        color: #721c24;
-    }
-    
-    .days-success {
-        border-color: #155724;
-        color: #155724;
-    }
-
     /* TABLES */
     .maintenance-table-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
         overflow-x: auto;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
+        margin-top: 1rem;
     }
-
+    
     .maintenance-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 1000px;
+        min-width: 900px;
     }
-
+    
     .maintenance-table th {
-        background: #f8f9fa;
-        padding: 18px 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        border: 1px solid #dee2e6;
-        font-size: 14px;
-        white-space: nowrap;
-        text-align: center;
-    }
-
-    .maintenance-table td {
-        padding: 16px 15px;
-        border: 1px solid #e9ecef;
-        vertical-align: middle;
-        font-size: 14px;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .maintenance-table td:nth-child(1) {
+        padding: 1rem;
         text-align: left;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.02);
     }
-
-    .maintenance-table tbody tr:hover td {
-        background: #f8f9fa;
-        border-color: #cfe2ff;
+    
+    .maintenance-table td {
+        padding: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
     }
-
+    
+    .maintenance-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    
     /* NO DATA */
     .no-data {
         text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: white;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
     }
-
+    
     .no-data h3 {
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+        font-weight: 500;
     }
-
-    .no-data p {
-        margin-bottom: 20px;
-        color: #6c757d;
-    }
-
+    
     .no-data-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        opacity: 0.3;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
     }
-
+    
     /* MODAL */
     .modal {
         display: none;
@@ -610,274 +612,142 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,.5);
+        background: rgba(0, 0, 0, 0.95);
         z-index: 10000;
         align-items: center;
         justify-content: center;
     }
-
+    
     .modal.show {
         display: flex;
     }
-
+    
     .modal-content {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         width: 90%;
         max-width: 800px;
         max-height: 90vh;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,.2);
-        animation: modalSlideIn 0.3s ease;
     }
-
+    
     .modal-header {
-        padding: 20px 30px;
-        border-bottom: 1px solid #dee2e6;
+        padding: 1rem 1.5rem;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-
+    
     .modal-title {
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text-main);
         margin: 0;
     }
-
-    .modal-body {
-        padding: 20px;
-        max-height: calc(90vh - 140px);
-        overflow: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-footer {
-        padding: 20px 30px;
-        border-top: 1px solid #dee2e6;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .btn-close {
+    
+    .modal-close, .btn-close {
         background: none;
         border: none;
-        font-size: 24px;
+        font-size: 1.5rem;
         cursor: pointer;
-        color: #6c757d;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
         padding: 0;
         width: 30px;
         height: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 4px;
     }
-
-    .btn-close:hover {
-        background: #f8f9fa;
-        color: #2c3e50;
+    
+    .modal-close:hover, .btn-close:hover {
+        color: var(--accent-emerald);
     }
-
+    
+    .modal-body {
+        padding: 1.5rem;
+        max-height: calc(90vh - 70px);
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+    
     /* FORM CONTROLS */
     .form-label {
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
         font-weight: 500;
-        color: #2c3e50;
-        font-size: 14px;
+        color: var(--text-main);
+        font-size: 0.8rem;
     }
-
+    
     .form-control {
         width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        font-size: 14px;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.8rem;
         font-family: 'Inter', sans-serif;
-        transition: all 0.3s ease;
+        color: var(--text-main);
+        transition: all 0.2s ease;
     }
-
+    
     .form-control:focus {
         outline: none;
-        border-color: #4a5568;
-        box-shadow: 0 0 0 3px rgba(74,85,104,0.1);
+        border-color: var(--accent-emerald);
     }
-
+    
     textarea.form-control {
         resize: vertical;
-        min-height: 120px;
+        min-height: 100px;
     }
-
-    /* DOCUMENT MODAL */
-    #documentViewerContainer {
-        width: 100%;
-        min-height: 400px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    #documentContent img {
-        max-width: 100%;
-        max-height: 70vh;
-        object-fit: contain;
-        border-radius: 4px;
-    }
-
-    #documentContent embed,
-    #documentContent iframe {
-        width: 100%;
-        height: 70vh;
-        border: none;
-        border-radius: 4px;
-    }
-
-    #documentLoadingSpinner {
-        text-align: center;
-        padding: 40px;
-    }
-
-    .spinner {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #4a5568;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    /* UTILITY CLASSES */
-    .text-muted {
-        color: #6c757d;
-    }
-
-    .fw-bold {
-        font-weight: 600;
-    }
-
-    .small {
-        font-size: 12px;
-    }
-
-    .mb-0 {
-        margin-bottom: 0;
-    }
-
-    .mt-3 {
-        margin-top: 15px;
-    }
-
+    
     .mb-3 {
-        margin-bottom: 15px;
+        margin-bottom: 1rem;
     }
-
-    .me-2 {
-        margin-right: 8px;
+    
+    /* UTILITY */
+    .text-muted {
+        color: var(--text-muted);
     }
-
-    .me-3 {
-        margin-right: 15px;
+    
+    .mt-3 {
+        margin-top: 1rem;
     }
-
-    .ms-auto {
-        margin-left: auto;
-    }
-
-    .bg-light {
-        background: #f8f9fa;
-    }
-
-    .p-3 {
-        padding: 15px;
-    }
-
-    .rounded {
-        border-radius: 6px;
-    }
-
+    
     /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .tenant-header {
-            padding: 25px;
-        }
-        
-        .tenant-title {
-            font-size: 24px;
-        }
-        
-        .header-content {
-            flex-direction: column;
-        }
-        
-        .action-buttons {
-            width: 100%;
-            justify-content: flex-start;
-        }
-        
-        .btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
-        }
-        
-        .tenant-meta {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .tab-button {
-            padding: 15px 20px;
-            font-size: 13px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .maintenance-table {
-            min-width: 900px;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .tab-content { padding: 1rem; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .action-buttons { width: 100%; justify-content: flex-start; }
+        .overview-grid { grid-template-columns: 1fr; }
+        .tenant-meta { flex-direction: column; gap: 0.5rem; }
+        .days-badge { margin-left: 0; }
+        .maintenance-table { min-width: 750px; }
     }
-
-    @media (max-width: 576px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .tab-button {
-            padding: 12px 15px;
-            font-size: 12px;
-        }
-        
-        .tab-content {
-            padding: 20px;
-        }
+    
+    @media (max-width: 480px) {
+        .stats-grid { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
             <h1 class="page-title">Tenant Details</h1>
@@ -1025,7 +895,7 @@
         </div>
         
         <div class="tab-content">
-            <!-- Overview Tab - 4-box layout with internal note in 4th box -->
+            <!-- Overview Tab -->
             <div class="tab-pane active" id="overview">
                 <div class="overview-grid">
                     <!-- Box 1: Emergency Contact -->
@@ -1101,7 +971,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                <div class="feature-tag" style="margin-top: 10px;">
+                                <div class="feature-tag" style="margin-top: 0.5rem;">
                                     Total: {{ $tenant->number_of_occupants }} occupants
                                 </div>
                             @else
@@ -1118,9 +988,9 @@
                         <div class="overview-box-content">
                             @if($tenant->notes)
                                 <div class="info-item" style="border-bottom: none;">
-                                    <div class="info-value" style="color: #856404; line-height: 1.6;">{{ $tenant->notes }}</div>
+                                    <div class="info-value" style="color: var(--accent-warning); line-height: 1.6;">{{ $tenant->notes }}</div>
                                 </div>
-                                <div style="margin-top: 15px; color: #6c757d; font-size: 11px; text-align: right;">
+                                <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.65rem; text-align: right;">
                                     Last updated: {{ $tenant->updated_at ? $tenant->updated_at->format('M d, Y h:i A') : 'N/A' }}
                                 </div>
                             @else
@@ -1171,7 +1041,7 @@
                         <div class="overview-box-content">
                             <div class="info-item">
                                 <div class="info-label">Monthly Rent</div>
-                                <div class="info-value" style="font-size: 20px; color: #4a5568;">₱{{ number_format($tenant->monthly_rent ?? 0, 2) }}</div>
+                                <div class="info-value" style="font-size: 1.25rem; color: var(--accent-emerald);">₱{{ number_format($tenant->monthly_rent ?? 0, 2) }}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Security Deposit</div>
@@ -1182,11 +1052,11 @@
 
                     <!-- Box 3: Lease Expiry Alert -->
                     @if($tenant->lease_status === 'active' && $daysLeft <= 30 && $daysLeft > 0)
-                    <div class="overview-box" style="background: #fff3cd;">
-                        <div class="overview-box-header" style="background: #ffeaa7;">Lease Expiry Alert</div>
+                    <div class="overview-box" style="border-color: var(--accent-warning);">
+                        <div class="overview-box-header" style="color: var(--accent-warning);">Lease Expiry Alert</div>
                         <div class="overview-box-content">
                             <div class="info-item">
-                                <div class="info-value" style="color: #856404; text-align: center; font-size: 16px;">
+                                <div class="info-value" style="color: var(--accent-warning); text-align: center; font-size: 0.9rem;">
                                     ⚠️ Lease expires in <strong>{{ $daysLeft }} days</strong>
                                 </div>
                             </div>
@@ -1200,7 +1070,7 @@
                         <div class="overview-box-header">Lease Agreement</div>
                         <div class="overview-box-content" style="text-align: center;">
                             <div class="info-item">
-                                <span style="font-size: 48px; display: block; margin-bottom: 15px;">📄</span>
+                                <span style="font-size: 2.5rem; display: block; margin-bottom: 0.75rem;">📄</span>
                                 <a href="{{ Storage::url($tenant->lease_agreement_path) }}" target="_blank" class="btn btn-sm">
                                     View Agreement
                                 </a>
@@ -1211,9 +1081,9 @@
                 </div>
 
                 <!-- Lease History -->
-                <div style="margin-top: 30px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; color: #2c3e50;">Lease History</h3>
+                <div style="margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Lease History</h3>
                         <a href="{{ route('tenants.lease-history', $tenant) }}" class="btn btn-sm">
                             View Full History
                         </a>
@@ -1252,7 +1122,7 @@
                             </table>
                         </div>
                     @else
-                        <div class="no-data" style="padding: 40px 20px;">
+                        <div class="no-data" style="padding: 2rem;">
                             <div class="no-data-icon">📋</div>
                             <h3>No Lease History</h3>
                             <p>Previous leases will appear here</p>
@@ -1279,7 +1149,7 @@
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Unit Number</div>
-                                <div class="info-value" style="font-size: 20px;">{{ $tenant->unit->unit_number }}</div>
+                                <div class="info-value" style="font-size: 1.25rem;">{{ $tenant->unit->unit_number }}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Floor</div>
@@ -1327,7 +1197,7 @@
                     </div>
                     @endif
 
-                    <!-- Box 4: View Unit -->
+                    <!-- Box 4: Actions -->
                     <div class="overview-box">
                         <div class="overview-box-header">Actions</div>
                         <div class="overview-box-content" style="text-align: center;">
@@ -1350,10 +1220,10 @@
 
             <!-- Maintenance Tab -->
             <div class="tab-pane" id="maintenance">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
                     <div>
-                        <h3 style="font-size: 18px; color: #2c3e50; margin-bottom: 5px;">Maintenance Requests</h3>
-                        <p style="color: #6c757d; font-size: 13px;">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Maintenance Requests</h3>
+                        <p style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.25rem;">
                             Showing maintenance requests for all units this tenant has occupied
                         </p>
                     </div>
@@ -1382,12 +1252,12 @@
                             @foreach($maintenanceRequests as $request)
                             <tr>
                                 <td>
-                                    <a href="{{ route('maintenance-requests.show', $request) }}" style="color: #4a5568; text-decoration: none; font-weight: 500; display: block;">
+                                    <a href="{{ route('maintenance-requests.show', $request) }}" style="color: var(--accent-emerald); text-decoration: none; font-weight: 500; display: block;">
                                         {{ Str::limit($request->title, 25) }}
                                     </a>
                                     @if($request->unit)
-                                        <span style="color: #6c757d; font-size: 11px; display: block; margin-top: 2px;">
-                                            <a href="{{ route('units.show', $request->unit) }}" style="color: #6c757d; text-decoration: none;">
+                                        <span style="color: var(--text-muted); font-size: 0.65rem; display: block; margin-top: 0.25rem;">
+                                            <a href="{{ route('units.show', $request->unit) }}" style="color: var(--text-muted); text-decoration: none;">
                                                 Unit {{ $request->unit->unit_number }}
                                             </a>
                                             @if($request->unit->id != $tenant->unit_id)
@@ -1436,11 +1306,11 @@
                                     @elseif($request->assignedStaff)
                                         <span>{{ $request->assignedStaff->name }}</span>
                                     @else
-                                        <span style="color: #6c757d;">Unassigned</span>
+                                        <span style="color: var(--text-muted);">Unassigned</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
                                         <a href="{{ route('maintenance-requests.show', $request) }}" class="btn-sm">
                                             View
                                         </a>
@@ -1453,7 +1323,7 @@
                 </div>
                 
                 @if($tenant->unit && method_exists($tenant->unit, 'maintenanceRequests') && $tenant->unit->maintenanceRequests()->count() > 10)
-                <div style="text-align: center; margin-top: 20px;">
+                <div style="text-align: center; margin-top: 1.25rem;">
                     <a href="{{ route('maintenance-requests.index', ['unit_id' => $tenant->unit_id]) }}" class="btn">
                         View All Maintenance Requests
                     </a>
@@ -1466,7 +1336,7 @@
                     <h3>No Maintenance Requests</h3>
                     <p>This tenant hasn't submitted any maintenance requests yet</p>
                     @if($tenant->unit)
-                    <a href="{{ route('maintenance-requests.create', ['tenant_id' => $tenant->id, 'unit_id' => $tenant->unit_id]) }}" class="btn" style="margin-top: 15px;">
+                    <a href="{{ route('maintenance-requests.create', ['tenant_id' => $tenant->id, 'unit_id' => $tenant->unit_id]) }}" class="btn" style="margin-top: 1rem;">
                         Create First Request
                     </a>
                     @endif
@@ -1482,7 +1352,7 @@
                     <div class="overview-box">
                         <div class="overview-box-header">Identification Document</div>
                         <div class="overview-box-content" style="text-align: center;">
-                            <div style="font-size: 48px; margin-bottom: 15px;">🆔</div>
+                            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🆔</div>
                             <div class="info-item">
                                 <div class="info-label">Document Type</div>
                                 <div class="info-value">{{ $tenant->id_type_label ?? ucfirst($tenant->id_type) }}</div>
@@ -1503,7 +1373,7 @@
                     <div class="overview-box">
                         <div class="overview-box-header">Lease Agreement</div>
                         <div class="overview-box-content" style="text-align: center;">
-                            <div style="font-size: 48px; margin-bottom: 15px;">📄</div>
+                            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📄</div>
                             <div class="info-item">
                                 <div class="info-label">Document</div>
                                 <div class="info-value">Lease Agreement</div>
@@ -1538,14 +1408,14 @@
         <div class="modal-body" id="documentViewerContainer">
             <div id="documentLoadingSpinner">
                 <div class="spinner"></div>
-                <p style="margin-top: 15px; color: #6c757d;">Loading document...</p>
+                <p style="margin-top: 1rem; color: var(--text-muted);">Loading document...</p>
             </div>
             <div id="documentContent" style="display: none;">
                 <!-- Content will be injected here -->
             </div>
-            <div id="documentError" style="display: none; color: #dc3545; padding: 20px; text-align: center;">
-                <span style="font-size: 48px;">⚠️</span>
-                <p style="margin-top: 15px; font-size: 16px;">Failed to load document. Please try again.</p>
+            <div id="documentError" style="display: none; color: var(--accent-red); padding: 1.25rem; text-align: center;">
+                <span style="font-size: 2.5rem;">⚠️</span>
+                <p style="margin-top: 1rem; font-size: 0.85rem;">Failed to load document. Please try again.</p>
             </div>
         </div>
     </div>
@@ -1587,6 +1457,23 @@
         </form>
     </div>
 </div>
+
+<style>
+    .spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid var(--accent-emerald);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
 @endsection
 
 @push('scripts')
@@ -1694,11 +1581,11 @@
                 } else {
                     // Unknown file type
                     contentDiv.innerHTML = `
-                        <div style="text-align: center; padding: 40px;">
-                            <span style="font-size: 64px;">📁</span>
-                            <h3 style="margin: 20px 0 10px; color: #2c3e50;">Cannot Preview File</h3>
-                            <p style="color: #6c757d; margin-bottom: 20px;">This file type (${fileExtension}) cannot be previewed.</p>
-                            <p style="color: #6c757d;">Please download the file to view it.</p>
+                        <div style="text-align: center; padding: 2rem;">
+                            <span style="font-size: 3rem;">📁</span>
+                            <h3 style="margin: 1rem 0 0.5rem; color: var(--text-main);">Cannot Preview File</h3>
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">This file type (${fileExtension}) cannot be previewed.</p>
+                            <p style="color: var(--text-muted);">Please download the file to view it.</p>
                         </div>
                     `;
                     contentDiv.style.display = 'block';
@@ -1748,25 +1635,33 @@
     // Show session messages as toasts using layout's Utilities
     @if(session('success'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('success') }}', 'success');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('success') }}', 'success');
+            }
         });
     @endif
     
     @if(session('error'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('error') }}', 'error');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('error') }}', 'error');
+            }
         });
     @endif
     
     @if(session('warning'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('warning') }}', 'warning');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('warning') }}', 'warning');
+            }
         });
     @endif
     
     @if(session('info'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('info') }}', 'info');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('info') }}', 'info');
+            }
         });
     @endif
 </script>

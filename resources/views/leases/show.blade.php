@@ -1,857 +1,905 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Lease ' . $lease->lease_number)
+@section('title', 'Lease ' . $lease->lease_number . ' - Lease Details')
+
+@push('styles')
+<style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* LEASE HEADER */
+    .lease-header {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    
+    .header-left { flex: 1; min-width: 280px; }
+    
+    .lease-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        color: var(--text-main);
+    }
+    
+    .lease-location {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .lease-location a {
+        color: var(--accent-emerald);
+        text-decoration: none;
+    }
+    
+    .lease-location a:hover {
+        text-decoration: underline;
+    }
+    
+    .lease-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .meta-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
+    }
+    
+    /* STATS GRID */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+        transition: left 0.3s ease;
+    }
+    
+    .stat-card:hover::before {
+        left: 100%;
+        animation: pulse 1.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0; left: -100%; }
+        50% { opacity: 1; left: 0%; }
+        100% { opacity: 0; left: 100%; }
+    }
+    
+    .stat-card:hover {
+        border-color: var(--accent-emerald);
+        transform: translateY(-3px);
+    }
+    
+    .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+    
+    /* TAB CONTAINER */
+    .tab-container {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .tab-header {
+        display: flex;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-surface);
+        overflow-x: auto;
+    }
+    
+    .tab-button {
+        padding: 1rem 1.75rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        white-space: nowrap;
+    }
+    
+    .tab-button:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
+    }
+    
+    .tab-button.active {
+        color: var(--accent-emerald);
+        border-bottom-color: var(--accent-emerald);
+    }
+    
+    .tab-content {
+        padding: 1.75rem;
+    }
+    
+    .tab-pane {
+        display: none;
+    }
+    
+    .tab-pane.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* OVERVIEW GRID */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .overview-box {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
+    }
+    
+    .overview-box-header {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.9rem;
+    }
+    
+    .overview-box-content {
+        padding: 1.25rem;
+        flex: 1;
+    }
+    
+    .info-item {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-main);
+        word-break: break-word;
+    }
+    
+    .info-value a {
+        color: var(--accent-emerald);
+        text-decoration: none;
+    }
+    
+    .info-value a:hover {
+        text-decoration: underline;
+    }
+    
+    /* PROGRESS BAR */
+    .progress-container {
+        margin-top: 0.5rem;
+    }
+    .progress-bar-container {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 0.75rem 0;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--accent-emerald);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    
+    /* FEATURES LIST */
+    .features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .feature-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent-emerald);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        border: 1px solid var(--border-color);
+    }
+    
+    /* BADGES */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-align: center;
+        background: transparent;
+        border: 1px solid;
+        min-width: 100px;
+    }
+    
+    .status-active {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    
+    .status-pending {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    
+    .status-expired {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
+    
+    .status-terminated {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+    
+    .days-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        border: 1px solid;
+    }
+    .days-warning {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    .days-danger {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn:hover {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    /* DOCUMENT PREVIEW */
+    .document-preview {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+    }
+    .document-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .dashboard-wrapper { padding: 1rem; }
+        .tab-content { padding: 1rem; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .action-buttons { width: 100%; justify-content: flex-start; }
+        .overview-grid { grid-template-columns: 1fr; }
+    }
+    
+    @media (max-width: 480px) {
+        .stats-grid { grid-template-columns: 1fr; }
+    }
+</style>
+@endpush
 
 @section('content')
-<div class="container">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-                <h1 class="page-title">
-                    <span>✏️</span> Edit Lease
-                </h1>
-                <p class="page-subtitle">Update lease information for {{ $lease->lease_number }}</p>
-            </div>
-            <div>
-                <span class="status-badge status-{{ $lease->lease_status }}">
-                    {{ $lease->status_label }}
-                </span>
-            </div>
+        <div>
+            <h1 class="page-title">Lease Details</h1>
+            <p class="page-subtitle">{{ $lease->lease_number }} • {{ $lease->tenant->full_name }}</p>
         </div>
     </div>
 
-    <!-- Form Container -->
-    <div class="form-container">
-        <!-- Info Card -->
-        <div class="info-card">
-            <div class="info-card-title">
-                <span>📄</span> Lease Information
-            </div>
-            <div class="info-card-content">
-                <div class="info-card-item">
-                    <span class="info-card-label">Tenant</span>
-                    <span class="info-card-value">
-                        <a href="{{ route('tenants.show', $lease->tenant) }}" style="color: #4a5568; text-decoration: none;">
-                            {{ $lease->tenant->full_name }}
-                        </a>
-                    </span>
+    <!-- Lease Header -->
+    @php
+        $daysRemaining = $lease->end_date ? max(0, now()->diffInDays(\Carbon\Carbon::parse($lease->end_date), false)) : 0;
+    @endphp
+    
+    <div class="lease-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="lease-title">Lease {{ $lease->lease_number }}</h1>
+                <div class="lease-location">
+                    <a href="{{ route('units.show', $lease->unit) }}">
+                        Unit {{ $lease->unit->unit_number }}
+                    </a> 
+                    • {{ $lease->unit->building->name }}
                 </div>
-                <div class="info-card-item">
-                    <span class="info-card-label">Unit</span>
-                    <span class="info-card-value">
-                        <a href="{{ route('units.show', $lease->unit) }}" style="color: #4a5568; text-decoration: none;">
-                            Unit {{ $lease->unit->unit_number }}
-                        </a>
-                    </span>
-                </div>
-                <div class="info-card-item">
-                    <span class="info-card-label">Building</span>
-                    <span class="info-card-value">{{ $lease->unit->building->name }}</span>
-                </div>
-                <div class="info-card-item">
-                    <span class="info-card-label">Lease Number</span>
-                    <span class="info-card-value">{{ $lease->lease_number }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Error Alerts -->
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <strong style="display: block; margin-bottom: 8px;">⚠️ Please fix the following errors:</strong>
-                <ul style="margin: 0; padding-left: 20px;">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <!-- UPDATE FORM -->
-        <form action="{{ route('leases.update', $lease) }}" method="POST" enctype="multipart/form-data" id="updateForm">
-            @csrf
-            @method('PUT')
-            
-            <!-- Lease Period Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>📅</div>
-                    <span>Lease Period</span>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Start Date <span class="required">*</span></label>
-                        <input type="date" name="start_date" id="start_date" class="form-control" required 
-                               value="{{ old('start_date', $lease->start_date?->format('Y-m-d')) }}">
-                        @error('start_date')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
+                <div class="lease-meta">
+                    <div class="meta-item">
+                        {{ $lease->lease_type ?? 'Standard' }}
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">End Date <span class="required">*</span></label>
-                        <input type="date" name="end_date" id="end_date" class="form-control" required 
-                               value="{{ old('end_date', $lease->end_date?->format('Y-m-d')) }}">
-                        @error('end_date')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
+                    <div class="meta-item">
+                        ₱{{ number_format($lease->monthly_rent, 0) }}/month
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Move-in Date</label>
-                        <input type="date" name="move_in_date" id="move_in_date" class="form-control" 
-                               value="{{ old('move_in_date', $lease->move_in_date?->format('Y-m-d') ?? $lease->start_date?->format('Y-m-d')) }}">
-                        @error('move_in_date')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                        <div class="help-text">Leave blank to use start date</div>
+                    <div class="meta-item">
+                        <span class="status-badge status-{{ $lease->lease_status }}">
+                            {{ ucfirst($lease->lease_status) }}
+                        </span>
                     </div>
-                    
-                    @if($lease->lease_status === 'terminated' || $lease->move_out_date)
-                    <div class="form-group">
-                        <label class="form-label">Move-out Date</label>
-                        <input type="date" name="move_out_date" class="form-control" 
-                               value="{{ old('move_out_date', $lease->move_out_date?->format('Y-m-d')) }}">
-                        @error('move_out_date')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
+                    @if($lease->lease_status === 'active' && $daysRemaining <= 30 && $daysRemaining > 0)
+                        <div class="meta-item">
+                            <span class="days-badge days-warning">{{ $daysRemaining }} days left</span>
+                        </div>
+                    @endif
+                    @if($lease->start_date)
+                    <div class="meta-item">
+                        Since {{ \Carbon\Carbon::parse($lease->start_date)->format('M Y') }}
                     </div>
                     @endif
                 </div>
             </div>
-            
-            <!-- Financial Details Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>💰</div>
-                    <span>Financial Details</span>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Monthly Rent <span class="required">*</span></label>
-                        <div class="currency-input">
-                            <span class="currency-prefix">₱</span>
-                            <input type="number" name="monthly_rent" class="form-control" required 
-                                   value="{{ old('monthly_rent', $lease->monthly_rent) }}" 
-                                   step="0.01" min="0"
-                                   placeholder="0.00">
-                        </div>
-                        @error('monthly_rent')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Security Deposit</label>
-                        <div class="currency-input">
-                            <span class="currency-prefix">₱</span>
-                            <input type="number" name="security_deposit" class="form-control" 
-                                   value="{{ old('security_deposit', $lease->security_deposit ?? 0) }}" 
-                                   step="0.01" min="0"
-                                   placeholder="0.00">
-                        </div>
-                        @error('security_deposit')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Payment Due Day</label>
-                        <input type="number" name="payment_due_day" class="form-control" 
-                               value="{{ old('payment_due_day', $lease->payment_due_day ?? 1) }}" 
-                               min="1" max="31"
-                               placeholder="1">
-                        @error('payment_due_day')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                        <div class="help-text">Day of month (1-31)</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Lease Details Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>📋</div>
-                    <span>Lease Details</span>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Lease Status <span class="required">*</span></label>
-                        <select name="lease_status" class="form-control" required>
-                            <option value="">Select Status</option>
-                            <option value="active" {{ old('lease_status', $lease->lease_status) == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="pending" {{ old('lease_status', $lease->lease_status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="expired" {{ old('lease_status', $lease->lease_status) == 'expired' ? 'selected' : '' }}>Expired</option>
-                            <option value="terminated" {{ old('lease_status', $lease->lease_status) == 'terminated' ? 'selected' : '' }}>Terminated</option>
-                        </select>
-                        @error('lease_status')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Lease Type</label>
-                        <select name="lease_type" class="form-control">
-                            <option value="">Select Lease Type</option>
-                            <option value="Standard" {{ old('lease_type', $lease->lease_type) == 'Standard' ? 'selected' : '' }}>Standard</option>
-                            <option value="Renewal" {{ old('lease_type', $lease->lease_type) == 'Renewal' ? 'selected' : '' }}>Renewal</option>
-                            <option value="Short-term" {{ old('lease_type', $lease->lease_type) == 'Short-term' ? 'selected' : '' }}>Short-term</option>
-                            <option value="Month-to-Month" {{ old('lease_type', $lease->lease_type) == 'Month-to-Month' ? 'selected' : '' }}>Month-to-Month</option>
-                            <option value="Commercial" {{ old('lease_type', $lease->lease_type) == 'Commercial' ? 'selected' : '' }}>Commercial</option>
-                            <option value="Sublease" {{ old('lease_type', $lease->lease_type) == 'Sublease' ? 'selected' : '' }}>Sublease</option>
-                            <option value="Other" {{ old('lease_type', $lease->lease_type) == 'Other' ? 'selected' : '' }}>Other</option>
-                        </select>
-                        @error('lease_type')
-                            <div class="error">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Terms & Conditions Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>📝</div>
-                    <span>Terms & Conditions</span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Terms (JSON)</label>
-                    <textarea name="terms" class="form-control form-textarea json-editor" 
-                              rows="4" 
-                              placeholder='{"late_fee": 500, "allowed_pets": false, "notice_period_days": 30}'>{{ old('terms', is_array($lease->terms) ? json_encode($lease->terms, JSON_PRETTY_PRINT) : $lease->terms) }}</textarea>
-                    @error('terms')
-                        <div class="error">{{ $message }}</div>
-                    @enderror
-                    <div class="help-text">Enter terms as JSON object</div>
-                </div>
-            </div>
-            
-            <!-- Utilities Included Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>⚡</div>
-                    <span>Utilities Included</span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Utilities (JSON)</label>
-                    <textarea name="utilities_included" class="form-control form-textarea json-editor" 
-                              rows="3" 
-                              placeholder='["water", "electricity", "internet"]'>{{ old('utilities_included', is_array($lease->utilities_included) ? json_encode($lease->utilities_included, JSON_PRETTY_PRINT) : $lease->utilities_included) }}</textarea>
-                    @error('utilities_included')
-                        <div class="error">{{ $message }}</div>
-                    @enderror
-                    <div class="help-text">Enter utilities as JSON array</div>
-                </div>
-            </div>
-            
-            <!-- Lease Agreement Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>📎</div>
-                    <span>Lease Agreement</span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Lease Agreement (PDF/DOC)</label>
-                    <div class="file-input-group">
-                        <input type="file" name="lease_agreement_path" class="form-control" 
-                               accept=".pdf,.doc,.docx">
-                        @if($lease->lease_agreement_path)
-                            <a href="{{ Storage::url($lease->lease_agreement_path) }}" target="_blank" class="current-file">
-                                📄 View Current
-                            </a>
-                        @endif
-                    </div>
-                    @error('lease_agreement_path')
-                        <div class="error">{{ $message }}</div>
-                    @enderror
-                    <div class="help-text">
-                        Accepted formats: PDF, DOC, DOCX (Max 10MB)
-                        @if($lease->lease_agreement_path)
-                            <br>Current file: <strong>{{ basename($lease->lease_agreement_path) }}</strong>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Notes Section -->
-            <div class="form-section">
-                <div class="section-title">
-                    <div>📝</div>
-                    <span>Notes</span>
-                </div>
-                
-                <div class="form-group">
-                    <textarea name="notes" class="form-control form-textarea" 
-                              rows="4" 
-                              placeholder="Additional notes about this lease...">{{ old('notes', $lease->notes) }}</textarea>
-                    @error('notes')
-                        <div class="error">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-            
-            <!-- Form Actions -->
-            <div class="form-actions">
-                <a href="{{ route('leases.show', $lease) }}" class="btn btn-secondary">
-                    Cancel
+            <div class="action-buttons">
+                <a href="{{ route('leases.edit', $lease) }}" class="btn">
+                    Edit Lease
                 </a>
-                <button type="submit" class="btn btn-primary" id="submitBtn">
-                    💾 Update Lease
-                </button>
+                <a href="{{ route('tenants.show', $lease->tenant) }}" class="btn">
+                    View Tenant
+                </a>
+                <a href="{{ route('units.show', $lease->unit) }}" class="btn">
+                    View Unit
+                </a>
             </div>
-        </form>
-        <!-- END UPDATE FORM -->
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    @php
+        // Safely calculate payment totals without causing errors
+        $totalPaid = 0;
+        $totalDue = 0;
         
-        <!-- Danger Zone (commented out in original) 
-        <div class="danger-zone">
-            <div class="danger-zone-title">
-                <span>⚠️</span> Danger Zone
+        try {
+            if ($lease->payments && method_exists($lease, 'payments')) {
+                $totalPaid = $lease->payments->where('payment_status', 'completed')->sum('amount_paid') ?? 0;
+            }
+        } catch (\Exception $e) {
+            $totalPaid = 0;
+        }
+        
+        try {
+            if (method_exists($lease, 'getTotalMonths')) {
+                $totalMonths = $lease->getTotalMonths() ?? 0;
+            } else {
+                if ($lease->start_date && $lease->end_date) {
+                    $start = \Carbon\Carbon::parse($lease->start_date);
+                    $end = \Carbon\Carbon::parse($lease->end_date);
+                    $totalMonths = $start->diffInMonths($end);
+                } else {
+                    $totalMonths = 0;
+                }
+            }
+            $totalDue = $lease->monthly_rent * max(0, $totalMonths);
+        } catch (\Exception $e) {
+            $totalDue = $lease->monthly_rent * 12;
+        }
+        
+        $remainingBalance = max(0, $totalDue - $totalPaid);
+    @endphp
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value">₱{{ number_format($lease->monthly_rent, 0) }}</span>
+            <span class="stat-label">Monthly Rent</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">
+                @php
+                    try {
+                        echo $lease->getTotalMonths() ?? 0;
+                    } catch (\Exception $e) {
+                        if ($lease->start_date && $lease->end_date) {
+                            echo \Carbon\Carbon::parse($lease->start_date)->diffInMonths(\Carbon\Carbon::parse($lease->end_date));
+                        } else {
+                            echo '0';
+                        }
+                    }
+                @endphp
+            </span>
+            <span class="stat-label">Months</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">₱{{ number_format($totalPaid, 0) }}</span>
+            <span class="stat-label">Total Paid</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">₱{{ number_format($remainingBalance, 0) }}</span>
+            <span class="stat-label">Balance</span>
+        </div>
+    </div>
+
+    <!-- Tab Interface -->
+    <div class="tab-container">
+        <div class="tab-header">
+            <button class="tab-button active" data-tab="overview">Overview</button>
+            <button class="tab-button" data-tab="details">Lease Details</button>
+            <button class="tab-button" data-tab="documents">Documents</button>
+        </div>
+        
+        <div class="tab-content">
+            <!-- Overview Tab -->
+            <div class="tab-pane active" id="overview">
+                <div class="overview-grid">
+                    <!-- Box 1: Lease Period -->
+                    <div class="overview-box">
+                        <div class="overview-box-header">Lease Period</div>
+                        <div class="overview-box-content">
+                            <div class="info-item">
+                                <div class="info-label">Start Date</div>
+                                <div class="info-value">{{ $lease->start_date ? \Carbon\Carbon::parse($lease->start_date)->format('F d, Y') : 'N/A' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">End Date</div>
+                                <div class="info-value">{{ $lease->end_date ? \Carbon\Carbon::parse($lease->end_date)->format('F d, Y') : 'N/A' }}</div>
+                            </div>
+                            @if($lease->move_in_date)
+                            <div class="info-item">
+                                <div class="info-label">Move-in Date</div>
+                                <div class="info-value">{{ \Carbon\Carbon::parse($lease->move_in_date)->format('F d, Y') }}</div>
+                            </div>
+                            @endif
+                            @if($lease->move_out_date)
+                            <div class="info-item">
+                                <div class="info-label">Move-out Date</div>
+                                <div class="info-value">{{ \Carbon\Carbon::parse($lease->move_out_date)->format('F d, Y') }}</div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Financial Details -->
+                    <div class="overview-box">
+                        <div class="overview-box-header">Financial Details</div>
+                        <div class="overview-box-content">
+                            <div class="info-item">
+                                <div class="info-label">Monthly Rent</div>
+                                <div class="info-value" style="font-size: 1.1rem; color: var(--accent-emerald);">₱{{ number_format($lease->monthly_rent, 2) }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Security Deposit</div>
+                                <div class="info-value">₱{{ number_format($lease->security_deposit ?? 0, 2) }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Payment Due Day</div>
+                                <div class="info-value">Day {{ $lease->payment_due_day ?? 1 }} of each month</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Total Lease Value</div>
+                                <div class="info-value">₱{{ number_format($totalDue, 2) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Lease Progress -->
+                    @if($lease->lease_status === 'active' && $lease->start_date && $lease->end_date)
+                        @php
+                            try {
+                                $start = \Carbon\Carbon::parse($lease->start_date);
+                                $end = \Carbon\Carbon::parse($lease->end_date);
+                                $totalDays = $start->diffInDays($end);
+                                $elapsedDays = $start->diffInDays(now());
+                                $progressPercent = $totalDays > 0 ? min(round(($elapsedDays / $totalDays) * 100), 100) : 0;
+                            } catch (\Exception $e) {
+                                $progressPercent = 0;
+                                $start = null;
+                                $end = null;
+                            }
+                        @endphp
+                        @if(isset($start) && $start)
+                        <div class="overview-box">
+                            <div class="overview-box-header">Lease Progress</div>
+                            <div class="overview-box-content">
+                                <div class="progress-container">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="font-size: 0.7rem; color: var(--text-muted);">{{ $start->format('M d, Y') }}</span>
+                                        <span style="font-size: 0.7rem; color: var(--text-muted);">{{ $end->format('M d, Y') }}</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill" style="width: {{ $progressPercent }}%;"></div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                        <span style="font-size: 0.7rem; color: var(--text-muted);">{{ $progressPercent }}% Complete</span>
+                                        @if($daysRemaining <= 30 && $daysRemaining > 0)
+                                            <span style="font-size: 0.7rem; color: var(--accent-warning);">⚠️ {{ $daysRemaining }} days left</span>
+                                        @elseif($daysRemaining <= 0)
+                                            <span style="font-size: 0.7rem; color: var(--accent-red);">⚠️ Expired</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    @endif
+                </div>
+                
+                <!-- Terms & Conditions -->
+                @if($lease->terms)
+                <div class="overview-box" style="margin-top: 0;">
+                    <div class="overview-box-header">Terms & Conditions</div>
+                    <div class="overview-box-content">
+                        @php
+                            $terms = is_array($lease->terms) ? $lease->terms : json_decode($lease->terms, true);
+                        @endphp
+                        @if($terms && is_array($terms))
+                            <div class="features-list">
+                                @foreach($terms as $key => $value)
+                                    <span class="feature-tag">
+                                        {{ ucfirst(str_replace('_', ' ', $key)) }}: {{ is_bool($value) ? ($value ? 'Yes' : 'No') : $value }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="info-value">{{ $lease->terms }}</div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                <!-- Utilities Included -->
+                @if($lease->utilities_included)
+                <div class="overview-box" style="margin-top: 0;">
+                    <div class="overview-box-header">Utilities Included</div>
+                    <div class="overview-box-content">
+                        @php
+                            $utilities = is_array($lease->utilities_included) ? $lease->utilities_included : json_decode($lease->utilities_included, true);
+                        @endphp
+                        @if($utilities && is_array($utilities) && count($utilities) > 0)
+                            <div class="features-list">
+                                @foreach($utilities as $utility)
+                                    <span class="feature-tag">{{ ucfirst(str_replace('_', ' ', $utility)) }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="info-value">No utilities listed</div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+                <!-- Notes -->
+                @if($lease->notes)
+                <div class="overview-box" style="margin-top: 0;">
+                    <div class="overview-box-header">Notes</div>
+                    <div class="overview-box-content">
+                        <div class="info-value" style="line-height: 1.6; color: var(--text-muted);">
+                            {{ $lease->notes }}
+                        </div>
+                        <div style="margin-top: 0.75rem; font-size: 0.65rem; color: var(--text-muted); text-align: right;">
+                            Last updated: {{ $lease->updated_at ? $lease->updated_at->format('M d, Y h:i A') : 'N/A' }}
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
-            <div class="danger-zone-description">
-                Once you delete a lease, there is no going back. Please be certain.
+            
+            <!-- Lease Details Tab -->
+            <div class="tab-pane" id="details">
+                <div class="overview-grid">
+                    <!-- Box 1: Tenant Information -->
+                    <div class="overview-box">
+                        <div class="overview-box-header">👤 Tenant Information</div>
+                        <div class="overview-box-content">
+                            <div class="info-item">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">
+                                    <a href="{{ route('tenants.show', $lease->tenant) }}">
+                                        {{ $lease->tenant->full_name }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">
+                                    <a href="mailto:{{ $lease->tenant->email }}">{{ $lease->tenant->email }}</a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">
+                                    <a href="tel:{{ $lease->tenant->phone }}">{{ $lease->tenant->phone }}</a>
+                                </div>
+                            </div>
+                            @if($lease->tenant->emergency_contact_name)
+                            <div class="info-item">
+                                <div class="info-label">Emergency Contact</div>
+                                <div class="info-value">{{ $lease->tenant->emergency_contact_name }} 
+                                    @if($lease->tenant->emergency_contact_phone)
+                                    ({{ $lease->tenant->emergency_contact_phone }})
+                                    @endif
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Box 2: Unit Information -->
+                    <div class="overview-box">
+                        <div class="overview-box-header">🏠 Unit Information</div>
+                        <div class="overview-box-content">
+                            <div class="info-item">
+                                <div class="info-label">Unit Number</div>
+                                <div class="info-value">
+                                    <a href="{{ route('units.show', $lease->unit) }}">
+                                        Unit {{ $lease->unit->unit_number }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Building</div>
+                                <div class="info-value">
+                                    <a href="{{ route('buildings.show', $lease->unit->building) }}">
+                                        {{ $lease->unit->building->name }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Address</div>
+                                <div class="info-value">{{ $lease->unit->building->address }}, {{ $lease->unit->building->city }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Unit Type</div>
+                                <div class="info-value">{{ $lease->unit->unit_type_label ?? ucfirst($lease->unit->unit_type) }}</div>
+                            </div>
+                            @if($lease->unit->bedrooms || $lease->unit->bathrooms)
+                            <div class="info-item">
+                                <div class="info-label">Specifications</div>
+                                <div class="info-value">{{ $lease->unit->bedrooms ?? 0 }} bed / {{ $lease->unit->bathrooms ?? 0 }} bath</div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Box 3: Lease Information -->
+                    <div class="overview-box">
+                        <div class="overview-box-header">📋 Lease Information</div>
+                        <div class="overview-box-content">
+                            <div class="info-item">
+                                <div class="info-label">Lease Number</div>
+                                <div class="info-value">{{ $lease->lease_number }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Lease Type</div>
+                                <div class="info-value">{{ $lease->lease_type ?? 'Standard' }}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">
+                                    <span class="status-badge status-{{ $lease->lease_status }}">
+                                        {{ ucfirst($lease->lease_status) }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Payment Due Day</div>
+                                <div class="info-value">Day {{ $lease->payment_due_day ?? 1 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form action="{{ route('leases.destroy', $lease) }}" method="POST" 
-                  onsubmit="return confirmDeleteLease(this, '{{ addslashes($lease->lease_number) }}')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger">
-                    🗑️ Delete Lease
-                </button>
-            </form>
-        </div>-->
+            
+            <!-- Documents Tab -->
+            <div class="tab-pane" id="documents">
+                <div class="overview-grid">
+                    <!-- Lease Agreement -->
+                    @if($lease->lease_agreement_path)
+                    <div class="overview-box">
+                        <div class="overview-box-header">Lease Agreement</div>
+                        <div class="overview-box-content">
+                            <div class="document-preview">
+                                <div class="document-icon">📄</div>
+                                <div class="info-value" style="margin-bottom: 0.75rem;">Lease Agreement Document</div>
+                                <a href="{{ Storage::url($lease->lease_agreement_path) }}" target="_blank" class="btn">
+                                    View Document
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="overview-box">
+                        <div class="overview-box-header">Lease Agreement</div>
+                        <div class="overview-box-content">
+                            <div class="info-value" style="text-align: center; color: var(--text-muted);">
+                                No lease agreement uploaded
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<style>
-/* Additional styles specific to edit lease form */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.page-header {
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.page-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.page-subtitle {
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.status-active {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-}
-
-.status-expired {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.status-terminated {
-    background: #e2e3e5;
-    color: #383d41;
-    border: 1px solid #d6d8db;
-}
-
-.form-container {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.1);
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #dee2e6;
-}
-
-.form-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.form-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.required {
-    color: #e74c3c;
-}
-
-.help-text {
-    font-size: 12px;
-    color: #666;
-    margin-top: 5px;
-}
-
-.error {
-    color: #e74c3c;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary {
-    background: #3498db;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #2980b9;
-}
-
-.btn-secondary {
-    background: #95a5a6;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #7f8c8d;
-}
-
-.btn-danger {
-    background: #e74c3c;
-    color: white;
-}
-
-.btn-danger:hover {
-    background: #c0392b;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.currency-input {
-    display: flex;
-    align-items: center;
-}
-
-.currency-prefix {
-    padding: 10px 15px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    color: #666;
-    font-weight: 500;
-}
-
-.currency-input .form-control {
-    border-radius: 0 4px 4px 0;
-}
-
-.file-input-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.file-input-group .form-control {
-    flex: 1;
-}
-
-.current-file {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px 15px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 13px;
-    color: #666;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.current-file:hover {
-    background: #e9ecef;
-    color: #333;
-}
-
-.alert {
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    border-left: 4px solid;
-}
-
-.alert-danger {
-    background: #f8d7da;
-    color: #721c24;
-    border-left-color: #e74c3c;
-}
-
-.alert-warning {
-    background: #fff3cd;
-    color: #856404;
-    border-left-color: #ffc107;
-}
-
-.alert-success {
-    background: #d4edda;
-    color: #155724;
-    border-left-color: #28a745;
-}
-
-.alert-info {
-    background: #d1ecf1;
-    color: #0c5460;
-    border-left-color: #17a2b8;
-}
-
-.alert ul {
-    margin-top: 10px;
-    margin-bottom: 0;
-    padding-left: 20px;
-}
-
-.info-card {
-    background: #e8f4fc;
-    border: 1px solid #d1e4ff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-}
-
-.info-card-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.info-card-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.info-card-item {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.info-card-label {
-    font-size: 12px;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.info-card-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.json-editor {
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-    .form-container {
-        padding: 20px;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .btn {
-        width: 100%;
-        text-align: center;
-    }
-
-    .file-input-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .current-file {
-        justify-content: center;
-    }
-
-    .info-card-content {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.transition = 'opacity 0.5s';
-            alert.style.opacity = '0';
-            setTimeout(() => alert.remove(), 500);
-        }, 5000);
-    });
-
-    // Date validation
-    const startDate = document.getElementById('start_date');
-    const endDate = document.getElementById('end_date');
-    const moveInDate = document.getElementById('move_in_date');
-    
-    if (startDate && endDate) {
-        startDate.addEventListener('change', function() {
-            endDate.min = this.value;
-            if (endDate.value && endDate.value < this.value) {
-                endDate.value = this.value;
-            }
-            
-            // Set move-in date to start date if not set
-            if (moveInDate && !moveInDate.value) {
-                moveInDate.value = this.value;
-            }
-        });
-        
-        endDate.addEventListener('change', function() {
-            if (startDate.value && this.value < startDate.value) {
-                this.value = startDate.value;
-            }
-        });
-    }
-    
-    if (moveInDate && startDate) {
-        moveInDate.addEventListener('change', function() {
-            if (this.value && startDate.value && this.value < startDate.value) {
-                alert('Move-in date cannot be before lease start date');
-                this.value = startDate.value;
-            }
-        });
-    }
-
-    // Form submission handler
-    const form = document.getElementById('updateForm');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    if (form && submitBtn) {
-        form.addEventListener('submit', function() {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '⏳ Updating...';
-            submitBtn.style.opacity = '0.7';
-        });
-    }
-
-    // JSON formatting helper
-    function formatJSON(element) {
-        try {
-            const value = element.value;
-            if (value) {
-                const parsed = JSON.parse(value);
-                element.value = JSON.stringify(parsed, null, 2);
-            }
-        } catch (e) {
-            // Not valid JSON, leave as is
-        }
-    }
-
-    // Format JSON on blur
-    document.querySelectorAll('.json-editor').forEach(textarea => {
-        textarea.addEventListener('blur', function() {
-            formatJSON(this);
-        });
-    });
-});
-
-// Toast notification system - use the layout's Utilities if available
-window.showToast = function(message, type = 'success') {
-    if (window.Utilities && typeof window.Utilities.showToast === 'function') {
-        window.Utilities.showToast(message, type);
-    } else {
-        // Fallback to original implementation
-        let container = document.querySelector('.toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-        }
-
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.style.cssText = `
-            background: white;
-            border-radius: 4px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
-            display: flex;
-            align-items: center;
-            min-width: 300px;
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid ${type === 'success' ? '#28a745' : 
-                                  type === 'error' ? '#dc3545' : 
-                                  type === 'warning' ? '#ffc107' : '#17a2b8'};
-        `;
-        
-        toast.innerHTML = `
-            <div style="flex-grow: 1;">${message}</div>
-            <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 18px; color: #666;">&times;</button>
-        `;
-
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.remove();
-            }
-        }, 5000);
-    }
-};
-
-// Delete confirmation
-window.confirmDeleteLease = function(form, leaseNumber) {
-    event.preventDefault();
-    
-    if (confirm(`Are you sure you want to delete lease "${leaseNumber}"? This action cannot be undone.`)) {
-        const button = form.querySelector('button[type="submit"]');
-        button.innerHTML = '⏳';
-        button.disabled = true;
-        form.submit();
-    }
-    
-    return false;
-};
-
-// Show session messages as toasts
-@if(session('success'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("success") }}', 'success');
-    });
-@endif
-
-@if(session('error'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("error") }}', 'error');
-    });
-@endif
-
-@if(session('warning'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("warning") }}', 'warning');
-    });
-@endif
-
-@if(session('info'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("info") }}', 'info');
-    });
-@endif
-</script>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab Switching
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update URL hash for bookmarking
+                window.location.hash = tabId;
+            });
+        });
+        
+        // Check for hash in URL
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const activeTab = document.querySelector(`.tab-button[data-tab="${hash}"]`);
+            if (activeTab) {
+                activeTab.click();
+            }
+        }
+    });
+
+    // Show session messages as toasts using layout's Utilities
+    @if(session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('success') }}', 'success');
+            }
+        });
+    @endif
+    
+    @if(session('error'))
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('error') }}', 'error');
+            }
+        });
+    @endif
+    
+    @if(session('warning'))
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('warning') }}', 'warning');
+            }
+        });
+    @endif
+</script>
+@endpush

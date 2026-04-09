@@ -4,409 +4,385 @@
 
 @push('styles')
 <style>
-    /* PAGE HEADER */
-    .page-header {
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .page-title {
-        font-size: 24px;
-        font-weight: 600;
-        color: #2c3e50;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
     }
 
-    .page-subtitle {
-        color: #6c757d;
-        margin-top: 5px;
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { 
+        padding-bottom: 1.5rem; 
+        margin-bottom: 2rem; 
+        border-bottom: 1px solid var(--border-color);
     }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
 
     /* FORM CONTAINER */
     .form-container {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        max-width: 800px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 900px;
         margin: 0 auto;
-        border: 1px solid #dee2e6;
     }
 
+    /* FORM SECTIONS */
     .form-section {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 2rem;
     }
-
+    
     .section-title {
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
+    /* FORM GROUPS */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
     }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #2c3e50;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: all 0.3s;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-    }
-
-    .form-control.error {
-        border-color: #e74c3c;
-        background-color: #fff8f8;
-    }
-
-    .form-control.valid {
-        border-color: #28a745;
-        background-color: #f8fff8;
-    }
-
+    
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
     }
-
-    .form-textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-
-    /* BUTTONS */
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: none;
-        font-size: 14px;
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
         font-weight: 500;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-
-    .btn-primary {
-        background: #4a5568;
-        color: white;
+    
+    .form-label .required {
+        color: var(--accent-red);
     }
-
-    .btn-primary:hover:not(:disabled) {
-        background: #2d3748;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        transition: all 0.2s ease;
     }
-
-    .btn-primary:disabled {
-        background: #95a5a6;
-        cursor: not-allowed;
-        opacity: 0.7;
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
     }
-
-    .btn-secondary {
-        background: #718096;
-        color: white;
+    
+    .form-control.error {
+        border-color: var(--accent-red);
     }
-
-    .btn-secondary:hover {
-        background: #4a5568;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
+    
+    .form-control.valid {
+        border-color: var(--accent-emerald);
     }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
     }
-
-    .required {
-        color: #e74c3c;
-    }
-
-    .help-text {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-        transition: color 0.3s;
-    }
-
-    .help-text-success {
-        color: #28a745;
-    }
-
-    .help-text-warning {
-        color: #856404;
-    }
-
-    .help-text-error {
-        color: #e74c3c;
-    }
-
-    .error-message {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    /* SELECT STYLING */
+    
     select.form-control {
+        cursor: pointer;
         appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 16px;
-        padding-right: 40px;
+        background-position: right 0.75rem center;
+        background-size: 14px;
+        padding-right: 2rem;
     }
-
-    /* OPTGROUP STYLING */
+    
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-main);
+    }
+    
     optgroup {
         font-weight: 600;
-        color: #2c3e50;
-        font-size: 13px;
+        color: var(--text-main);
+        background: var(--bg-surface);
     }
-
+    
     optgroup option {
         font-weight: normal;
-        padding-left: 20px;
+        padding-left: 1rem;
     }
-
-    optgroup[label^="✅"] {
-        color: #28a745;
-    }
-
-    optgroup[label^="❌"] {
-        color: #dc3545;
-    }
-
-    optgroup[label^="⚠️"] {
-        color: #856404;
-    }
-
+    
     /* INPUT GROUP FOR CURRENCY */
     .input-group {
         display: flex;
         align-items: center;
     }
-
+    
     .input-group-text {
-        background: #f8f9fa;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
         border-right: none;
-        border-radius: 4px 0 0 4px;
-        color: #666;
-        font-size: 14px;
+        border-radius: 6px 0 0 6px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
     }
-
+    
     .input-group .form-control {
-        border-radius: 0 4px 4px 0;
-        flex: 1;
+        border-radius: 0 6px 6px 0;
     }
-
+    
+    /* CHECKBOX LABEL */
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--text-main);
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--accent-emerald);
+    }
+    
+    /* HELP TEXT & ERRORS */
+    .help-text {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+    
+    .help-text-success {
+        color: var(--accent-emerald);
+    }
+    
+    .help-text-warning {
+        color: var(--accent-warning);
+    }
+    
+    .help-text-error {
+        color: var(--accent-red);
+    }
+    
+    .error-message {
+        font-size: 0.65rem;
+        color: var(--accent-red);
+        margin-top: 0.35rem;
+    }
+    
     /* INFO CARD FOR PRE-SELECTED UNIT */
     .info-card {
-        background: #f8f9fa;
-        border-radius: 6px;
-        padding: 15px;
-        border: 1px solid #e9ecef;
-        margin-bottom: 20px;
+        background: var(--bg-surface);
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
     }
-
+    
     .info-card-title {
-        font-size: 13px;
-        color: #666;
-        margin-bottom: 10px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-weight: 600;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
     }
-
+    
     .info-card-content {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 1rem;
     }
-
+    
     .info-card-item {
         display: flex;
         align-items: center;
-        gap: 8px;
-        color: #2c3e50;
+        gap: 0.5rem;
+        color: var(--text-main);
+        font-size: 0.85rem;
     }
-
-    /* STATUS BADGE */
+    
+    /* STATUS BADGES */
     .status-badge {
         display: inline-block;
-        padding: 4px 12px;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.65rem;
         font-weight: 500;
+        background: transparent;
+        border: 1px solid;
     }
-
+    
     .status-available {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
+    
     .status-occupied {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
+    
     .status-warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
+    
     /* VALIDATION STATUS */
     .validation-status {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-size: 13px;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
     }
-
+    
     .validation-status.warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--accent-warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
     }
-
+    
     .validation-status.success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--accent-emerald);
+        border: 1px solid rgba(16, 185, 129, 0.3);
     }
-
+    
     .validation-status.error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.3);
     }
-
+    
     .validation-status.info {
-        background: #d1ecf1;
-        color: #0c5460;
-        border: 1px solid #bee5eb;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-blue);
+        border: 1px solid rgba(59, 130, 246, 0.3);
     }
-
+    
     /* LOADING SPINNER */
     .spinner {
         display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid rgba(0,0,0,.1);
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
-        border-top-color: #3498db;
+        border-top-color: var(--accent-emerald);
         animation: spin 0.6s linear infinite;
     }
-
+    
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
-
-    /* CHECKBOX STYLING */
-    .checkbox-label {
-        display: flex;
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
         cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
     }
-
-    .checkbox-label input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
+    
+    .btn:hover:not(:disabled) {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
     }
-
-    /* FILE INPUT STYLING */
+    
+    .btn-primary {
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
+        color: white;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+        background: #0d9668;
+        border-color: #0d9668;
+        color: white;
+    }
+    
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+        background: var(--bg-surface);
+        border-color: var(--border-color);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    /* FILE INPUT */
     input[type="file"].form-control {
-        padding: 8px 15px;
+        padding: 0.5rem 0.75rem;
     }
-
+    
     /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .form-container {
-            padding: 20px;
-        }
-
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .form-actions {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
-
-        .info-card-content {
-            flex-direction: column;
-            gap: 10px;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .form-container { padding: 1.25rem; }
+        .form-row { grid-template-columns: 1fr; gap: 1rem; }
+        .form-actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .info-card-content { flex-direction: column; gap: 0.75rem; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">👤 Add New Tenant</h1>
+            <h1 class="page-title">Add New Tenant</h1>
             <p class="page-subtitle">Fill in the details below to add a new tenant to your portfolio</p>
         </div>
     </div>
@@ -415,9 +391,9 @@
     <div class="form-container">
         <!-- Display validation errors -->
         @if ($errors->any())
-            <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #f5c6cb;">
-                <strong>Please fix the following errors:</strong>
-                <ul style="margin-top: 10px; margin-bottom: 0; padding-left: 20px;">
+            <div class="validation-status error" style="margin-bottom: 1.25rem; flex-direction: column; align-items: flex-start;">
+                <strong>⚠️ Please fix the following errors:</strong>
+                <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.25rem;">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -440,7 +416,7 @@
             @if(request()->has('unit_id') && isset($selectedUnit))
             <div class="info-card" id="preselectedUnitCard">
                 <div class="info-card-title">
-                    🏢 PRE-SELECTED UNIT
+                    PRE-SELECTED UNIT
                     <span class="status-badge status-{{ $selectedUnit->status === 'occupied' ? 'occupied' : 'available' }}" 
                           style="margin-left: auto;" 
                           id="preselectedUnitStatus">
@@ -467,15 +443,14 @@
                 </div>
                 
                 <!-- Current Tenant Info (if occupied) -->
-                <div id="preselectedUnitTenantInfo" style="margin-top: 15px; display: none;"></div>
+                <div id="preselectedUnitTenantInfo" style="margin-top: 1rem; display: none;"></div>
             </div>
             @endif
 
             <!-- Personal Information Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>👤</div>
-                    <span>Personal Information</span>
+                    Personal Information
                 </div>
                 
                 <div class="form-row">
@@ -527,8 +502,7 @@
             <!-- Emergency Contact Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🆘</div>
-                    <span>Emergency Contact</span>
+                    Emergency Contact
                 </div>
 
                 <div class="form-row">
@@ -557,8 +531,7 @@
             <!-- Unit Assignment Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🏢</div>
-                    <span>Unit Assignment</span>
+                    Unit Assignment
                 </div>
 
                 @if(!request()->has('unit_id') || !isset($selectedUnit))
@@ -603,15 +576,14 @@
                 <!-- Hidden but active unit validation for pre-selected -->
                 <input type="hidden" id="preselected_unit_id" value="{{ $selectedUnit->id }}">
                 <input type="hidden" id="preselected_building_id" value="{{ $selectedBuilding->id ?? $selectedUnit->building_id }}">
-                <div id="preselected_unit_validation" class="validation-status" style="margin-top: 10px;"></div>
+                <div id="preselected_unit_validation" class="validation-status" style="margin-top: 0.75rem;"></div>
                 @endif
             </div>
 
             <!-- Lease Information Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📄</div>
-                    <span>Lease Information</span>
+                    Lease Information
                 </div>
 
                 <div class="form-row">
@@ -677,8 +649,7 @@
             <!-- Identification Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🪪</div>
-                    <span>Identification</span>
+                    Identification
                 </div>
 
                 <div class="form-row">
@@ -707,8 +678,7 @@
             <!-- Employment Information Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>💼</div>
-                    <span>Employment & Income</span>
+                    Employment & Income
                 </div>
 
                 <div class="form-row">
@@ -740,8 +710,7 @@
             <!-- Lease Agreement Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📎</div>
-                    <span>Lease Agreement</span>
+                    Lease Agreement
                 </div>
 
                 <div class="form-group">
@@ -755,8 +724,7 @@
             <!-- Notes Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📝</div>
-                    <span>Notes</span>
+                    Notes
                 </div>
 
                 <div class="form-group">
@@ -769,16 +737,15 @@
             <!-- Status Section -->
             <div class="form-section" style="border-bottom: none;">
                 <div class="section-title">
-                    <div>⚙️</div>
-                    <span>Account Status</span>
+                    Account Status
                 </div>
 
                 <div class="form-group">
                     <label class="checkbox-label">
                         <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
-                        <span style="font-weight: 500; color: #2c3e50;">Active Account</span>
+                        <span>Active Account</span>
                     </label>
-                    <div class="help-text" style="margin-left: 26px;">Inactive tenants won't appear in active tenant lists</div>
+                    <div class="help-text" style="margin-left: 1.5rem;">Inactive tenants won't appear in active tenant lists</div>
                 </div>
             </div>
 
@@ -788,7 +755,7 @@
                     Cancel
                 </a>
                 <button type="submit" class="btn btn-primary" id="submitBtn">
-                    ➕ Create Tenant
+                    Create Tenant
                 </button>
             </div>
         </form>
@@ -1254,7 +1221,11 @@
             form.addEventListener('submit', function(e) {
                 if (!isUnitValid) {
                     e.preventDefault();
-                    Utilities.showToast('Cannot create tenant: This unit already has an active tenant', 'error');
+                    if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                        Utilities.showToast('Cannot create tenant: This unit already has an active tenant', 'error');
+                    } else {
+                        alert('Cannot create tenant: This unit already has an active tenant');
+                    }
                 }
             });
         }

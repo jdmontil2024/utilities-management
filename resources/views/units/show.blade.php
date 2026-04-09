@@ -4,588 +4,549 @@
 
 @push('styles')
 <style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+        --accent-pink: #ec4899;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
     /* UNIT HEADER */
     .unit-header {
-        background: white;
-        color: #2c3e50;
-        padding: 30px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
     }
-
-    .unit-title {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: #2c3e50;
-    }
-
-    .unit-location {
-        font-size: 15px;
-        color: #6c757d;
-        margin-bottom: 20px;
-    }
-
-    .unit-location a {
-        color: #4a5568;
-        text-decoration: none;
-    }
-
-    .unit-location a:hover {
-        color: #2d3748;
-        text-decoration: underline;
-    }
-
-    .unit-meta {
-        display: flex;
-        gap: 15px;
-        font-size: 14px;
-        flex-wrap: wrap;
-    }
-
-    .meta-item {
-        background: #f8f9fa;
-        padding: 8px 15px;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
-    }
-
+    
     .header-content {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 1.5rem;
     }
-
-    .header-left {
-        flex: 1;
-        min-width: 300px;
+    
+    .header-left { flex: 1; min-width: 280px; }
+    
+    .unit-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        color: var(--text-main);
     }
-
+    
+    .unit-location {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .unit-location a {
+        color: var(--accent-emerald);
+        text-decoration: none;
+    }
+    
+    .unit-location a:hover {
+        text-decoration: underline;
+    }
+    
+    .unit-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .meta-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
+    }
+    
     /* STATS GRID */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
-
+    
     .stat-card {
-        background: white;
-        border-radius: 8px;
-        padding: 25px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
         text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
     }
-
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+        transition: left 0.3s ease;
+    }
+    
+    .stat-card:hover::before {
+        left: 100%;
+        animation: pulse 1.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0; left: -100%; }
+        50% { opacity: 1; left: 0%; }
+        100% { opacity: 0; left: 100%; }
+    }
+    
+    .stat-card:hover {
+        border-color: var(--accent-emerald);
+        transform: translateY(-3px);
+    }
+    
     .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #2c3e50;
         display: block;
-        margin-bottom: 10px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 0.5rem;
     }
-
+    
     .stat-label {
-        font-size: 13px;
-        color: #6c757d;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 500;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
     }
-
+    
     /* TAB CONTAINER */
     .tab-container {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
-        margin-bottom: 40px;
+        margin-bottom: 2rem;
     }
-
+    
     .tab-header {
         display: flex;
-        border-bottom: 1px solid #dee2e6;
-        background: #f8f9fa;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-surface);
         overflow-x: auto;
     }
-
+    
     .tab-button {
-        padding: 18px 30px;
-        border: none;
+        padding: 1rem 1.75rem;
         background: none;
+        border: none;
         cursor: pointer;
         font-weight: 500;
-        color: #6c757d;
+        color: var(--text-muted);
         transition: all 0.3s ease;
         border-bottom: 3px solid transparent;
-        white-space: nowrap;
-        font-size: 14px;
+        font-size: 0.85rem;
         font-family: 'Inter', sans-serif;
+        white-space: nowrap;
     }
-
+    
     .tab-button:hover {
-        background: #e9ecef;
-        color: #495057;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
     }
-
+    
     .tab-button.active {
-        color: #4a5568;
-        border-bottom-color: #4a5568;
-        background: white;
-        font-weight: 600;
+        color: var(--accent-emerald);
+        border-bottom-color: var(--accent-emerald);
     }
-
+    
     .tab-content {
-        padding: 30px;
+        padding: 1.75rem;
     }
-
+    
     .tab-pane {
         display: none;
     }
-
+    
     .tab-pane.active {
         display: block;
+        animation: fadeIn 0.3s ease;
     }
-
-    /* INFO GRID */
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* OVERVIEW GRID */
     .overview-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
     }
-
+    
     .overview-box {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
         height: fit-content;
     }
-
+    
     .overview-box-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        font-weight: 700;
-        color: #2c3e50;
-        font-size: 16px;
-        text-align: center;
-        letter-spacing: 0.3px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.9rem;
     }
-
+    
     .overview-box-content {
-        padding: 20px;
+        padding: 1.25rem;
         flex: 1;
     }
-
+    
     .info-item {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
-
+    
     .info-item:last-child {
         margin-bottom: 0;
         padding-bottom: 0;
         border-bottom: none;
     }
-
+    
     .info-label {
-        font-size: 12px;
-        color: #6c757d;
+        font-size: 0.7rem;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.3px;
-        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
     }
-
+    
     .info-value {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2c3e50;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-main);
         word-break: break-word;
     }
-
+    
     .description-text {
-        color: #2c3e50;
-        font-size: 14px;
-        line-height: 1.8;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
         margin: 0;
-        word-break: break-word;
     }
-
-    /* Responsive for overview grid */
-    @media (max-width: 992px) {
-        .overview-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    
+    /* FEATURES */
+    .features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
     }
-
-    @media (max-width: 576px) {
-        .overview-grid {
-            grid-template-columns: 1fr;
-        }
+    
+    .feature-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--accent-emerald);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        border: 1px solid var(--border-color);
     }
-
+    
     /* TENANT CARD */
     .tenant-card {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 1.5rem;
     }
-
-    .tenant-info {
-        flex: 1;
-    }
-
+    
     .tenant-name {
-        font-size: 24px;
+        font-size: 1.5rem;
         font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 10px;
+        color: var(--text-main);
+        margin-bottom: 1rem;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 1rem;
     }
-
+    
     .tenant-detail-item {
-        margin-bottom: 12px;
-        color: #495057;
-        font-size: 15px;
+        margin-bottom: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
     }
-
+    
     .tenant-detail-item a {
-        color: #4a5568;
+        color: var(--accent-emerald);
         text-decoration: none;
     }
-
+    
     .tenant-detail-item a:hover {
-        color: #2d3748;
         text-decoration: underline;
     }
-
+    
     .lease-progress {
-        margin-top: 25px;
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border: 1px solid #e9ecef;
+        margin-top: 1.5rem;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
     }
-
+    
     .progress-bar-container {
         height: 8px;
-        background: #e9ecef;
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 4px;
         overflow: hidden;
-        margin: 15px 0;
+        margin: 0.75rem 0;
     }
-
+    
     .progress-bar-fill {
         height: 100%;
-        background: #4a5568;
+        background: var(--accent-emerald);
         border-radius: 4px;
         transition: width 0.3s ease;
     }
-
-    /* BADGES */
-    .status-badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-        text-align: center;
-        min-width: 100px;
-        background: transparent;
-        border: 1px solid;
-    }
-
-    .status-occupied {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    .status-vacant {
-        border-color: #495057;
-        color: #495057;
-    }
-
-    .status-maintenance {
-        border-color: #856404;
-        color: #856404;
-    }
-
-    .status-renovation {
-        border-color: #0c5460;
-        color: #0c5460;
-    }
-
-    .status-reserved {
-        border-color: #2c3e50;
-        color: #2c3e50;
-    }
-
-    .status-ready {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    .type-badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-        background: transparent;
-        border: 1px solid #4a5568;
-        color: #4a5568;
-        text-align: center;
-        min-width: 100px;
-    }
-
+    
     /* BUTTONS */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: 1px solid #4a5568;
-        font-size: 14px;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
         font-weight: 500;
-        cursor: pointer;
+        color: var(--text-main);
         text-decoration: none;
-        transition: all 0.3s ease;
+        cursor: pointer;
+        transition: all 0.2s ease;
         font-family: 'Inter', sans-serif;
-        background: transparent;
-        color: #4a5568;
     }
-
+    
     .btn:hover {
-        background: #4a5568;
-        color: white;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
     }
-
+    
     .btn-sm {
-        padding: 6px 12px;
-        font-size: 12px;
-        border: 1px solid #4a5568;
-        background: transparent;
-        color: #4a5568;
-        border-radius: 4px;
-        cursor: pointer;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
         text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        line-height: 1;
-        height: 32px;
+        gap: 0.3rem;
     }
-
+    
     .btn-sm:hover {
-        background: #4a5568;
-        color: white;
-        text-decoration: none;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
-    .btn-danger {
-        border: 1px solid #2d3748;
-        color: #2d3748;
-    }
-
-    .btn-danger:hover {
-        background: #2d3748;
-        color: white;
-    }
-
+    
     .action-buttons {
         display: flex;
-        gap: 10px;
+        gap: 0.75rem;
         flex-wrap: wrap;
     }
-
-    /* FEATURES */
-    .features-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 15px;
-    }
-
-    .feature-tag {
-        background: transparent;
-        color: #4a5568;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        border: 1px solid #4a5568;
-    }
-
-    /* DAYS REMAINING BADGE */
-    .days-badge {
+    
+    /* BADGES */
+    .status-badge {
         display: inline-block;
-        padding: 6px 16px;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-left: 10px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-align: center;
         background: transparent;
         border: 1px solid;
+        min-width: 100px;
     }
     
-    .days-warning {
-        border-color: #856404;
-        color: #856404;
+    .status-occupied,
+    .status-active,
+    .status-ready,
+    .status-completed {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
     
-    .days-danger {
-        border-color: #721c24;
-        color: #721c24;
+    .status-vacant,
+    .status-inactive {
+        border-color: #6c757d;
+        color: #6c757d;
     }
     
-    .days-success {
-        border-color: #155724;
-        color: #155724;
+    .status-maintenance,
+    .status-pending,
+    .status-assigned,
+    .status-submitted,
+    .status-renovation {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
-    /* MAINTENANCE TABLE */
-    .maintenance-table-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        overflow-x: auto;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
+    
+    .status-in_progress {
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
     }
-
-    .maintenance-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 800px;
+    
+    .status-expired,
+    .status-terminated,
+    .status-cancelled {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
-    .maintenance-table th {
-        background: #f8f9fa;
-        padding: 18px 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        border: 1px solid #dee2e6;
-        font-size: 14px;
-        white-space: nowrap;
-        text-align: center;
+    
+    .status-reserved {
+        border-color: var(--accent-purple);
+        color: var(--accent-purple);
     }
-
-    .maintenance-table td {
-        padding: 16px 15px;
-        border: 1px solid #e9ecef;
-        vertical-align: middle;
-        font-size: 14px;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .maintenance-table td:first-child {
-        text-align: left;
-    }
-
-    .maintenance-table tbody tr:hover td {
-        background: #f8f9fa;
-        border-color: #cfe2ff;
-    }
-
-    /* PRIORITY BADGES */
+    
     .priority-emergency {
-        border-color: #e74c3c;
-        color: #e74c3c;
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-    
     .priority-high {
         border-color: #e67e22;
         color: #e67e22;
     }
-    
     .priority-medium {
-        border-color: #f39c12;
-        color: #f39c12;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    .priority-low {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
     
-    .priority-low {
-        border-color: #27ae60;
-        color: #27ae60;
+    .days-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        border: 1px solid;
     }
-
-    /* STATUS BADGES for maintenance */
-    .status-submitted {
-        border-color: #2c3e50;
-        color: #2c3e50;
+    .days-warning {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
-    .status-assigned {
-        border-color: #856404;
-        color: #856404;
+    .days-danger {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
-    .status-in_progress {
-        border-color: #004085;
-        color: #004085;
+    .days-success {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
-    .status-completed {
-        border-color: #155724;
-        color: #155724;
+    
+    /* TABLES */
+    .maintenance-table-container {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow-x: auto;
+        margin-top: 1rem;
     }
-
-    .status-cancelled {
-        border-color: #721c24;
-        color: #721c24;
+    
+    .maintenance-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
     }
-
+    
+    .maintenance-table th {
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .maintenance-table td {
+        padding: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .maintenance-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    
     /* NO DATA */
     .no-data {
         text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        margin: 20px 0;
-        background: white;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
     }
-
+    
     .no-data h3 {
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+        font-weight: 500;
     }
-
-    .no-data p {
-        margin-bottom: 20px;
-        color: #6c757d;
-    }
-
+    
     .no-data-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        opacity: 0.3;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
     }
-
-    /* MODAL STYLES */
+    
+    /* MODAL */
     .modal {
         display: none;
         position: fixed;
@@ -593,189 +554,96 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.95);
         z-index: 10000;
         align-items: center;
         justify-content: center;
-        animation: fadeIn 0.2s ease;
     }
-
-    .modal.active {
-        display: flex;
-    }
-
+    
     .modal-content {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         width: 90%;
-        max-width: 800px;
+        max-width: 900px;
         max-height: 90vh;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        animation: scaleIn 0.3s ease;
     }
-
+    
     .modal-header {
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
+        padding: 1rem 1.5rem;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-
+    
     .modal-header h3 {
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
+        color: var(--text-main);
         margin: 0;
     }
-
+    
     .modal-close {
         background: none;
         border: none;
-        font-size: 24px;
+        font-size: 1.5rem;
         cursor: pointer;
-        color: #6c757d;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
+        color: var(--text-muted);
         transition: all 0.2s ease;
     }
-
+    
     .modal-close:hover {
-        background: #e9ecef;
-        color: #2c3e50;
+        color: var(--accent-emerald);
     }
-
+    
     .modal-body {
-        padding: 20px;
+        padding: 1.5rem;
         max-height: calc(90vh - 70px);
         overflow: auto;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-
+    
     .modal-body img {
         max-width: 100%;
         max-height: calc(90vh - 110px);
         object-fit: contain;
-        border-radius: 4px;
+        border-radius: 8px;
     }
-
+    
     .modal-body iframe {
         width: 100%;
         height: 70vh;
         border: none;
+        border-radius: 8px;
     }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
+    
     /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .unit-header {
-            padding: 25px;
-        }
-        
-        .unit-title {
-            font-size: 24px;
-        }
-        
-        .header-content {
-            flex-direction: column;
-        }
-        
-        .action-buttons {
-            width: 100%;
-            justify-content: flex-start;
-        }
-        
-        .btn {
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
-        }
-        
-        .unit-meta {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .tab-button {
-            padding: 15px 20px;
-            font-size: 13px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .tenant-name {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .days-badge {
-            margin-left: 0;
-        }
-
-        .maintenance-table {
-            min-width: 700px;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .tab-content { padding: 1rem; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .action-buttons { width: 100%; justify-content: flex-start; }
+        .overview-grid { grid-template-columns: 1fr; }
+        .tenant-name { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+        .days-badge { margin-left: 0; }
     }
-
-    @media (max-width: 576px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .tab-button {
-            padding: 12px 15px;
-            font-size: 12px;
-        }
-        
-        .tab-content {
-            padding: 20px;
-        }
+    
+    @media (max-width: 480px) {
+        .stats-grid { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">🚪 Unit Details</h1>
+            <h1 class="page-title">Unit Details</h1>
             <p class="page-subtitle">View and manage unit information</p>
         </div>
     </div>
@@ -859,7 +727,6 @@
         if ($hasTenant && $unit->currentTenant) {
             $tenant = $unit->currentTenant;
             
-            // Handle days left
             if ($tenant->lease_end_date) {
                 $leaseEndDate = $tenant->lease_end_date;
                 if (is_string($leaseEndDate)) {
@@ -868,7 +735,6 @@
                 $daysLeft = max(0, (int) now()->startOfDay()->diffInDays($leaseEndDate->startOfDay(), false));
             }
             
-            // Handle lease progress
             if ($tenant->lease_start_date && $tenant->lease_end_date) {
                 $startDate = $tenant->lease_start_date;
                 $endDate = $tenant->lease_end_date;
@@ -974,12 +840,12 @@
                 </div>
                 
                 @if($unit->notes)
-                <div style="margin-top: 20px;">
-                    <div class="overview-box" style="background: #fff3cd;">
-                        <div class="overview-box-header" style="background: #ffeaa7;">Internal Notes</div>
+                <div style="margin-top: 1.5rem;">
+                    <div class="overview-box" style="border-color: var(--accent-warning);">
+                        <div class="overview-box-header" style="color: var(--accent-warning);">Internal Notes</div>
                         <div class="overview-box-content">
-                            <p class="description-text" style="color: #856404;">{{ $unit->notes }}</p>
-                            <div style="margin-top: 10px; color: #856404; font-size: 12px;">
+                            <p class="description-text" style="color: var(--accent-warning);">{{ $unit->notes }}</p>
+                            <div style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.7rem;">
                                 Last updated: {{ $unit->updated_at ? $unit->updated_at->format('M d, Y h:i A') : 'N/A' }}
                             </div>
                         </div>
@@ -988,7 +854,7 @@
                 @endif
                 
                 <!-- Action buttons -->
-                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
                     @if(!$hasTenant && in_array($unit->status, ['vacant', 'ready']))
                         <a href="{{ route('tenants.create', ['building_id' => $unit->building->id, 'unit_id' => $unit->id]) }}" class="btn">
                             + Add Tenant
@@ -1009,7 +875,6 @@
                         $tenant = $unit->currentTenant;
                         $lease = $unit->currentLease;
                         
-                        // Parse dates for tenant
                         $leaseStartDate = $tenant->lease_start_date ? (is_string($tenant->lease_start_date) ? \Carbon\Carbon::parse($tenant->lease_start_date) : $tenant->lease_start_date) : null;
                         $leaseEndDate = $tenant->lease_end_date ? (is_string($tenant->lease_end_date) ? \Carbon\Carbon::parse($tenant->lease_end_date) : $tenant->lease_end_date) : null;
                         
@@ -1037,7 +902,7 @@
                                 @endif
                             </div>
                             
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.25rem;">
                                 <div>
                                     <div class="tenant-detail-item">
                                         <a href="mailto:{{ $tenant->email }}">{{ $tenant->email }}</a>
@@ -1063,23 +928,23 @@
                                     </div>
                                     @endif
                                     <div class="tenant-detail-item">
-                                        Monthly Rent: <strong style="color: #4a5568;">₱{{ number_format($tenant->monthly_rent, 0) }}</strong>
+                                        Monthly Rent: <strong style="color: var(--accent-emerald);">₱{{ number_format($tenant->monthly_rent, 0) }}</strong>
                                     </div>
                                 </div>
                             </div>
                             
                             @if($tenant->emergency_contact_name)
-                            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #dee2e6;">
-                                <div style="margin-bottom: 12px;">
-                                    <strong style="font-size: 15px; color: #2c3e50;">Emergency Contact</strong>
+                            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong style="font-size: 0.85rem; color: var(--text-main);">Emergency Contact</strong>
                                 </div>
-                                <div style="display: flex; gap: 30px; margin-top: 10px; flex-wrap: wrap;">
-                                    <span style="color: #495057;">{{ $tenant->emergency_contact_name }}</span>
+                                <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                                    <span style="color: var(--text-muted); font-size: 0.85rem;">{{ $tenant->emergency_contact_name }}</span>
                                     @if($tenant->emergency_contact_relation)
-                                        <span style="color: #495057;">{{ $tenant->emergency_contact_relation }}</span>
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">{{ $tenant->emergency_contact_relation }}</span>
                                     @endif
                                     @if($tenant->emergency_contact_phone)
-                                        <span style="color: #495057;">{{ $tenant->emergency_contact_phone }}</span>
+                                        <span style="color: var(--text-muted); font-size: 0.85rem;">{{ $tenant->emergency_contact_phone }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -1088,14 +953,14 @@
                             <!-- Lease Progress Bar -->
                             @if($leaseStartDate && $leaseEndDate)
                             <div class="lease-progress">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span style="font-weight: 600; color: #2c3e50;">Lease Progress</span>
-                                    <span style="color: #4a5568; font-weight: 600;">{{ $progressPercent }}%</span>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600; color: var(--text-main); font-size: 0.8rem;">Lease Progress</span>
+                                    <span style="color: var(--accent-emerald); font-weight: 600; font-size: 0.8rem;">{{ $progressPercent }}%</span>
                                 </div>
                                 <div class="progress-bar-container">
                                     <div class="progress-bar-fill" style="width: {{ $progressPercent }}%;"></div>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 12px; color: #6c757d; font-size: 13px;">
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; color: var(--text-muted); font-size: 0.7rem;">
                                     <span>Started: {{ $leaseStartDate->format('M d, Y') }}</span>
                                     <span>Ends: {{ $leaseEndDate->format('M d, Y') }}</span>
                                 </div>
@@ -1103,7 +968,7 @@
                             @endif
                             
                             <!-- Action buttons -->
-                            <div style="display: flex; gap: 12px; margin-top: 25px; flex-wrap: wrap;">
+                            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
                                 <a href="{{ route('tenants.show', $tenant) }}" class="btn">
                                     View Full Profile
                                 </a>
@@ -1121,14 +986,14 @@
                     
                     <!-- Tenant Documents -->
                     @if($tenant->government_id)
-                    <div class="overview-box" style="margin-top: 20px;">
+                    <div class="overview-box">
                         <div class="overview-box-header">Identification Document</div>
                         <div class="overview-box-content">
-                            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-                                <span style="font-size: 32px;">🆔</span>
+                            <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+                                <span style="font-size: 2rem;">🆔</span>
                                 <div>
-                                    <strong style="font-size: 16px; color: #2c3e50;">{{ $tenant->id_type_label ?? ucfirst($tenant->id_type) }}</strong>
-                                    <div style="color: #6c757d; font-size: 13px; margin-top: 4px;">Uploaded on {{ $tenant->created_at ? $tenant->created_at->format('M d, Y') : 'N/A' }}</div>
+                                    <strong style="font-size: 0.9rem; color: var(--text-main);">{{ $tenant->id_type_label ?? ucfirst($tenant->id_type) }}</strong>
+                                    <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.25rem;">Uploaded on {{ $tenant->created_at ? $tenant->created_at->format('M d, Y') : 'N/A' }}</div>
                                 </div>
                                 <div style="margin-left: auto;">
                                     <button onclick="viewDocument('{{ Storage::url($tenant->government_id) }}', '{{ $tenant->id_type_label ?? ucfirst($tenant->id_type) }}')" class="btn">
@@ -1141,12 +1006,12 @@
                                 $isImage = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
                             @endphp
                             @if(!$isImage)
-                            <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span style="font-size: 24px;">📄</span>
+                            <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.5rem;">📄</span>
                                     <div>
-                                        <span style="font-weight: 500; color: #2c3e50;">PDF Document</span>
-                                        <div style="color: #6c757d; font-size: 12px;">Click the View Document button to open in modal</div>
+                                        <span style="font-weight: 500; color: var(--text-main); font-size: 0.8rem;">PDF Document</span>
+                                        <div style="color: var(--text-muted); font-size: 0.65rem;">Click the View Document button to open in modal</div>
                                     </div>
                                 </div>
                             </div>
@@ -1162,11 +1027,11 @@
                         <h3>No Current Tenant</h3>
                         <p>This unit is currently vacant and ready for occupancy</p>
                         @if(in_array($unit->status, ['vacant', 'ready']))
-                            <a href="{{ route('tenants.create', ['building_id' => $unit->building->id, 'unit_id' => $unit->id]) }}" class="btn" style="margin-top: 15px;">
+                            <a href="{{ route('tenants.create', ['building_id' => $unit->building->id, 'unit_id' => $unit->id]) }}" class="btn" style="margin-top: 1rem;">
                                 + Add New Tenant
                             </a>
                         @else
-                            <p style="margin-top: 10px; color: #856404; background: #fff3cd; padding: 10px 20px; border-radius: 6px; display: inline-block;">
+                            <p style="margin-top: 0.75rem; color: var(--accent-warning); background: rgba(245, 158, 11, 0.1); padding: 0.75rem 1.25rem; border-radius: 8px; display: inline-block; font-size: 0.8rem;">
                                 ⚠️ Unit status must be "Vacant" or "Ready" to add a tenant
                             </p>
                         @endif
@@ -1178,8 +1043,8 @@
             <div class="tab-pane" id="maintenance">
                 @if($unit->maintenanceRequests && $unit->maintenanceRequests->count() > 0)
                 <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="font-size: 18px; color: #2c3e50;">Maintenance Requests</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Maintenance Requests</h3>
                         <a href="{{ route('maintenance-requests.create', ['unit_id' => $unit->id]) }}" class="btn">
                             + New Request
                         </a>
@@ -1200,7 +1065,7 @@
                                 @foreach($unit->maintenanceRequests as $request)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('maintenance-requests.show', $request) }}" style="color: #4a5568; text-decoration: none; font-weight: 500;">
+                                        <a href="{{ route('maintenance-requests.show', $request) }}" style="color: var(--accent-emerald); text-decoration: none; font-weight: 500;">
                                             {{ Str::limit($request->title, 40) }}
                                         </a>
                                     </td>
@@ -1235,7 +1100,7 @@
                                     </td>
                                     <td>{{ $request->created_at ? $request->created_at->format('M d, Y') : 'N/A' }}</td>
                                     <td>
-                                        <div style="display: flex; gap: 5px; justify-content: center;">
+                                        <div style="display: flex; gap: 0.5rem;">
                                             <a href="{{ route('maintenance-requests.show', $request) }}" class="btn-sm">
                                                 View
                                             </a>
@@ -1252,7 +1117,7 @@
                     <div class="no-data-icon">🔧</div>
                     <h3>No Maintenance Requests</h3>
                     <p>No maintenance requests have been submitted for this unit</p>
-                    <a href="{{ route('maintenance-requests.create', ['unit_id' => $unit->id]) }}" class="btn" style="margin-top: 15px;">
+                    <a href="{{ route('maintenance-requests.create', ['unit_id' => $unit->id]) }}" class="btn" style="margin-top: 1rem;">
                         + Submit Maintenance Request
                     </a>
                 </div>
@@ -1265,8 +1130,8 @@
                     <div class="no-data-icon">📜</div>
                     <h3>Unit History</h3>
                     <p>Lease history and other historical data will appear here</p>
-                    <div style="margin-top: 30px;">
-                        <h4 style="font-size: 16px; color: #2c3e50; margin-bottom: 15px; text-align: left;">Previous Tenants</h4>
+                    <div style="margin-top: 2rem;">
+                        <h4 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 1rem; text-align: left;">Previous Tenants</h4>
                         @if($unit->tenants && $unit->tenants->count() > 1)
                             <div class="maintenance-table-container">
                                 <table class="maintenance-table">
@@ -1281,7 +1146,7 @@
                                         @foreach($unit->tenants as $pastTenant)
                                             @if(!$hasTenant || ($hasTenant && $pastTenant->id !== $unit->currentTenant->id))
                                             <tr>
-                                                <td style="text-align: left;">{{ $pastTenant->full_name }}</td>
+                                                <td style="text-align: left; font-weight: 500;">{{ $pastTenant->full_name }}</td>
                                                 <td>
                                                     @php
                                                         $startDate = $pastTenant->lease_start_date ? (is_string($pastTenant->lease_start_date) ? \Carbon\Carbon::parse($pastTenant->lease_start_date) : $pastTenant->lease_start_date) : null;
@@ -1302,7 +1167,7 @@
                                 </table>
                             </div>
                         @else
-                            <p style="color: #6c757d;">No previous tenants found</p>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">No previous tenants found</p>
                         @endif
                     </div>
                 </div>
@@ -1390,12 +1255,12 @@
                 // Show download option for other file types
                 const previewDiv = document.createElement('div');
                 previewDiv.className = 'no-data';
-                previewDiv.style.padding = '40px';
+                previewDiv.style.padding = '2rem';
                 previewDiv.innerHTML = `
-                    <div style="font-size: 64px; margin-bottom: 20px;">📄</div>
-                    <h3>${documentType}</h3>
-                    <p>This file cannot be previewed in the browser.</p>
-                    <a href="${url}" download class="btn" style="margin-top: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                    <h3 style="margin-bottom: 0.5rem;">${documentType}</h3>
+                    <p style="margin-bottom: 1.25rem;">This file cannot be previewed in the browser.</p>
+                    <a href="${url}" download class="btn">
                         ⬇️ Download Document
                     </a>
                 `;
@@ -1403,13 +1268,13 @@
             }
         }
         
-        modal.classList.add('active');
+        modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
     function closeDocumentModal() {
         const modal = document.getElementById('documentModal');
-        modal.classList.remove('active');
+        modal.style.display = 'none';
         document.body.style.overflow = 'auto';
         
         // Clear content
@@ -1435,25 +1300,33 @@
     // Show session messages as toasts using layout's Utilities
     @if(session('success'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('success') }}', 'success');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('success') }}', 'success');
+            }
         });
     @endif
     
     @if(session('error'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('error') }}', 'error');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('error') }}', 'error');
+            }
         });
     @endif
     
     @if(session('warning'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('warning') }}', 'warning');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('warning') }}', 'warning');
+            }
         });
     @endif
     
     @if(session('info'))
         document.addEventListener('DOMContentLoaded', function() {
-            Utilities.showToast('{{ session('info') }}', 'info');
+            if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                Utilities.showToast('{{ session('info') }}', 'info');
+            }
         });
     @endif
 </script>

@@ -4,367 +4,377 @@
 
 @push('styles')
 <style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { 
+        padding-bottom: 1.5rem; 
+        margin-bottom: 2rem; 
+        border-bottom: 1px solid var(--border-color);
+    }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
     /* FORM CONTAINER */
     .form-container {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        max-width: 800px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 900px;
         margin: 0 auto;
-        border: 1px solid #dee2e6;
     }
 
+    /* FORM SECTIONS */
     .form-section {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 2rem;
     }
-
+    
     .section-title {
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
     }
 
+    /* FORM GROUPS */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
     }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #2c3e50;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: all 0.3s;
-        font-family: 'Inter', sans-serif;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-    }
-
-    .form-control.error {
-        border-color: #e74c3c;
-        background-color: #fff8f8;
-    }
-
-    .form-control.valid {
-        border-color: #28a745;
-        background-color: #f8fff8;
-    }
-
+    
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
     }
-
-    .form-textarea {
-        min-height: 100px;
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-label .required {
+        color: var(--accent-red);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
+    }
+    
+    .form-control.error {
+        border-color: var(--accent-red);
+    }
+    
+    .form-control.valid {
+        border-color: var(--accent-emerald);
+    }
+    
+    textarea.form-control {
         resize: vertical;
+        min-height: 100px;
     }
-
+    
+    select.form-control {
+        cursor: pointer;
+    }
+    
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-main);
+    }
+    
+    /* CHECKBOX GROUP */
     .checkbox-group {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 10px;
-        margin-top: 10px;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
     }
-
+    
+    .feature-checkbox {
+        background: var(--bg-surface);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .feature-checkbox:hover {
+        border-color: var(--accent-emerald);
+    }
+    
     .checkbox-label {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 0.5rem;
         cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--text-main);
     }
-
+    
     .checkbox-label input[type="checkbox"] {
         width: 18px;
         height: 18px;
         cursor: pointer;
+        accent-color: var(--accent-emerald);
     }
-
-    /* BUTTONS */
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: none;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: #4a5568;
-        color: white;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-        background: #2d3748;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-primary:disabled {
-        background: #95a5a6;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    .btn-secondary {
-        background: #718096;
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: #4a5568;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-danger {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #c0392b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
-    }
-
-    .required {
-        color: #e74c3c;
-    }
-
-    .help-text {
-        font-size: 12px;
-        color: #666;
-        margin-top: 5px;
-        transition: color 0.3s;
-    }
-
-    .help-text-success {
-        color: #28a745;
-    }
-
-    .help-text-warning {
-        color: #856404;
-    }
-
-    .help-text-error {
-        color: #e74c3c;
-    }
-
-    .error-message {
-        color: #e74c3c;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    /* VALIDATION STATUS */
-    .validation-status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-        padding: 8px 12px;
-        border-radius: 4px;
-        font-size: 13px;
-    }
-
-    .validation-status.warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
-    }
-
-    .validation-status.success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .validation-status.error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-
-    .validation-status.info {
-        background: #d1ecf1;
-        color: #0c5460;
-        border: 1px solid #bee5eb;
-    }
-
-    /* LOADING SPINNER */
-    .spinner {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        border: 2px solid rgba(0,0,0,.1);
-        border-radius: 50%;
-        border-top-color: #3498db;
-        animation: spin 0.6s linear infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* EXISTING UNITS LIST */
-    .existing-units-list {
-        margin-top: 10px;
-        padding: 10px;
-        background: #f8f9fa;
-        border-radius: 4px;
-        border: 1px solid #dee2e6;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    .existing-unit-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .existing-unit-item:last-child {
-        border-bottom: none;
-    }
-
-    .unit-details {
-        font-size: 12px;
-        color: #666;
-    }
-
-    .badge-deleted {
-        background: #6c757d;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-    }
-
-    .badge-occupied {
-        background: #dc3545;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-    }
-
-    .badge-available {
-        background: #28a745;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-    }
-
-    .feature-checkbox {
-        background: #f8f9fa;
-        padding: 12px;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
-        transition: all 0.2s;
-    }
-
-    .feature-checkbox:hover {
-        background: #e9ecef;
-    }
-
-    /* Currency input styling */
+    
+    /* CURRENCY INPUT */
     .currency-input {
         display: flex;
         align-items: center;
     }
-
+    
     .currency-prefix {
-        padding: 10px 15px;
-        background: #f8f9fa;
-        border: 1px solid #ddd;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
         border-right: none;
-        border-radius: 4px 0 0 4px;
+        border-radius: 6px 0 0 6px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+    
+    .currency-input .form-control {
+        border-radius: 0 6px 6px 0;
+    }
+    
+    /* HELP TEXT & ERRORS */
+    .help-text {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+    
+    .help-text-success {
+        color: var(--accent-emerald);
+    }
+    
+    .help-text-warning {
+        color: var(--accent-warning);
+    }
+    
+    .help-text-error {
+        color: var(--accent-red);
+    }
+    
+    .error-message {
+        font-size: 0.65rem;
+        color: var(--accent-red);
+        margin-top: 0.35rem;
+    }
+    
+    /* VALIDATION STATUS */
+    .validation-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+    }
+    
+    .validation-status.warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--accent-warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .validation-status.success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--accent-emerald);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .validation-status.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--accent-red);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .validation-status.info {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-blue);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    /* LOADING SPINNER */
+    .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        border-top-color: var(--accent-emerald);
+        animation: spin 0.6s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* EXISTING UNITS LIST */
+    .existing-units-list {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        background: var(--bg-surface);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .existing-unit-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .existing-unit-item:last-child {
+        border-bottom: none;
+    }
+    
+    .unit-details {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+    
+    .badge-deleted {
+        background: rgba(108, 117, 125, 0.2);
+        color: #6c757d;
+        padding: 0.15rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.6rem;
+        border: 1px solid #6c757d;
+    }
+    
+    .badge-occupied {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--accent-red);
+        padding: 0.15rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.6rem;
+        border: 1px solid var(--accent-red);
+    }
+    
+    .badge-available {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--accent-emerald);
+        padding: 0.15rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.6rem;
+        border: 1px solid var(--accent-emerald);
+    }
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
         font-family: 'Inter', sans-serif;
     }
-
-    .currency-input .form-control {
-        border-radius: 0 4px 4px 0;
+    
+    .btn:hover:not(:disabled) {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
     }
-
-    /* Responsive */
+    
+    .btn-primary {
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
+        color: white;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+        background: #0d9668;
+        border-color: #0d9668;
+        color: white;
+    }
+    
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+        background: var(--bg-surface);
+        border-color: var(--border-color);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .form-container {
-            padding: 20px;
-        }
-
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .checkbox-group {
-            grid-template-columns: 1fr;
-        }
-
-        .form-actions {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            text-align: center;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .form-container { padding: 1.25rem; }
+        .form-row { grid-template-columns: 1fr; gap: 1rem; }
+        .form-actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .checkbox-group { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">🚪 Create New Unit</h1>
+            <h1 class="page-title">Create New Unit</h1>
             <p class="page-subtitle">Fill in the details below to add a new unit</p>
         </div>
     </div>
@@ -373,9 +383,9 @@
     <div class="form-container">
         <!-- Display validation errors -->
         @if ($errors->any())
-            <div class="validation-status error" style="margin-bottom: 20px;">
+            <div class="validation-status error" style="margin-bottom: 1.25rem;">
                 <strong>⚠️ Please fix the following errors:</strong>
-                <ul style="margin-top: 10px; margin-bottom: 0; padding-left: 20px;">
+                <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.25rem;">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -384,7 +394,7 @@
         @endif
 
         @if(session('error'))
-            <div class="validation-status error" style="margin-bottom: 20px;">
+            <div class="validation-status error" style="margin-bottom: 1.25rem;">
                 <strong>Error:</strong> {{ session('error') }}
             </div>
         @endif
@@ -395,8 +405,7 @@
             <!-- Building Selection -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🏢</div>
-                    <span>Building Selection</span>
+                    Building Selection
                 </div>
                 
                 <div class="form-group">
@@ -418,8 +427,7 @@
             <!-- Unit Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📋</div>
-                    <span>Unit Information</span>
+                    Unit Information
                 </div>
                 
                 <div class="form-row">
@@ -456,7 +464,7 @@
                 <!-- Existing Units in this Building -->
                 <div id="existing_units_container" style="display: none;">
                     <div class="existing-units-list">
-                        <strong style="display: block; margin-bottom: 10px;">📋 Existing units in this building:</strong>
+                        <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.75rem;">Existing units in this building:</strong>
                         <div id="existing_units_list"></div>
                     </div>
                 </div>
@@ -543,8 +551,7 @@
             <!-- Features & Amenities -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🎯</div>
-                    <span>Features & Amenities</span>
+                    Features & Amenities
                 </div>
                 
                 <div class="form-group">
@@ -638,8 +645,7 @@
             <!-- Financial Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>💰</div>
-                    <span>Financial Information</span>
+                    Financial Information
                 </div>
                 
                 <div class="form-row">
@@ -713,8 +719,7 @@
             <!-- Additional Information -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📝</div>
-                    <span>Additional Information</span>
+                    Additional Information
                 </div>
                 
                 <div class="form-group">
@@ -811,7 +816,7 @@
                                         <strong>${unit.unit_number}</strong>
                                         ${unit.unit_name ? ` - ${unit.unit_name}` : ''}
                                         <div class="unit-details">
-                                            ${unit.unit_type_label} • ${unit.bedrooms}br • ${unit.bathrooms}ba • ${unit.area} sq ft
+                                            ${getUnitTypeLabel(unit)} • ${unit.bedrooms}br • ${unit.bathrooms}ba • ${unit.area} sq ft
                                         </div>
                                     </div>
                                     <div>
@@ -911,7 +916,7 @@
                         isUnitNumberValid = true;
                         if (submitBtn) submitBtn.disabled = false;
                     });
-            }, 500); // 500ms debounce
+            }, 500);
         }
 
         // Building change event - load existing units
@@ -961,7 +966,11 @@
                 // Check if unit number is valid
                 if (!isUnitNumberValid) {
                     e.preventDefault();
-                    Utilities.showToast('Unit number already exists in this building. Please choose a different number.', 'error');
+                    if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                        Utilities.showToast('Unit number already exists in this building. Please choose a different number.', 'error');
+                    } else {
+                        alert('Unit number already exists in this building. Please choose a different number.');
+                    }
                     return;
                 }
                 
@@ -980,7 +989,11 @@
                 
                 if (!isValid) {
                     e.preventDefault();
-                    Utilities.showToast('Please fill in all required fields', 'error');
+                    if (typeof Utilities !== 'undefined' && Utilities.showToast) {
+                        Utilities.showToast('Please fill in all required fields', 'error');
+                    } else {
+                        alert('Please fill in all required fields');
+                    }
                     return;
                 }
                 
@@ -988,39 +1001,9 @@
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = 'Saving...';
-                    submitBtn.style.opacity = '0.7';
                 }
             });
         }
-
-        // Debug: Log form data before submission
-        window.addEventListener('beforeunload', function(e) {
-            if (form && form.querySelector('[name="unit_number"]').value) {
-                console.log('Form data before leaving:', {
-                    unit_number: form.querySelector('[name="unit_number"]').value,
-                    unit_type: form.querySelector('[name="unit_type"]').value,
-                    building_id: form.querySelector('[name="building_id"]').value
-                });
-            }
-        });
     });
-
-    // Debug helper
-    window.debugForm = function() {
-        const form = document.getElementById('createForm');
-        if (!form) return;
-        
-        const formData = new FormData(form);
-        const data = {};
-        for (let [key, value] of formData.entries()) {
-            data[key] = value;
-        }
-        
-        console.log('Form data:', data);
-        console.log('Form action:', form.action);
-        console.log('Form method:', form.method);
-        
-        return data;
-    }
 </script>
 @endpush

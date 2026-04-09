@@ -4,194 +4,178 @@
 
 @push('styles')
 <style>
-    /* PAGE HEADER */
-    .page-header {
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+        --accent-pink: #ec4899;
     }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
     
-    .page-title {
-        font-size: 24px;
-        font-weight: 600;
-        color: #2c3e50;
-    }
+    .page-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
 
     /* BUILDING HEADER */
     .building-header {
-        background: white;
-        color: #2c3e50;
-        padding: 30px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
     }
     
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    
+    .header-left { flex: 1; min-width: 280px; }
+    
     .building-title {
-        font-size: 28px;
+        font-size: 1.75rem;
         font-weight: 700;
-        margin-bottom: 10px;
-        color: #2c3e50;
+        margin: 0 0 0.5rem 0;
+        color: var(--text-main);
     }
     
     .building-address {
-        font-size: 15px;
-        color: #6c757d;
-        margin-bottom: 20px;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
     }
     
     .building-meta {
         display: flex;
-        gap: 20px;
-        font-size: 14px;
+        gap: 1rem;
         flex-wrap: wrap;
     }
     
     .meta-item {
-        background: #f8f9fa;
-        padding: 8px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.3rem 0.8rem;
         border-radius: 6px;
-        border: 1px solid #e9ecef;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
     }
     
-    /* BUTTONS */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 20px;
-        border-radius: 4px;
-        border: 1px solid #4a5568;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
-        background: transparent;
-        color: #4a5568;
-    }
-
-    .btn:hover {
-        background: #4a5568;
-        color: white;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,.1);
-        text-decoration: none;
-    }
-
-    .btn-sm {
-        padding: 6px 12px;
-        font-size: 12px;
-        border: 1px solid #4a5568;
-        background: transparent;
-        color: #4a5568;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 500;
-        line-height: 1;
-        height: 32px;
-    }
-
-    .btn-sm:hover {
-        background: #4a5568;
-        color: white;
-        text-decoration: none;
-    }
-
-    .btn-danger {
-        border: 1px solid #2d3748;
-        color: #2d3748;
-    }
-
-    .btn-danger:hover {
-        background: #2d3748;
-        color: white;
-    }
-
     /* STATS GRID */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
     
     .stat-card {
-        background: white;
-        border-radius: 8px;
-        padding: 25px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+        transition: left 0.3s ease;
+    }
+    
+    .stat-card:hover::before {
+        left: 100%;
+        animation: pulse 1.5s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0; left: -100%; }
+        50% { opacity: 1; left: 0%; }
+        100% { opacity: 0; left: 100%; }
+    }
+    
+    .stat-card:hover {
+        border-color: var(--accent-emerald);
+        transform: translateY(-3px);
     }
     
     .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #2c3e50;
         display: block;
-        margin-bottom: 10px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 0.5rem;
     }
     
     .stat-label {
-        font-size: 13px;
-        color: #6c757d;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 500;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
     }
     
     /* TAB CONTAINER */
     .tab-container {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
-        margin-bottom: 40px;
+        margin-bottom: 2rem;
     }
     
     .tab-header {
         display: flex;
-        border-bottom: 1px solid #dee2e6;
-        background: #f8f9fa;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-surface);
         overflow-x: auto;
     }
     
     .tab-button {
-        padding: 18px 30px;
-        border: none;
+        padding: 1rem 1.75rem;
         background: none;
+        border: none;
         cursor: pointer;
         font-weight: 500;
-        color: #6c757d;
+        color: var(--text-muted);
         transition: all 0.3s ease;
         border-bottom: 3px solid transparent;
-        white-space: nowrap;
-        font-size: 14px;
+        font-size: 0.85rem;
         font-family: 'Inter', sans-serif;
+        white-space: nowrap;
     }
     
     .tab-button:hover {
-        background: #e9ecef;
-        color: #495057;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
     }
     
     .tab-button.active {
-        color: #4a5568;
-        border-bottom-color: #4a5568;
-        background: white;
-        font-weight: 600;
+        color: var(--accent-emerald);
+        border-bottom-color: var(--accent-emerald);
     }
     
     .tab-content {
-        padding: 30px;
+        padding: 1.75rem;
     }
     
     .tab-pane {
@@ -200,494 +184,370 @@
     
     .tab-pane.active {
         display: block;
+        animation: fadeIn 0.3s ease;
     }
     
-    /* OVERVIEW 4-BOX LAYOUT */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* OVERVIEW GRID */
     .overview-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
-
-    .overview-box {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        height: fit-content;
-    }
-
-    .overview-box-header {
-        background: #f8f9fa;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        font-weight: 700;
-        color: #2c3e50;
-        font-size: 16px;
-        text-align: center;
-        letter-spacing: 0.3px;
-    }
-
-    .overview-box-content {
-        padding: 20px;
-        flex: 1;
-    }
-
-    .info-item {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .info-item:last-child {
-        margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
-    }
-
-    .info-label {
-        font-size: 12px;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        margin-bottom: 4px;
-    }
-
-    .info-value {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        word-break: break-word;
-    }
-
-    .description-text {
-        color: #2c3e50;
-        font-size: 14px;
-        line-height: 1.8;
-        margin: 0;
-        word-break: break-word;
-    }
-
-    /* Responsive for overview grid */
-    @media (max-width: 992px) {
-        .overview-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 576px) {
+    
+    @media (max-width: 768px) {
         .overview-grid {
             grid-template-columns: 1fr;
         }
     }
     
-    /* UNITS TABLE */
-    .units-table-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        overflow-x: auto;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
+    .overview-box {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow: hidden;
     }
-
-    .units-table {
+    
+    .overview-box-header {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.9rem;
+    }
+    
+    .overview-box-content {
+        padding: 1.25rem;
+    }
+    
+    .info-item {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-main);
+        word-break: break-word;
+    }
+    
+    .description-text {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn:hover {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
+    }
+    
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    
+    .btn-sm:hover {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    /* TABLES */
+    .units-table-container,
+    .tenants-table-container,
+    .maintenance-table-container {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow-x: auto;
+        margin-top: 1rem;
+    }
+    
+    .units-table,
+    .tenants-table,
+    .maintenance-table {
         width: 100%;
         border-collapse: collapse;
         min-width: 800px;
     }
-
-    .units-table th {
-        background: #f8f9fa;
-        padding: 18px 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        border: 1px solid #dee2e6;
-        font-size: 14px;
-        white-space: nowrap;
-        text-align: center;
-    }
-
-    .units-table td {
-        padding: 16px 15px;
-        border: 1px solid #e9ecef;
-        vertical-align: middle;
-        font-size: 14px;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .units-table td:first-child,
-    .units-table td:nth-child(2),
-    .units-table td:nth-child(6) {
-        text-align: left;
-    }
-
-    .units-table tbody tr:hover td {
-        background: #f8f9fa;
-        border-color: #cfe2ff;
-    }
     
-    /* TENANTS TABLE */
-    .tenants-table-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        overflow-x: auto;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
-    }
-
-    .tenants-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1000px;
-    }
-
-    .tenants-table th {
-        background: #f8f9fa;
-        padding: 18px 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        border: 1px solid #dee2e6;
-        font-size: 14px;
-        white-space: nowrap;
-        text-align: center;
-    }
-
-    .tenants-table td {
-        padding: 16px 15px;
-        border: 1px solid #e9ecef;
-        vertical-align: middle;
-        font-size: 14px;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .tenants-table td:first-child,
-    .tenants-table td:nth-child(2),
-    .tenants-table td:nth-child(3) {
-        text-align: left;
-    }
-
-    .tenants-table tbody tr:hover td {
-        background: #f8f9fa;
-        border-color: #cfe2ff;
-    }
-    
-    /* MAINTENANCE TABLE */
-    .maintenance-table-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        overflow-x: auto;
-        border: 1px solid #dee2e6;
-        margin-bottom: 30px;
-    }
-
-    .maintenance-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 1100px;
-    }
-
+    .units-table th,
+    .tenants-table th,
     .maintenance-table th {
-        background: #f8f9fa;
-        padding: 18px 15px;
-        font-weight: 600;
-        color: #2c3e50;
-        border: 1px solid #dee2e6;
-        font-size: 14px;
-        white-space: nowrap;
-        text-align: center;
-    }
-
-    .maintenance-table td {
-        padding: 16px 15px;
-        border: 1px solid #e9ecef;
-        vertical-align: middle;
-        font-size: 14px;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .maintenance-table td:nth-child(1),
-    .maintenance-table td:nth-child(5) {
+        padding: 1rem;
         text-align: left;
-    }
-
-    .maintenance-table tbody tr:hover td {
-        background: #f8f9fa;
-        border-color: #cfe2ff;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.02);
     }
     
-    /* BADGES - No background colors */
+    .units-table td,
+    .tenants-table td,
+    .maintenance-table td {
+        padding: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-main);
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .units-table tbody tr:hover,
+    .tenants-table tbody tr:hover,
+    .maintenance-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* BADGES */
     .status-badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 0.25rem 0.75rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.7rem;
         font-weight: 500;
         text-align: center;
-        min-width: 100px;
         background: transparent;
         border: 1px solid;
     }
-
-    .status-occupied {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    .status-vacant {
-        border-color: #495057;
-        color: #495057;
-    }
-
-    .status-maintenance {
-        border-color: #856404;
-        color: #856404;
-    }
-
-    .status-pending {
-        border-color: #856404;
-        color: #856404;
-    }
-
-    .status-reserved {
-        border-color: #2c3e50;
-        color: #2c3e50;
-    }
-
-    .status-ready {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    .status-expired {
-        border-color: #721c24;
-        color: #721c24;
-    }
-
-    .status-terminated {
-        border-color: #2c3e50;
-        color: #2c3e50;
-    }
-
-    .status-active {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    /* PRIORITY BADGES */
-    .priority-emergency {
-        border-color: #e74c3c;
-        color: #e74c3c;
+    
+    .status-occupied,
+    .status-active,
+    .status-ready,
+    .status-completed {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
     
+    .status-vacant,
+    .status-inactive {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+    
+    .status-maintenance,
+    .status-pending,
+    .status-assigned,
+    .status-submitted {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    
+    .status-in_progress {
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+    }
+    
+    .status-expired,
+    .status-terminated,
+    .status-cancelled {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
+    
+    .status-reserved {
+        border-color: var(--accent-purple);
+        color: var(--accent-purple);
+    }
+    
+    .priority-emergency {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
+    }
     .priority-high {
         border-color: #e67e22;
         color: #e67e22;
     }
-    
     .priority-medium {
-        border-color: #f39c12;
-        color: #f39c12;
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    .priority-low {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
     
-    .priority-low {
-        border-color: #27ae60;
-        color: #27ae60;
+    .days-badge {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        border: 1px solid;
     }
-
-    /* STATUS BADGES for maintenance */
-    .status-submitted {
-        border-color: #2c3e50;
-        color: #2c3e50;
+    .days-warning {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
     }
-
-    .status-assigned {
-        border-color: #856404;
-        color: #856404;
+    .days-danger {
+        border-color: var(--accent-red);
+        color: var(--accent-red);
     }
-
-    .status-in_progress {
-        border-color: #004085;
-        color: #004085;
-    }
-
-    .status-completed {
-        border-color: #155724;
-        color: #155724;
-    }
-
-    .status-cancelled {
-        border-color: #721c24;
-        color: #721c24;
-    }
-
-    /* Overdue badge */
+    
     .overdue-badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 0.25rem 0.6rem;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 0.65rem;
         font-weight: 500;
-        text-align: center;
-        min-width: 70px;
-        border: 1px solid #e74c3c;
-        color: #e74c3c;
-        margin-left: 5px;
-    }
-
-    /* ACTION BUTTONS */
-    .action-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
+        margin-left: 0.5rem;
+        border: 1px solid var(--accent-red);
+        color: var(--accent-red);
     }
     
-    /* DELETE FORM */
-    .delete-form {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex: 1;
-    }
-
-    /* EMPTY STATE */
     .no-data {
         text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        margin: 20px;
-        background: white;
+        padding: 3rem;
+        color: var(--text-muted);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
     }
-
+    
     .no-data h3 {
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .no-data p {
-        margin-bottom: 20px;
-        color: #6c757d;
-    }
-    
-    /* HEADER CONTENT LAYOUT */
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    
-    .header-left {
-        flex: 1;
-        min-width: 300px;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+        font-weight: 500;
     }
     
     /* PHOTO SECTION */
     .photo-section {
-        margin-bottom: 30px;
+        margin-top: 0;
     }
-
+    
     .photo-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
-
+    
     .photo-title {
-        font-size: 18px;
-        color: #2c3e50;
+        font-size: 1.1rem;
         font-weight: 600;
+        color: var(--text-main);
+        margin: 0 0 0.25rem 0;
     }
-
-    .photo-upload-toggle {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .photo-upload-toggle .btn {
-        padding: 8px 16px;
-        border: 1px solid #4a5568;
-        background: transparent;
-        color: #4a5568;
-    }
-
-    .photo-upload-toggle .btn:hover {
-        background: #4a5568;
-        color: white;
-    }
-
+    
     .photo-upload-panel {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
         display: none;
     }
-
+    
     .photo-upload-panel.active {
         display: block;
     }
-
+    
     .photo-upload-form {
         display: flex;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 1rem;
         align-items: flex-end;
     }
-
+    
     .photo-upload-field {
         flex: 1;
-        min-width: 200px;
+        min-width: 180px;
     }
-
+    
     .photo-upload-field label {
         display: block;
-        margin-bottom: 5px;
-        font-size: 12px;
+        margin-bottom: 0.25rem;
+        font-size: 0.7rem;
         font-weight: 500;
-        color: #495057;
+        color: var(--text-muted);
         text-transform: uppercase;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.5px;
     }
-
+    
     .photo-upload-field input,
     .photo-upload-field select {
         width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        font-size: 13px;
+        padding: 0.6rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
+        font-size: 0.8rem;
         font-family: 'Inter', sans-serif;
     }
-
+    
     .photo-upload-field input:focus,
     .photo-upload-field select:focus {
         outline: none;
-        border-color: #4a5568;
+        border-color: var(--accent-emerald);
     }
-
+    
     .file-input-wrapper {
         position: relative;
     }
-
+    
     .file-input-wrapper input[type="file"] {
         position: absolute;
         opacity: 0;
@@ -695,181 +555,160 @@
         height: 100%;
         cursor: pointer;
     }
-
+    
     .file-input-button {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        background: white;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        font-size: 13px;
-        color: #495057;
+        gap: 0.5rem;
+        padding: 0.6rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
         cursor: pointer;
     }
-
+    
     .file-input-button:hover {
-        background: #f1f3f5;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
-
+    
     .selected-files {
-        font-size: 12px;
-        color: #6c757d;
-        margin-top: 5px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
     }
-
+    
     .category-filter {
         display: flex;
-        gap: 10px;
-        margin-bottom: 25px;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
         flex-wrap: wrap;
     }
     
     .category-btn {
-        padding: 6px 14px;
+        padding: 0.4rem 1rem;
         background: transparent;
-        border: 1px solid #dee2e6;
+        border: 1px solid var(--border-color);
         border-radius: 20px;
+        font-size: 0.75rem;
+        color: var(--text-muted);
         cursor: pointer;
-        font-size: 12px;
-        color: #6c757d;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
     
     .category-btn:hover {
-        background: #e9ecef;
-        border-color: #adb5bd;
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
     }
     
     .category-btn.active {
-        background: #4a5568;
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
         color: white;
-        border-color: #4a5568;
     }
-
-    /* Photo Gallery */
+    
     .photo-gallery {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-top: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
     }
-
-    /* Photo Card */
+    
     .photo-card {
-        background: white;
-        border-radius: 8px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,.1);
-        border: 1px solid #dee2e6;
         transition: all 0.3s ease;
-        position: relative;
-        height: 100%;
-        min-height: 280px;
-        animation: fadeIn 0.3s ease forwards;
     }
-
+    
     .photo-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,.15);
+        border-color: var(--accent-emerald);
     }
-
-    /* Photo Image Container */
+    
     .photo-image-container {
-        height: 160px;
+        height: 180px;
         width: 100%;
         overflow: hidden;
         position: relative;
-        background: #f8f9fa;
+        background: var(--bg-deep);
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
+    
     .photo-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
-
+    
     .photo-card:hover .photo-image {
         transform: scale(1.05);
     }
-
+    
     .primary-badge {
         position: absolute;
         top: 10px;
         right: 10px;
-        background: #4a5568;
+        background: var(--accent-emerald);
         color: white;
-        padding: 4px 10px;
+        padding: 0.2rem 0.6rem;
         border-radius: 20px;
-        font-size: 11px;
+        font-size: 0.65rem;
         font-weight: 600;
-        letter-spacing: 0.3px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-
-    /* Photo Card Content */
+    
     .photo-card-content {
-        padding: 12px 15px;
+        padding: 0.75rem;
     }
-
-    /* Photo Card Header */
+    
     .photo-card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
     }
-
+    
     .photo-category-badge {
-        font-size: 11px;
+        font-size: 0.65rem;
         font-weight: 600;
-        color: #4a5568;
-        background: #f8f9fa;
-        padding: 3px 8px;
+        color: var(--accent-emerald);
+        background: rgba(16, 185, 129, 0.1);
+        padding: 0.2rem 0.6rem;
         border-radius: 4px;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
     }
-
+    
     .photo-date {
-        font-size: 10px;
-        color: #6c757d;
+        font-size: 0.6rem;
+        color: var(--text-muted);
     }
-
-    /* Photo Description */
+    
     .photo-description {
-        font-size: 14px;
-        font-weight: 500;
-        color: #2c3e50;
-        margin-bottom: 12px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        min-height: 40px;
     }
-
-    /* Photo Card Actions */
+    
     .photo-card-actions {
         display: flex;
-        gap: 6px;
+        gap: 0.5rem;
     }
-
+    
     .photo-card-actions .btn-sm {
         flex: 1;
-        height: 28px;
-        font-size: 11px;
-        padding: 0 8px;
-        min-width: 0;
+        justify-content: center;
     }
-
-    /* Modal Styles */
+    
     .modal {
         display: none;
         position: fixed;
@@ -877,18 +716,18 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.9);
+        background: rgba(0, 0, 0, 0.95);
         z-index: 10000;
         align-items: center;
         justify-content: center;
     }
-
+    
     .modal-content {
         position: relative;
         max-width: 90%;
         max-height: 90%;
     }
-
+    
     .modal-close {
         position: absolute;
         top: -40px;
@@ -896,237 +735,104 @@
         background: none;
         border: none;
         color: white;
-        font-size: 24px;
+        font-size: 28px;
         cursor: pointer;
     }
-
+    
     .modal-image {
         max-width: 100%;
         max-height: 80vh;
-        border-radius: 4px;
+        border-radius: 8px;
     }
-
+    
     .modal-description {
-        color: white;
+        color: var(--text-muted);
         text-align: center;
-        margin-top: 15px;
-        font-size: 16px;
-    }
-
-    /* Days remaining badge */
-    .days-badge {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 600;
-        margin-left: 8px;
-        background: transparent;
+        margin-top: 1rem;
+        font-size: 0.9rem;
     }
     
-    .days-warning {
-        border: 1px solid #856404;
-        color: #856404;
+    .alert {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid var(--accent-red);
+        color: var(--accent-red);
     }
     
-    .days-danger {
-        border: 1px solid #721c24;
-        color: #721c24;
-    }
-
-    /* Animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Responsive */
-    @media (max-width: 1400px) {
-        .photo-gallery {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    @media (max-width: 1100px) {
-        .photo-gallery {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
     @media (max-width: 768px) {
-        .page-content {
-            padding: 20px 15px !important;
-        }
-
-        .header-content {
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .building-header {
-            padding: 25px;
-        }
-        
-        .building-title {
-            font-size: 24px;
-        }
-        
-        .building-meta {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .tab-button {
-            padding: 15px 20px;
-            font-size: 13px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-        }
-        
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .photo-gallery {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        
-        .photo-card {
-            min-height: 260px;
-        }
-        
-        .photo-image-container {
-            height: 180px;
-        }
-        
-        .photo-card-actions {
-            flex-direction: row;
-            gap: 6px;
-        }
-        
-        .photo-card-actions .btn-sm {
-            height: 32px;
-            font-size: 12px;
-        }
-        
-        .photo-upload-form {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .photo-upload-field {
-            width: 100%;
-        }
-        
-        .tenants-table {
-            min-width: 800px;
-        }
-        
-        .maintenance-table {
-            min-width: 900px;
-        }
+        .dashboard-wrapper { padding: 1rem; }
+        .tab-content { padding: 1rem; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .photo-gallery { grid-template-columns: 1fr; }
+        .action-buttons { width: 100%; justify-content: flex-start; }
     }
-
+    
     @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .photo-gallery {
-            grid-template-columns: 1fr;
-        }
-        
-        .overview-grid {
-            grid-template-columns: 1fr;
-        }
+        .stats-grid { grid-template-columns: 1fr; }
     }
 </style>
 @endpush
 
 @section('content')
-<div class="page-content">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
             <h1 class="page-title">Building Details</h1>
-            <p>View and manage building information</p>
+            <p class="page-subtitle">{{ $building->name }} • Property Management Overview</p>
         </div>
     </div>
 
-    <!-- Success/Error Messages (using layout's toast system) -->
     @if(session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("success") }}', 'success');
-            });
-        </script>
+        <div class="alert alert-success" style="margin-bottom: 1.5rem;">
+            {{ session('success') }}
+            <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: inherit; cursor: pointer;">&times;</button>
+        </div>
     @endif
     
     @if(session('error'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Utilities.showToast('{{ session("error") }}', 'error');
-            });
-        </script>
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            {{ session('error') }}
+            <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: inherit; cursor: pointer;">&times;</button>
+        </div>
     @endif
 
-    <!-- Building Header -->
     <div class="building-header">
         <div class="header-content">
             <div class="header-left">
                 <h1 class="building-title">{{ $building->name }}</h1>
-                <div class="building-address">
-                    {{ $building->full_address }}
-                </div>
+                <div class="building-address">{{ $building->full_address }}</div>
                 <div class="building-meta">
                     @if($building->building_type)
-                    <div class="meta-item">
-                        {{ $building->building_type_label }}
-                    </div>
+                    <div class="meta-item">{{ $building->building_type_label }}</div>
                     @endif
-                    
                     @if($building->total_floors)
-                    <div class="meta-item">
-                        {{ $building->total_floors }} floors
-                    </div>
+                    <div class="meta-item">{{ $building->total_floors }} floors</div>
                     @endif
-                    
-                    <div class="meta-item">
-                        Status: {{ $building->status_label }}
-                    </div>
-                    
+                    <div class="meta-item">Status: {{ $building->status_label }}</div>
                     @if($building->year_built)
-                    <div class="meta-item">
-                        Built: {{ $building->year_built }}
-                    </div>
+                    <div class="meta-item">Built: {{ $building->year_built }}</div>
                     @endif
-                    
-                    <div class="meta-item">
-                        {{ $building->active_tenants_count ?? 0 }} Active Tenants
-                    </div>
+                    <div class="meta-item">{{ $building->active_tenants_count ?? 0 }} Active Tenants</div>
                 </div>
             </div>
             <div class="action-buttons">
-                <a href="{{ route('buildings.edit', $building) }}" class="btn">
-                    Edit Building
-                </a>
-                <a href="{{ route('buildings.index') }}" class="btn">
-                    Back to Buildings
-                </a>
+                <a href="{{ route('buildings.edit', $building) }}" class="btn">Edit Building</a>
+                <a href="{{ route('buildings.index') }}" class="btn">Back to Buildings</a>
             </div>
         </div>
     </div>
 
-    <!-- Quick Stats -->
     @php
         $totalUnits = $building->units_count ?? $building->units->count();
         $occupiedUnits = $building->occupied_units_count ?? $building->units->where('status', 'occupied')->count();
@@ -1134,7 +840,6 @@
         $monthlyRevenue = $building->monthly_revenue ?? $building->total_monthly_tenant_revenue ?? 0;
         $totalTenants = $building->active_tenants_count ?? $building->currentTenants->count() ?? 0;
         
-        // Safely get maintenance requests count
         $pendingMaintenanceCount = 0;
         if (method_exists($building, 'maintenanceRequests') && $building->maintenanceRequests) {
             $pendingMaintenanceCount = $building->maintenanceRequests->whereNotIn('status', ['completed', 'cancelled'])->count();
@@ -1160,14 +865,13 @@
         </div>
     </div>
 
-    <!-- Tab Interface -->
     <div class="tab-container">
         <div class="tab-header">
             <button class="tab-button active" data-tab="overview">Overview</button>
             <button class="tab-button" data-tab="units">Units ({{ $totalUnits }})</button>
             <button class="tab-button" data-tab="tenants">Tenants ({{ $totalTenants }})</button>
             <button class="tab-button" data-tab="maintenance">Maintenance 
-                <span style="background: {{ $pendingMaintenanceCount > 0 ? '#e74c3c' : '#6c757d' }}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">
+                <span style="background: {{ $pendingMaintenanceCount > 0 ? 'var(--accent-red)' : 'var(--text-muted)' }}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 5px;">
                     {{ $pendingMaintenanceCount }}
                 </span>
             </button>
@@ -1178,7 +882,6 @@
             <!-- Overview Tab -->
             <div class="tab-pane active" id="overview">
                 <div class="overview-grid">
-                    <!-- Box 1: Contact Information -->
                     <div class="overview-box">
                         <div class="overview-box-header">Contact Information</div>
                         <div class="overview-box-content">
@@ -1193,18 +896,15 @@
                         </div>
                     </div>
                     
-                    <!-- Box 2: Building Specifications -->
                     <div class="overview-box">
                         <div class="overview-box-header">Building Specifications</div>
                         <div class="overview-box-content">
-                            
                             @if($building->total_area)
                             <div class="info-item">
                                 <div class="info-label">Total Area</div>
                                 <div class="info-value">{{ number_format($building->total_area) }} sq ft</div>
                             </div>
                             @endif
-                            
                             <div class="info-item">
                                 <div class="info-label">Elevator</div>
                                 <div class="info-value">{{ $building->has_elevator ? 'Available' : 'Not available' }}</div>
@@ -1216,10 +916,7 @@
                         </div>
                     </div>
                     
-                    
-                    
-                    <!-- Box 4: Description -->
-                    <div class="overview-box">
+                    <div class="overview-box" style="grid-column: span 2;">
                         <div class="overview-box-header">Description</div>
                         <div class="overview-box-content">
                             <p class="description-text">{{ $building->description ?? 'No description provided.' }}</p>
@@ -1230,27 +927,16 @@
             
             <!-- Units Tab -->
             <div class="tab-pane" id="units">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 18px; color: #2c3e50;">Units in {{ $building->name }}</h3>
-                    <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn">
-                        Add Unit
-                    </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Units in {{ $building->name }}</h3>
+                    <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn">Add Unit</a>
                 </div>
                 
                 @if($building->units && $building->units->count() > 0)
                 <div class="units-table-container">
                     <table class="units-table">
                         <thead>
-                            <tr>
-                                <th>Unit #</th>
-                                <th>Type</th>
-                                <th>Bed/Bath</th>
-                                <th>Rent</th>
-                                <th>Status</th>
-                                <th>Current Tenant</th>
-                                <th>Lease End</th>
-                                <th>Actions</th>
-                            </tr>
+                            <tr><th>Unit #</th><th>Type</th><th>Bed/Bath</th><th>Rent</th><th>Status</th><th>Current Tenant</th><th>Lease End</th><th>Actions</th></tr>
                         </thead>
                         <tbody>
                             @foreach($building->units as $unit)
@@ -1258,7 +944,7 @@
                                 <td style="font-weight: 600;">{{ $unit->unit_number }}</td>
                                 <td>{{ $unit->unit_type_label ?? ucfirst($unit->unit_type ?? 'N/A') }}</td>
                                 <td>{{ $unit->bedrooms ?? '-' }} / {{ $unit->bathrooms ?? '-' }}</td>
-                                <td style="font-weight: 600; color: #2c3e50;">₱{{ number_format($unit->monthly_rent ?? 0, 0) }}</td>
+                                <td style="font-weight: 600;">₱{{ number_format($unit->monthly_rent ?? 0, 0) }}</td>
                                 <td>
                                     @if($unit->status === 'occupied')
                                         <span class="status-badge status-occupied">Occupied</span>
@@ -1276,11 +962,11 @@
                                 </td>
                                 <td>
                                     @if($unit->currentTenant)
-                                        <a href="{{ route('tenants.show', $unit->currentTenant) }}" style="color: #4a5568; text-decoration: none; font-weight: 500;">
+                                        <a href="{{ route('tenants.show', $unit->currentTenant) }}" style="color: var(--accent-emerald); text-decoration: none;">
                                             {{ $unit->currentTenant->full_name }}
                                         </a>
                                     @else
-                                        <span style="color: #6c757d;">—</span>
+                                        <span style="color: var(--text-muted);">—</span>
                                     @endif
                                 </td>
                                 <td>
@@ -1296,16 +982,10 @@
                                             <span class="days-badge days-danger">Expired</span>
                                         @endif
                                     @else
-                                        <span style="color: #6c757d;">—</span>
+                                        <span style="color: var(--text-muted);">—</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <div style="display: flex; gap: 5px; justify-content: center;">
-                                        <a href="{{ route('units.show', $unit) }}" class="btn-sm">
-                                            View
-                                        </a>
-                                    </div>
-                                </td>
+                                <td><a href="{{ route('units.show', $unit) }}" class="btn-sm">View</a></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -1315,44 +995,28 @@
                 <div class="no-data">
                     <h3>No Units Added Yet</h3>
                     <p>Add units to start managing this building</p>
-                    <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn" style="margin-top: 15px;">
-                        Add Your First Unit
-                    </a>
+                    <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn" style="margin-top: 1rem;">Add Your First Unit</a>
                 </div>
                 @endif
             </div>
             
             <!-- Tenants Tab -->
             <div class="tab-pane" id="tenants">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div>
-                        <h3 style="font-size: 18px; color: #2c3e50; margin-bottom: 5px;">Current Tenants in {{ $building->name }}</h3>
-                    </div>
-                    <a href="{{ route('tenants.create', ['building_id' => $building->id]) }}" class="btn">
-                        Add Tenant
-                    </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Current Tenants in {{ $building->name }}</h3>
+                    <a href="{{ route('tenants.create', ['building_id' => $building->id]) }}" class="btn">Add Tenant</a>
                 </div>
                 
                 @php
-                    // Get ALL tenants in this building with their units
-                    $allTenants = $building->tenants()
-                        ->with('unit')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-                    
-                    // Filter to only tenants that have an active lease by directly querying the lease table
+                    $allTenants = $building->tenants()->with('unit')->orderBy('created_at', 'desc')->get();
                     $currentTenants = [];
                     foreach($allTenants as $tenant) {
                         $activeLease = \App\Models\Lease::where('tenant_id', $tenant->id)
                             ->where('lease_status', 'active')
                             ->latest('start_date')
                             ->first();
-                        
                         if ($activeLease) {
-                            $currentTenants[] = [
-                                'tenant' => $tenant,
-                                'lease' => $activeLease
-                            ];
+                            $currentTenants[] = ['tenant' => $tenant, 'lease' => $activeLease];
                         }
                     }
                 @endphp
@@ -1361,86 +1025,49 @@
                 <div class="tenants-table-container">
                     <table class="tenants-table">
                         <thead>
-                            <tr>
-                                <th>Tenant</th>
-                                <th>Contact</th>
-                                <th>Unit</th>
-                                <th>Lease Period</th>
-                                <th>Monthly Rent</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
+                            <tr><th>Tenant</th><th>Contact</th><th>Unit</th><th>Lease Period</th><th>Monthly Rent</th><th>Status</th><th>Actions</th></tr>
                         </thead>
                         <tbody>
                             @foreach($currentTenants as $item)
-                                @php
-                                    $tenant = $item['tenant'];
-                                    $lease = $item['lease'];
-                                @endphp
+                                @php $tenant = $item['tenant']; $lease = $item['lease']; @endphp
                                 <tr>
                                     <td>
-                                        <div>
-                                            <a href="{{ route('tenants.show', $tenant) }}" style="font-weight: 600; color: #2c3e50; text-decoration: none; display: block; margin-bottom: 2px;">
-                                                {{ $tenant->full_name }}
-                                            </a>
-                                            <div style="color: #6c757d; font-size: 12px;">
-                                                @if($lease && $lease->start_date)
-                                                    Tenant since {{ \Carbon\Carbon::parse($lease->start_date)->format('M Y') }}
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                                            <div style="color: #495057;">{{ $tenant->phone ?? 'N/A' }}</div>
-                                            <div style="color: #6c757d; font-size: 12px;">{{ $tenant->email }}</div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($tenant->unit)
-                                            <div style="font-weight: 600; color: #2c3e50;">
-                                                Unit {{ $tenant->unit->unit_number ?? 'N/A' }}
-                                            </div>
-                                            <div style="color: #6c757d; font-size: 12px;">
-                                                {{ $tenant->unit->unit_type_label ?? ucfirst($tenant->unit->unit_type ?? '') }}
-                                            </div>
-                                        @else
-                                            <div style="color: #6c757d;">No unit assigned</div>
+                                        <a href="{{ route('tenants.show', $tenant) }}" style="font-weight: 600; color: var(--accent-emerald); text-decoration: none;">
+                                            {{ $tenant->full_name }}
+                                        </a>
+                                        @if($lease && $lease->start_date)
+                                            <div style="color: var(--text-muted); font-size: 0.7rem;">Since {{ \Carbon\Carbon::parse($lease->start_date)->format('M Y') }}</div>
                                         @endif
                                     </td>
                                     <td>
-                                        <div style="color: #495057; font-size: 13px;">
-                                            {{ $lease->start_date ? \Carbon\Carbon::parse($lease->start_date)->format('M d, Y') : 'N/A' }}
-                                        </div>
-                                        <div style="color: #495057; font-size: 13px;">
-                                            → {{ $lease->end_date ? \Carbon\Carbon::parse($lease->end_date)->format('M d, Y') : 'N/A' }}
-                                        </div>
-                                    </td>
-                                    <td style="font-weight: 600; color: #2c3e50;">
-                                        ₱{{ number_format($lease->monthly_rent ?? 0, 0) }}
+                                        <div>{{ $tenant->phone ?? 'N/A' }}</div>
+                                        <div style="color: var(--text-muted); font-size: 0.7rem;">{{ $tenant->email }}</div>
                                     </td>
                                     <td>
-                                        @php
-                                            $statusClass = match($lease->lease_status) {
-                                                'active' => 'status-active',
-                                                'pending' => 'status-pending',
-                                                'expired' => 'status-expired',
-                                                'terminated' => 'status-terminated',
-                                                default => 'status-vacant'
-                                            };
-                                            $statusLabel = ucfirst($lease->lease_status);
-                                        @endphp
-                                        <span class="status-badge {{ $statusClass }}">
-                                            {{ $statusLabel }}
+                                        @if($tenant->unit)
+                                            <span style="font-weight: 500;">Unit {{ $tenant->unit->unit_number }}</span>
+                                            <div style="color: var(--text-muted); font-size: 0.7rem;">{{ $tenant->unit->unit_type_label ?? '' }}</div>
+                                        @else
+                                            <span style="color: var(--text-muted);">No unit assigned</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div>{{ $lease->start_date ? \Carbon\Carbon::parse($lease->start_date)->format('M d, Y') : 'N/A' }}</div>
+                                        <div>→ {{ $lease->end_date ? \Carbon\Carbon::parse($lease->end_date)->format('M d, Y') : 'N/A' }}</div>
+                                    </td>
+                                    <td style="font-weight: 600;">₱{{ number_format($lease->monthly_rent ?? 0, 0) }}</td>
+                                    <td>
+                                        <span class="status-badge {{ match($lease->lease_status) {
+                                            'active' => 'status-active',
+                                            'pending' => 'status-pending',
+                                            'expired' => 'status-expired',
+                                            'terminated' => 'status-terminated',
+                                            default => 'status-vacant'
+                                        } }}">
+                                            {{ ucfirst($lease->lease_status) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <div style="display: flex; gap: 5px; justify-content: center;">
-                                            <a href="{{ route('tenants.show', $tenant) }}" class="btn-sm">
-                                                View
-                                            </a>
-                                        </div>
-                                    </td>
+                                    <td><a href="{{ route('tenants.show', $tenant) }}" class="btn-sm">View</a></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -1450,14 +1077,10 @@
                 <div class="no-data">
                     <h3>No Current Tenants</h3>
                     <p>This building has no active tenants at the moment</p>
-                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
-                        <a href="{{ route('tenants.create', ['building_id' => $building->id]) }}" class="btn">
-                            Add Your First Tenant
-                        </a>
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
+                        <a href="{{ route('tenants.create', ['building_id' => $building->id]) }}" class="btn">Add Your First Tenant</a>
                         @if($totalUnits == 0)
-                        <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn">
-                            Add Unit First
-                        </a>
+                        <a href="{{ route('units.create', ['building' => $building->id]) }}" class="btn">Add Unit First</a>
                         @endif
                     </div>
                 </div>
@@ -1466,18 +1089,12 @@
             
             <!-- Maintenance Tab -->
             <div class="tab-pane" id="maintenance">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div>
-                        <h3 style="font-size: 18px; color: #2c3e50; margin-bottom: 5px;">Maintenance Requests for {{ $building->name }}</h3>
-                        
-                    </div>
-                    <a href="{{ route('maintenance-requests.create', ['building_id' => $building->id]) }}" class="btn">
-                        New Request
-                    </a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; margin: 0;">Maintenance Requests for {{ $building->name }}</h3>
+                    <a href="{{ route('maintenance-requests.create', ['building_id' => $building->id]) }}" class="btn">New Request</a>
                 </div>
                 
                 @php
-                    // Safely get maintenance requests
                     $maintenanceRequests = collect([]);
                     if (method_exists($building, 'maintenanceRequests')) {
                         try {
@@ -1495,75 +1112,53 @@
                 <div class="maintenance-table-container">
                     <table class="maintenance-table">
                         <thead>
-                            <tr>
-                                <th>Title / Unit</th>
-                                <th>Category</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Requested By</th>
-                                <th>Request Date</th>
-                                <th>Assigned To</th>
-                                <th>Actions</th>
-                            </tr>
+                            <tr><th>Title / Unit</th><th>Category</th><th>Priority</th><th>Status</th><th>Requested By</th><th>Request Date</th><th>Assigned To</th><th>Actions</th></tr>
                         </thead>
                         <tbody>
                             @foreach($maintenanceRequests as $request)
                             <tr>
                                 <td>
-                                    <a href="{{ route('maintenance-requests.show', $request) }}" style="color: #4a5568; text-decoration: none; font-weight: 500; display: block;">
+                                    <a href="{{ route('maintenance-requests.show', $request) }}" style="color: var(--accent-emerald); text-decoration: none; font-weight: 500;">
                                         {{ Str::limit($request->title, 25) }}
                                     </a>
                                     @if($request->unit)
-                                        <span style="color: #6c757d; font-size: 11px; display: block; margin-top: 2px;">
-                                            <a href="{{ route('units.show', $request->unit) }}" style="color: #6c757d; text-decoration: none;">
-                                                Unit {{ $request->unit->unit_number }}
-                                            </a>
-                                        </span>
+                                        <div style="color: var(--text-muted); font-size: 0.7rem;">Unit {{ $request->unit->unit_number }}</div>
                                     @endif
                                 </td>
                                 <td>{{ $request->maintenanceCategory->name ?? 'N/A' }}</td>
                                 <td>
-                                    @php
-                                        $priorityClass = match($request->priority ?? '') {
-                                            'emergency' => 'priority-emergency',
-                                            'high' => 'priority-high',
-                                            'medium' => 'priority-medium',
-                                            'low' => 'priority-low',
-                                            default => ''
-                                        };
-                                    @endphp
-                                    <span class="status-badge {{ $priorityClass }}" style="min-width: 80px;">
+                                    <span class="status-badge {{ match($request->priority ?? '') {
+                                        'emergency' => 'priority-emergency',
+                                        'high' => 'priority-high',
+                                        'medium' => 'priority-medium',
+                                        'low' => 'priority-low',
+                                        default => ''
+                                    } }}">
                                         {{ ucfirst($request->priority ?? 'N/A') }}
                                     </span>
                                 </td>
                                 <td>
-                                    @php
-                                        $statusClass = match($request->status ?? '') {
-                                            'submitted' => 'status-submitted',
-                                            'assigned' => 'status-assigned',
-                                            'in_progress' => 'status-in_progress',
-                                            'completed' => 'status-completed',
-                                            'cancelled' => 'status-cancelled',
-                                            default => ''
-                                        };
-                                    @endphp
-                                    <span class="status-badge {{ $statusClass }}" style="min-width: 100px;">
+                                    <span class="status-badge {{ match($request->status ?? '') {
+                                        'submitted' => 'status-submitted',
+                                        'assigned' => 'status-assigned',
+                                        'in_progress' => 'status-in_progress',
+                                        'completed' => 'status-completed',
+                                        'cancelled' => 'status-cancelled',
+                                        default => ''
+                                    } }}">
                                         {{ ucfirst(str_replace('_', ' ', $request->status ?? 'N/A')) }}
                                     </span>
-                                    <!-- Overdue badge only shows for assigned or in_progress status, not for submitted -->
                                     @if(method_exists($request, 'isOverdue') && $request->isOverdue() && !in_array($request->status, ['submitted', 'completed', 'cancelled']))
-                                        <span class="overdue-badge">
-                                            Overdue
-                                        </span>
+                                        <span class="overdue-badge">Overdue</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($request->tenant)
-                                        <a href="{{ route('tenants.show', $request->tenant) }}" style="color: #4a5568; text-decoration: none;">
+                                        <a href="{{ route('tenants.show', $request->tenant) }}" style="color: var(--accent-emerald); text-decoration: none;">
                                             {{ $request->tenant->full_name }}
                                         </a>
                                     @else
-                                        <span style="color: #6c757d;">N/A</span>
+                                        <span style="color: var(--text-muted);">N/A</span>
                                     @endif
                                 </td>
                                 <td>{{ $request->request_date ? $request->request_date->format('M d, Y') : 'N/A' }}</td>
@@ -1573,17 +1168,10 @@
                                     @elseif($request->assignedStaff)
                                         <span>{{ $request->assignedStaff->name }}</span>
                                     @else
-                                        <span style="color: #6c757d;">Unassigned</span>
+                                        <span style="color: var(--text-muted);">Unassigned</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <div style="display: flex; gap: 5px; justify-content: center;">
-                                        <a href="{{ route('maintenance-requests.show', $request) }}" 
-                                           class="btn-sm">
-                                            View
-                                        </a>
-                                    </div>
-                                </td>
+                                <td><a href="{{ route('maintenance-requests.show', $request) }}" class="btn-sm">View</a></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -1593,9 +1181,7 @@
                 <div class="no-data">
                     <h3>No Maintenance Requests</h3>
                     <p>This building has no maintenance requests yet</p>
-                    <a href="{{ route('maintenance-requests.create', ['building_id' => $building->id]) }}" class="btn" style="margin-top: 15px;">
-                        Create First Request
-                    </a>
+                    <a href="{{ route('maintenance-requests.create', ['building_id' => $building->id]) }}" class="btn" style="margin-top: 1rem;">Create First Request</a>
                 </div>
                 @endif
             </div>
@@ -1606,37 +1192,27 @@
                     <div class="photo-header">
                         <div>
                             <h3 class="photo-title">Building Photos</h3>
-                            <p style="color: #6c757d; font-size: 13px; margin-top: 5px;">
-                                Upload and manage photos of {{ $building->name }}
-                            </p>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">Upload and manage photos of {{ $building->name }}</p>
                         </div>
-                        <div class="photo-upload-toggle">
-                            <button class="btn" onclick="toggleUploadPanel()">
-                                + Upload Photos
-                            </button>
+                        <div>
+                            <button class="btn" onclick="toggleUploadPanel()">+ Upload Photos</button>
                         </div>
                     </div>
                     
-                    <!-- Success/Error Messages for Photos -->
                     <div id="photo-messages"></div>
                     
-                    <!-- Compact Upload Panel (hidden by default) -->
                     <div id="photoUploadPanel" class="photo-upload-panel">
                         <form id="photoUploadForm" enctype="multipart/form-data">
                             @csrf
-                            
                             <div class="photo-upload-form">
                                 <div class="photo-upload-field">
                                     <label>Photos</label>
                                     <div class="file-input-wrapper">
                                         <input type="file" id="photoInput" name="photos[]" accept="image/*" multiple>
-                                        <div class="file-input-button">
-                                            <span>📁</span> Choose Files
-                                        </div>
+                                        <div class="file-input-button">📁 Choose Files</div>
                                     </div>
                                     <div id="selectedFiles" class="selected-files"></div>
                                 </div>
-                                
                                 <div class="photo-upload-field">
                                     <label>Category</label>
                                     <select id="photoCategory" name="category">
@@ -1648,22 +1224,17 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                
                                 <div class="photo-upload-field">
                                     <label>Description</label>
                                     <input type="text" id="photoDescription" name="description" placeholder="Brief description">
                                 </div>
-                                
                                 <div class="photo-upload-field">
-                                    <button type="submit" class="btn" id="uploadBtn" style="padding: 8px 16px;">
-                                        Upload
-                                    </button>
+                                    <button type="submit" class="btn" id="uploadBtn">Upload</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                     
-                    <!-- Category Filter -->
                     <div class="category-filter">
                         <button class="category-btn active" data-category="all">All Photos</button>
                         <button class="category-btn" data-category="exterior">Exterior</button>
@@ -1673,55 +1244,34 @@
                         <button class="category-btn" data-category="floor_plans">Floor Plans</button>
                     </div>
                     
-                    <!-- Photo Gallery -->
                     <div id="photoGallery">
                         @php
                             $categoryLabels = [
-                                'exterior' => 'Exterior',
-                                'lobby' => 'Lobby',
-                                'amenities' => 'Amenities',
-                                'unit_sample' => 'Unit Sample',
-                                'floor_plans' => 'Floor Plans',
-                                'other' => 'Other'
+                                'exterior' => 'Exterior', 'lobby' => 'Lobby', 'amenities' => 'Amenities',
+                                'unit_sample' => 'Unit Sample', 'floor_plans' => 'Floor Plans', 'other' => 'Other'
                             ];
                         @endphp
                         
                         @if($building->photos && $building->photos->count() > 0)
                         <div class="photo-gallery" id="photoGalleryContainer">
                             @foreach($building->photos as $photo)
-                            <div class="photo-card" data-category="{{ $photo->category }}" data-photo-id="{{ $photo->id }}" @if($photo->is_primary) style="border: 2px solid #4a5568;" @endif>
-                                <!-- Photo Image Container -->
+                            <div class="photo-card" data-category="{{ $photo->category }}" data-photo-id="{{ $photo->id }}" @if($photo->is_primary) style="border-color: var(--accent-emerald);" @endif>
                                 <div class="photo-image-container">
-                                    <img src="{{ Storage::url($photo->path) }}" alt="{{ $photo->description }}" class="photo-image">
+                                    <img src="{{ asset('storage/' . $photo->path) }}" alt="{{ $photo->description }}" class="photo-image">
                                     @if($photo->is_primary)
                                     <div class="primary-badge">Primary</div>
                                     @endif
                                 </div>
-                                
-                                <!-- Photo Card Content -->
                                 <div class="photo-card-content">
-                                    <!-- Header with Category and Date -->
                                     <div class="photo-card-header">
                                         <span class="photo-category-badge">{{ $categoryLabels[$photo->category] ?? ucfirst($photo->category) }}</span>
                                         <span class="photo-date">{{ $photo->created_at ? $photo->created_at->format('M d, Y') : 'N/A' }}</span>
                                     </div>
-                                    
-                                    <!-- Description -->
-                                    <div class="photo-description" title="{{ $photo->description ?? 'No description' }}">
-                                        {{ $photo->description ?? 'No description' }}
-                                    </div>
-                                    
-                                    <!-- Actions -->
+                                    <div class="photo-description">{{ $photo->description ?? 'No description' }}</div>
                                     <div class="photo-card-actions">
-                                        <button onclick="setAsPrimary({{ $photo->id }})" class="btn-sm" style="background: #4a5568; color: white;">
-                                            {{ $photo->is_primary ? '✓ Primary' : 'Set Primary' }}
-                                        </button>
-                                        <button onclick="viewPhoto('{{ Storage::url($photo->path) }}', '{{ $photo->description }}')" class="btn-sm" style="background: #718096; color: white;">
-                                            View
-                                        </button>
-                                        <button onclick="deletePhoto({{ $photo->id }})" class="btn-sm" style="background: #2d3748; color: white;">
-                                            Delete
-                                        </button>
+                                        <button onclick="setAsPrimary({{ $photo->id }})" class="btn-sm">{{ $photo->is_primary ? '✓ Primary' : 'Set Primary' }}</button>
+                                        <button onclick="viewPhoto('{{ asset('storage/' . $photo->path) }}', '{{ addslashes($photo->description ?? '') }}')" class="btn-sm">View</button>
+                                        <button onclick="deletePhoto({{ $photo->id }})" class="btn-sm">Delete</button>
                                     </div>
                                 </div>
                             </div>
@@ -1752,23 +1302,17 @@
 
 @push('scripts')
 <script>
-    // Category labels mapping
     const categoryLabels = {
-        'exterior': 'Exterior',
-        'lobby': 'Lobby',
-        'amenities': 'Amenities',
-        'unit_sample': 'Unit Sample',
-        'floor_plans': 'Floor Plans',
-        'other': 'Other'
+        'exterior': 'Exterior', 'lobby': 'Lobby', 'amenities': 'Amenities',
+        'unit_sample': 'Unit Sample', 'floor_plans': 'Floor Plans', 'other': 'Other'
     };
 
-    // Toggle upload panel
+    const buildingId = {{ $building->id }};
+
     function toggleUploadPanel() {
-        const panel = document.getElementById('photoUploadPanel');
-        panel.classList.toggle('active');
+        document.getElementById('photoUploadPanel').classList.toggle('active');
     }
 
-    // Tab Switching
     document.addEventListener('DOMContentLoaded', function() {
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabPanes = document.querySelectorAll('.tab-pane');
@@ -1776,30 +1320,20 @@
         tabButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const tabId = this.getAttribute('data-tab');
-                
-                // Remove active class from all buttons and panes
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 tabPanes.forEach(pane => pane.classList.remove('active'));
-                
-                // Add active class to clicked button and corresponding pane
                 this.classList.add('active');
                 document.getElementById(tabId).classList.add('active');
-                
-                // Update URL hash for bookmarking
                 window.location.hash = tabId;
             });
         });
         
-        // Check for hash in URL to activate specific tab
         if (window.location.hash) {
             const hash = window.location.hash.substring(1);
             const activeTab = document.querySelector(`.tab-button[data-tab="${hash}"]`);
-            if (activeTab) {
-                activeTab.click();
-            }
+            if (activeTab) activeTab.click();
         }
         
-        // File selection display for photo upload
         const photoInput = document.getElementById('photoInput');
         const selectedFiles = document.getElementById('selectedFiles');
         
@@ -1809,439 +1343,224 @@
                 if (files.length > 0) {
                     let totalSize = 0;
                     let fileNames = [];
-                    
                     for (let i = 0; i < Math.min(files.length, 3); i++) {
                         fileNames.push(files[i].name);
                         totalSize += files[i].size;
                     }
-                    
-                    // Check file size (max 5MB per file)
-                    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-                    let validFiles = true;
-                    
-                    for (let i = 0; i < files.length; i++) {
-                        if (files[i].size > maxSize) {
-                            validFiles = false;
-                            showMessage(`File "${files[i].name}" exceeds 5MB limit.`, 'error');
-                            break;
-                        }
-                    }
-                    
                     let message = `Selected ${files.length} file${files.length > 1 ? 's' : ''}`;
-                    if (files.length > 3) {
-                        message += `: ${fileNames.join(', ')} and ${files.length - 3} more`;
-                    } else {
-                        message += `: ${fileNames.join(', ')}`;
-                    }
-                    
+                    if (files.length > 3) message += `: ${fileNames.join(', ')} and ${files.length - 3} more`;
+                    else message += `: ${fileNames.join(', ')}`;
                     message += ` (${formatBytes(totalSize)})`;
                     selectedFiles.textContent = message;
-                    selectedFiles.style.color = validFiles ? '#6c757d' : '#e74c3c';
-                    
-                    // Enable/disable upload button based on validation
-                    const uploadBtn = document.getElementById('uploadBtn');
-                    if (uploadBtn) {
-                        uploadBtn.disabled = !validFiles;
-                        uploadBtn.style.opacity = validFiles ? '1' : '0.5';
-                        uploadBtn.style.cursor = validFiles ? 'pointer' : 'not-allowed';
-                    }
                 } else {
                     selectedFiles.textContent = '';
                 }
             });
         }
         
-        // Initialize photo upload form with AJAX
         initializePhotoUpload();
         
-        // Category filter for photos
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                
-                // Update active button
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                
-                // Filter photos
-                filterPhotosByCategory(category);
+                filterPhotosByCategory(this.getAttribute('data-category'));
             });
         });
         
-        // Initial load
         filterPhotosByCategory('all');
     });
 
-    // Initialize photo upload with AJAX
-    function initializePhotoUpload() {
-        const photoUploadForm = document.getElementById('photoUploadForm');
-        
-        if (photoUploadForm) {
-            photoUploadForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const uploadBtn = document.getElementById('uploadBtn');
-                const originalText = uploadBtn.innerHTML;
-                
-                // Disable button and show loading state
-                uploadBtn.innerHTML = '⏳ Uploading...';
-                uploadBtn.disabled = true;
-                
-                try {
-                    const response = await fetch('{{ route("buildings.photos.upload", $building->id) }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        },
-                        body: formData
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        // Clear form
-                        document.getElementById('photoInput').value = '';
-                        document.getElementById('selectedFiles').textContent = '';
-                        document.getElementById('photoDescription').value = '';
-                        
-                        // Show success message
-                        showMessage(data.message || 'Photos uploaded successfully!', 'success');
-                        
-                        // Add new photos to gallery
-                        if (data.photos && data.photos.length > 0) {
-                            data.photos.forEach(photo => {
-                                addPhotoToGallery(photo);
-                            });
-                        }
-                    } else {
-                        showMessage(data.message || 'Upload failed', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error uploading photos:', error);
-                    showMessage('An error occurred while uploading photos', 'error');
-                } finally {
-                    // Reset button state
-                    uploadBtn.innerHTML = originalText;
-                    uploadBtn.disabled = false;
-                }
-            });
-        }
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + ['Bytes', 'KB', 'MB', 'GB'][i];
     }
 
-    // Add photo to gallery dynamically
+    function showMessage(message, type = 'success') {
+        const container = document.getElementById('photo-messages');
+        if (!container) return;
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.innerHTML = `${message}<button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: inherit; cursor: pointer;">&times;</button>`;
+        container.innerHTML = '';
+        container.appendChild(alertDiv);
+        setTimeout(() => { if (alertDiv.parentElement) alertDiv.remove(); }, 5000);
+    }
+
+    function initializePhotoUpload() {
+        const form = document.getElementById('photoUploadForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const uploadBtn = document.getElementById('uploadBtn');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = 'Uploading...';
+            uploadBtn.disabled = true;
+            
+            try {
+                const response = await fetch('{{ route("buildings.photos.upload", $building->id) }}', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('photoInput').value = '';
+                    document.getElementById('selectedFiles').textContent = '';
+                    document.getElementById('photoDescription').value = '';
+                    showMessage(data.message || 'Photos uploaded successfully!', 'success');
+                    if (data.photos && data.photos.length > 0) {
+                        data.photos.forEach(photo => addPhotoToGallery(photo));
+                    }
+                } else {
+                    showMessage(data.message || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('An error occurred while uploading photos', 'error');
+            } finally {
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+            }
+        });
+    }
+
     function addPhotoToGallery(photo) {
         let galleryContainer = document.getElementById('photoGalleryContainer');
         let noPhotosMessage = document.getElementById('noPhotosMessage');
         
-        // If gallery container doesn't exist, create it
         if (!galleryContainer) {
             const photoGallery = document.getElementById('photoGallery');
             photoGallery.innerHTML = '<div class="photo-gallery" id="photoGalleryContainer"></div>';
             galleryContainer = document.getElementById('photoGalleryContainer');
         }
+        if (noPhotosMessage) noPhotosMessage.remove();
         
-        // Remove no photos message if it exists
-        if (noPhotosMessage) {
-            noPhotosMessage.remove();
-        }
+        const photoUrl = photo.url || '/storage/' + photo.path;
+        const formattedDate = new Date(photo.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         
-        // Create photo URL
-        const photoUrl = '/storage/' + photo.path;
-        
-        // Format date
-        const uploadDate = new Date(photo.created_at);
-        const formattedDate = uploadDate.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
-        
-        // Create photo card HTML
         const photoCard = document.createElement('div');
         photoCard.className = 'photo-card';
         photoCard.setAttribute('data-category', photo.category);
         photoCard.setAttribute('data-photo-id', photo.id);
-        if (photo.is_primary) {
-            photoCard.style.border = '2px solid #4a5568';
-        }
+        if (photo.is_primary) photoCard.style.borderColor = 'var(--accent-emerald)';
         
         photoCard.innerHTML = `
             <div class="photo-image-container">
-                <img src="${photoUrl}" alt="${photo.description || ''}" class="photo-image">
+                <img src="${photoUrl}" alt="${photo.description || ''}" class="photo-image" onerror="this.src='https://via.placeholder.com/300?text=Image+Not+Found'">
                 ${photo.is_primary ? '<div class="primary-badge">Primary</div>' : ''}
             </div>
             <div class="photo-card-content">
                 <div class="photo-card-header">
-                    <span class="photo-category-badge">${categoryLabels[photo.category] || photo.category.charAt(0).toUpperCase() + photo.category.slice(1)}</span>
+                    <span class="photo-category-badge">${categoryLabels[photo.category] || photo.category}</span>
                     <span class="photo-date">${formattedDate}</span>
                 </div>
-                <div class="photo-description" title="${photo.description || 'No description'}">
-                    ${photo.description || 'No description'}
-                </div>
+                <div class="photo-description">${photo.description || 'No description'}</div>
                 <div class="photo-card-actions">
-                    <button onclick="setAsPrimary(${photo.id})" class="btn-sm" style="background: #4a5568; color: white;">
-                        ${photo.is_primary ? '✓ Primary' : 'Set Primary'}
-                    </button>
-                    <button onclick="viewPhoto('${photoUrl}', '${photo.description || ''}')" class="btn-sm" style="background: #718096; color: white;">
-                        View
-                    </button>
-                    <button onclick="deletePhoto(${photo.id})" class="btn-sm" style="background: #2d3748; color: white;">
-                        Delete
-                    </button>
+                    <button onclick="setAsPrimary(${photo.id})" class="btn-sm">${photo.is_primary ? '✓ Primary' : 'Set Primary'}</button>
+                    <button onclick="viewPhoto('${photoUrl}', '${photo.description || ''}')" class="btn-sm">View</button>
+                    <button onclick="deletePhoto(${photo.id})" class="btn-sm">Delete</button>
                 </div>
             </div>
         `;
         
-        // Add to gallery
         galleryContainer.appendChild(photoCard);
-        
-        // Apply current category filter
-        const activeCategoryBtn = document.querySelector('.category-btn.active');
-        if (activeCategoryBtn) {
-            const category = activeCategoryBtn.getAttribute('data-category');
-            filterPhotosByCategory(category);
-        }
+        const activeCategory = document.querySelector('.category-btn.active')?.getAttribute('data-category') || 'all';
+        filterPhotosByCategory(activeCategory);
     }
 
-    // Helper function to format bytes
-    function formatBytes(bytes, decimals = 2) {
-        if (bytes === 0) return '0 Bytes';
-        
-        const k = 1024;
-        const dm = decimals < 0 ? 0 : decimals;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    }
-
-    // Function to show messages
-    function showMessage(message, type = 'success') {
-        const container = document.getElementById('photo-messages');
-        if (!container) return;
-        
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type}`;
-        alertDiv.style.cssText = `
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            animation: fadeIn 0.3s ease;
-        `;
-        
-        if (type === 'success') {
-            alertDiv.style.background = '#d4edda';
-            alertDiv.style.color = '#155724';
-            alertDiv.style.border = '1px solid #c3e6cb';
-        } else if (type === 'error') {
-            alertDiv.style.background = '#f8d7da';
-            alertDiv.style.color = '#721c24';
-            alertDiv.style.border = '1px solid #f5c6cb';
-        } else {
-            alertDiv.style.background = '#e2e3e5';
-            alertDiv.style.color = '#383d41';
-            alertDiv.style.border = '1px solid #d6d8db';
-        }
-        
-        alertDiv.innerHTML = `
-            ${message}
-            <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer; font-size: 18px; color: inherit; opacity: 0.7;">&times;</button>
-        `;
-        
-        container.innerHTML = '';
-        container.appendChild(alertDiv);
-        
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (alertDiv.parentElement) {
-                alertDiv.style.opacity = '0';
-                alertDiv.style.transition = 'opacity 0.5s';
-                setTimeout(() => alertDiv.remove(), 500);
-            }
-        }, 5000);
-    }
-
-    // Function to filter photos by category
     function filterPhotosByCategory(category) {
-        const photoCards = document.querySelectorAll('.photo-card');
-        
-        photoCards.forEach(card => {
+        document.querySelectorAll('.photo-card').forEach(card => {
             if (category === 'all' || card.getAttribute('data-category') === category) {
                 card.style.display = 'block';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'scale(1)';
-                }, 10);
             } else {
-                card.style.opacity = '0';
-                card.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    card.style.display = 'none';
-                }, 300);
+                card.style.display = 'none';
             }
         });
     }
 
-    // Modal functions
     function closePhotoModal() {
         document.getElementById('photoModal').style.display = 'none';
         document.body.style.overflow = 'auto';
     }
 
-    // Photo management functions
+    function viewPhoto(url, description) {
+        const modal = document.getElementById('photoModal');
+        document.getElementById('modalImage').src = url;
+        document.getElementById('modalDescription').textContent = description;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
     async function setAsPrimary(photoId) {
         try {
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '⏳ Setting...';
-            button.disabled = true;
-            
-            const response = await fetch(`/buildings/{{ $building->id }}/photos/${photoId}/set-primary`, {
+            const response = await fetch('{{ route("buildings.photos.set-primary", ["building" => $building->id, "photo" => "__PHOTO_ID__"]) }}'.replace('__PHOTO_ID__', photoId), {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
             });
-            
             const data = await response.json();
-            
             if (data.success) {
                 showMessage('Primary photo updated successfully!', 'success');
-                
-                const photoCards = document.querySelectorAll('.photo-card');
-                photoCards.forEach(card => {
-                    card.style.border = '1px solid #dee2e6';
-                    const primaryBtn = card.querySelector('.btn-sm:first-child');
-                    if (primaryBtn && primaryBtn.textContent.includes('✓ Primary')) {
-                        primaryBtn.textContent = 'Set Primary';
-                        primaryBtn.style.background = '#4a5568';
-                    }
-                    
-                    // Remove primary badge
+                document.querySelectorAll('.photo-card').forEach(card => {
+                    card.style.borderColor = '';
                     const badge = card.querySelector('.primary-badge');
                     if (badge) badge.remove();
+                    const btn = card.querySelector('.btn-sm:first-child');
+                    if (btn && btn.textContent.includes('✓ Primary')) btn.textContent = 'Set Primary';
                 });
-                
                 const selectedCard = document.querySelector(`.photo-card[data-photo-id="${photoId}"]`);
                 if (selectedCard) {
-                    selectedCard.style.border = '2px solid #4a5568';
-                    
-                    // Add primary badge to image container
-                    const imageContainer = selectedCard.querySelector('.photo-image-container');
+                    selectedCard.style.borderColor = 'var(--accent-emerald)';
+                    const imgContainer = selectedCard.querySelector('.photo-image-container');
                     const badge = document.createElement('div');
                     badge.className = 'primary-badge';
                     badge.textContent = 'Primary';
-                    imageContainer.appendChild(badge);
-                    
-                    const primaryBtn = selectedCard.querySelector('.btn-sm:first-child');
-                    if (primaryBtn) {
-                        primaryBtn.textContent = '✓ Primary';
-                    }
+                    imgContainer.appendChild(badge);
+                    const btn = selectedCard.querySelector('.btn-sm:first-child');
+                    if (btn) btn.textContent = '✓ Primary';
                 }
             } else {
                 showMessage(data.message || 'Failed to set primary photo', 'error');
-                button.innerHTML = originalText;
-                button.disabled = false;
             }
         } catch (error) {
-            console.error('Error setting primary photo:', error);
+            console.error('Set primary error:', error);
             showMessage('An error occurred. Please try again.', 'error');
-            const button = event.target;
-            button.innerHTML = 'Set Primary';
-            button.disabled = false;
         }
     }
-    
-    function viewPhoto(url, description) {
-        const modal = document.getElementById('photoModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalDescription = document.getElementById('modalDescription');
-        
-        modalImage.src = url;
-        modalDescription.textContent = description;
-        modal.style.display = 'flex';
-        
-        document.body.style.overflow = 'hidden';
-    }
-    
+
     async function deletePhoto(photoId) {
+        if (!confirm('Are you sure you want to delete this photo?')) return;
+        
         try {
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '⏳ Deleting...';
-            button.disabled = true;
-            
-            const response = await fetch(`/buildings/{{ $building->id }}/photos/${photoId}`, {
+            const response = await fetch('{{ route("buildings.photos.destroy", ["building" => $building->id, "photo" => "__PHOTO_ID__"]) }}'.replace('__PHOTO_ID__', photoId), {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
             });
-            
             const data = await response.json();
-            
             if (data.success) {
                 showMessage('Photo deleted successfully!', 'success');
-                
                 const photoCard = document.querySelector(`.photo-card[data-photo-id="${photoId}"]`);
                 if (photoCard) {
-                    photoCard.style.opacity = '0.5';
-                    photoCard.style.transform = 'scale(0.8)';
-                    
-                    setTimeout(() => {
-                        photoCard.remove();
-                        
-                        const photoCards = document.querySelectorAll('.photo-card');
-                        const galleryContainer = document.getElementById('photoGalleryContainer');
-                        
-                        if (photoCards.length === 0 && galleryContainer) {
-                            const photoGallery = document.getElementById('photoGallery');
-                            photoGallery.innerHTML = `
-                                <div id="noPhotosMessage" class="no-data">
-                                    <h3>No Photos Uploaded Yet</h3>
-                                    <p>Upload photos to showcase this building</p>
-                                </div>
-                            `;
-                        }
-                    }, 300);
+                    photoCard.remove();
+                    if (document.querySelectorAll('.photo-card').length === 0) {
+                        const gallery = document.getElementById('photoGallery');
+                        gallery.innerHTML = `<div id="noPhotosMessage" class="no-data"><h3>No Photos Uploaded Yet</h3><p>Upload photos to showcase this building</p></div>`;
+                    }
                 }
             } else {
                 showMessage(data.message || 'Failed to delete photo', 'error');
-                button.innerHTML = originalText;
-                button.disabled = false;
             }
         } catch (error) {
-            console.error('Error deleting photo:', error);
+            console.error('Delete error:', error);
             showMessage('An error occurred while deleting the photo', 'error');
-            const button = event.target;
-            button.innerHTML = 'Delete';
-            button.disabled = false;
         }
     }
 
-    // Close modal on ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closePhotoModal();
-        }
-    });
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        const modal = document.getElementById('photoModal');
-        if (event.target === modal) {
-            closePhotoModal();
-        }
-    };
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePhotoModal(); });
+    window.onclick = function(event) { const modal = document.getElementById('photoModal'); if (event.target === modal) closePhotoModal(); };
 </script>
 @endpush

@@ -2,12 +2,307 @@
 
 @section('title', 'Create New Lease')
 
+@push('styles')
+<style>
+    /* MATTE BLACK DESIGN SYSTEM */
+    :root {
+        --bg-deep: #121212;
+        --bg-surface: #181818;
+        --bg-card: #1d1d1d;
+        --border-color: #2d2d2d;
+        --text-main: #ffffff;
+        --text-muted: #a0a0a0;
+        --accent-emerald: #10b981;
+        --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
+        --accent-purple: #8b5cf6;
+    }
+
+    .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
+    
+    .page-header { 
+        padding-bottom: 1.5rem; 
+        margin-bottom: 2rem; 
+        border-bottom: 1px solid var(--border-color);
+    }
+    .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
+    .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* FORM CONTAINER */
+    .form-container {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* FORM SECTIONS */
+    .form-section {
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    /* FORM GROUPS */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-label .required {
+        color: var(--accent-red);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-emerald);
+    }
+    
+    .form-control.error {
+        border-color: var(--accent-red);
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 14px;
+        padding-right: 2rem;
+    }
+    
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-main);
+    }
+    
+    optgroup {
+        font-weight: 600;
+        color: var(--text-main);
+        background: var(--bg-surface);
+    }
+    
+    optgroup option {
+        font-weight: normal;
+        padding-left: 1rem;
+    }
+    
+    /* INPUT GROUP */
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+    
+    .input-group-text {
+        padding: 0.6rem 0.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-right: none;
+        border-radius: 6px 0 0 6px;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+    
+    .input-group .form-control {
+        border-radius: 0 6px 6px 0;
+    }
+    
+    /* HELP TEXT & ERRORS */
+    .help-text {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+    
+    .help-text-warning {
+        color: var(--accent-warning);
+    }
+    
+    .help-text-success {
+        color: var(--accent-emerald);
+    }
+    
+    .error {
+        font-size: 0.65rem;
+        color: var(--accent-red);
+        margin-top: 0.35rem;
+    }
+    
+    /* BUTTONS */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.25rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-main);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn:hover {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+        transform: translateY(-1px);
+    }
+    
+    .btn-primary {
+        background: var(--accent-emerald);
+        border-color: var(--accent-emerald);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #0d9668;
+        border-color: #0d9668;
+        color: white;
+    }
+    
+    .btn-secondary {
+        background: var(--bg-surface);
+        border-color: var(--border-color);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    /* INFO CARDS */
+    .info-card {
+        background: var(--bg-surface);
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+    }
+    
+    .info-card-title {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .info-card-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .info-card-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-main);
+        font-size: 0.85rem;
+    }
+    
+    /* STATUS BADGES */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        font-weight: 500;
+        background: transparent;
+        border: 1px solid;
+    }
+    
+    .status-active {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    
+    .status-vacant, .status-available {
+        border-color: var(--accent-emerald);
+        color: var(--accent-emerald);
+    }
+    
+    .status-occupied {
+        border-color: var(--accent-warning);
+        color: var(--accent-warning);
+    }
+    
+    /* FILE INPUT */
+    input[type="file"].form-control {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .dashboard-wrapper { padding: 1rem; }
+        .form-container { padding: 1.25rem; }
+        .form-row { grid-template-columns: 1fr; gap: 1rem; }
+        .form-actions { flex-direction: column; }
+        .btn { width: 100%; justify-content: center; }
+        .info-card-content { flex-direction: column; gap: 0.75rem; }
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="container">
-    <!-- Page Header -->
+<div class="dashboard-wrapper">
     <div class="page-header">
         <div>
-            <h1 class="page-title">📄 Create New Lease</h1>
+            <h1 class="page-title">Create New Lease</h1>
             <p class="page-subtitle">Create a new lease agreement for a tenant and unit</p>
         </div>
     </div>
@@ -29,7 +324,7 @@
             @if(isset($tenant) && $tenant)
             <div class="info-card">
                 <div class="info-card-title">
-                    👤 PRE-SELECTED TENANT
+                    PRE-SELECTED TENANT
                     @if($tenant->currentLease)
                         <span class="status-badge status-occupied" style="margin-left: auto;">Has Active Lease</span>
                     @else
@@ -62,7 +357,7 @@
             @if(isset($unit) && $unit)
             <div class="info-card">
                 <div class="info-card-title">
-                    🏢 PRE-SELECTED UNIT
+                    PRE-SELECTED UNIT
                     <span class="status-badge status-{{ $unit->status }}" style="margin-left: auto;">{{ ucfirst($unit->status) }}</span>
                 </div>
                 <div class="info-card-content">
@@ -89,8 +384,7 @@
             <!-- Tenant Selection Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>👤</div>
-                    <span>Tenant Information</span>
+                    Tenant Information
                 </div>
 
                 @if(!isset($tenant))
@@ -142,12 +436,12 @@
                     <input type="text" value="{{ $tenant->full_name }} - {{ $tenant->email }}" 
                            class="form-control" readonly disabled>
                     @if($tenant->currentLease)
-                    <div class="help-text" style="color: #856404;">
+                    <div class="help-text help-text-warning">
                         ⚠️ This tenant already has an active lease ending {{ $tenant->currentLease->end_date->format('M d, Y') }}. 
                         This will create a renewal lease.
                     </div>
                     @else
-                    <div class="help-text" style="color: #155724;">
+                    <div class="help-text help-text-success">
                         ✅ This tenant is eligible for a new lease.
                     </div>
                     @endif
@@ -158,8 +452,7 @@
             <!-- Unit Selection Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>🏢</div>
-                    <span>Unit Assignment</span>
+                    Unit Assignment
                 </div>
 
                 @if(!isset($unit))
@@ -212,11 +505,11 @@
                         <input type="text" value="Unit {{ $unit->unit_number }} - {{ $unit->unit_type_label ?? ucfirst($unit->unit_type) }}" 
                                class="form-control" readonly disabled>
                         @if($unit->status !== 'vacant' && $unit->status !== 'ready')
-                        <div class="help-text" style="color: #856404;">
+                        <div class="help-text help-text-warning">
                             ⚠️ This unit is currently {{ $unit->status }}. Creating a lease will change its status to occupied.
                         </div>
                         @else
-                        <div class="help-text" style="color: #155724;">
+                        <div class="help-text help-text-success">
                             ✅ This unit is available for lease.
                         </div>
                         @endif
@@ -228,8 +521,7 @@
             <!-- Lease Period Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📅</div>
-                    <span>Lease Period</span>
+                    Lease Period
                 </div>
 
                 <div class="form-row">
@@ -272,8 +564,7 @@
             <!-- Financial Details Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>💰</div>
-                    <span>Financial Details</span>
+                    Financial Details
                 </div>
 
                 <div class="form-row">
@@ -302,8 +593,7 @@
             <!-- Lease Details Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📋</div>
-                    <span>Lease Details</span>
+                    Lease Details
                 </div>
 
                 <div class="form-row">
@@ -337,8 +627,7 @@
             <!-- Terms & Conditions Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📝</div>
-                    <span>Terms & Conditions</span>
+                    Terms & Conditions
                 </div>
 
                 <div class="form-group">
@@ -353,8 +642,7 @@
             <!-- Utilities Included Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>⚡</div>
-                    <span>Utilities Included</span>
+                    Utilities Included
                 </div>
 
                 <div class="form-group">
@@ -369,8 +657,7 @@
             <!-- Lease Agreement Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📎</div>
-                    <span>Lease Agreement</span>
+                    Lease Agreement
                 </div>
 
                 <div class="form-group">
@@ -384,8 +671,7 @@
             <!-- Notes Section -->
             <div class="form-section">
                 <div class="section-title">
-                    <div>📝</div>
-                    <span>Notes</span>
+                    Notes
                 </div>
 
                 <div class="form-group">
@@ -401,303 +687,15 @@
                     Cancel
                 </a>
                 <button type="submit" class="btn btn-primary">
-                    📄 Create Lease
+                    Create Lease
                 </button>
             </div>
         </form>
     </div>
 </div>
+@endsection
 
-<style>
-/* Additional styles specific to create lease form */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.page-header {
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.page-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.page-subtitle {
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-.form-container {
-    background: white;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.1);
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #dee2e6;
-}
-
-.form-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.form-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-primary {
-    background: #3498db;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #2980b9;
-}
-
-.btn-secondary {
-    background: #95a5a6;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #7f8c8d;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.required {
-    color: #e74c3c;
-}
-
-.help-text {
-    font-size: 12px;
-    color: #666;
-    margin-top: 5px;
-    transition: color 0.3s ease;
-}
-
-.help-text-warning {
-    color: #856404;
-}
-
-.help-text-success {
-    color: #155724;
-}
-
-.error {
-    color: #e74c3c;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-select.form-control {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 16px;
-    padding-right: 40px;
-}
-
-optgroup {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-optgroup option {
-    font-weight: normal;
-    padding-left: 20px;
-}
-
-.input-group {
-    display: flex;
-    align-items: center;
-}
-
-.input-group-text {
-    background: #f8f9fa;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    color: #666;
-    font-size: 14px;
-}
-
-.input-group .form-control {
-    border-radius: 0 4px 4px 0;
-    flex: 1;
-}
-
-.info-card {
-    background: #f8f9fa;
-    border-radius: 6px;
-    padding: 15px;
-    border: 1px solid #e9ecef;
-    margin-bottom: 20px;
-}
-
-.info-card-title {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.info-card-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.info-card-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #2c3e50;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.status-active {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.status-vacant {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.status-available {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.status-occupied {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-}
-
-input[type="file"].form-control {
-    padding: 8px 15px;
-}
-
-@media (max-width: 768px) {
-    .form-container {
-        padding: 20px;
-    }
-
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .btn {
-        width: 100%;
-        text-align: center;
-    }
-
-    .info-card-content {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-</style>
-
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-hide alerts after 5 seconds
@@ -954,4 +952,4 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 </script>
-@endsection
+@endpush
