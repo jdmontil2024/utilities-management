@@ -111,6 +111,7 @@
                                 </span>
                             </div>
                             <div class="unit-details">
+<<<<<<< HEAD
                                 <div class="unit-header">
                                     <h3>Unit {{ $unit->unit_number }}</h3>
                                     <span class="type-badge">
@@ -118,6 +119,13 @@
                                     </span>
                                 </div>
                                 <p>{{ $unit->building->name }}</p>
+=======
+                                <h3 style="display: flex; justify-content: space-between; align-items: center;">
+                                    Unit {{ $unit->unit_number }}
+                                    <span style="color: var(--accent-emerald); font-size: 1rem;">₱{{ number_format($unit->monthly_rent) }}</span>
+                                </h3>
+                                <p> {{ $unit->building->name }}</p>
+>>>>>>> 4c954cc80117da4af9d47f1504035aee57aab0b5
                                 
                                 <div class="unit-price">
                                     ₱{{ number_format($unit->monthly_rent) }}/month
