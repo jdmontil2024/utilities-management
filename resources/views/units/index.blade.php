@@ -82,6 +82,13 @@
                         </option>
                     @endforeach
                 </select>
+                <select name="status" class="dark-filter" onchange="this.form.submit()">
+                    <option value="">All Status</option>
+                    <option value="vacant" {{ request('status') == 'vacant' ? 'selected' : '' }}>Vacant</option>
+                    <option value="occupied" {{ request('status') == 'occupied' ? 'selected' : '' }}>Occupied</option>
+                    <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                    <option value="reserved" {{ request('status') == 'reserved' ? 'selected' : '' }}>Reserved</option>
+                </select>
             </form>
             <div class="view-switcher">
                 <button onclick="toggleView('grid')" id="gridBtn" class="view-btn active">
@@ -104,15 +111,16 @@
                                 </span>
                             </div>
                             <div class="unit-details">
-                                <h3 style="display: flex; justify-content: space-between; align-items: center;">
-                                    Unit {{ $unit->unit_number }}
-                                    <span style="color: var(--accent-emerald); font-size: 1rem;">₱{{ number_format($unit->monthly_rent) }}</span>
-                                </h3>
-                                <p>📍 {{ $unit->building->name }}</p>
+                                <div class="unit-header">
+                                    <h3>Unit {{ $unit->unit_number }}</h3>
+                                    <span class="type-badge">
+                                        {{ $unit->unit_type_label ?? ucfirst($unit->unit_type ?? 'Standard') }}
+                                    </span>
+                                </div>
+                                <p>{{ $unit->building->name }}</p>
                                 
-                                <div class="unit-specs">
-                                    <span><i data-lucide="bed" style="width:14px; margin-right:4px;"></i> {{ $unit->bedrooms ?? 0 }} Bed</span>
-                                    <span><i data-lucide="bath" style="width:14px; margin-right:4px;"></i> {{ $unit->bathrooms ?? 0 }} Bath</span>
+                                <div class="unit-price">
+                                    ₱{{ number_format($unit->monthly_rent) }}/month
                                 </div>
 
                                 <div class="action-footer">
@@ -134,6 +142,7 @@
                             <tr>
                                 <th>Unit #</th>
                                 <th>Building</th>
+                                <th>Type</th>
                                 <th>Monthly Rent</th>
                                 <th>Status</th>
                                 <th style="text-align: right;">Actions</th>
@@ -144,7 +153,8 @@
                                 <tr>
                                     <td style="font-weight: 600; color: #fff;">{{ $unit->unit_number }}</td>
                                     <td style="color: var(--text-muted);">{{ $unit->building->name }}</td>
-                                    <td style="color: var(--accent-emerald); font-weight: 600;">₱{{ number_format($unit->monthly_rent) }}</td>
+                                    <td style="color: var(--text-muted);">{{ $unit->unit_type_label ?? ucfirst($unit->unit_type ?? 'Standard') }}</td>
+                                    <td style="color: var(--text-muted);">₱{{ number_format($unit->monthly_rent) }}</td>
                                     <td>
                                         <span class="status-pill {{ $unit->status }}">
                                             {{ strtoupper($unit->status) }}
@@ -161,6 +171,17 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Pagination -->
+                <div class="pagination-wrapper">
+                    {{ $units->links() }}
+                </div>
+            @else
+                <div class="empty-state">
+                    <i data-lucide="home" style="width: 48px; height: 48px; margin-bottom: 1rem;"></i>
+                    <p>No units found.</p>
+                    <a href="{{ route('units.create') }}" class="btn-emerald-action">Add your first unit</a>
+                </div>
             @endif
         </div>
     </div>
@@ -176,6 +197,8 @@
         --text-muted: #a0a0a0;
         --accent-emerald: #10b981;
         --accent-red: #ef4444;
+        --accent-warning: #f59e0b;
+        --accent-blue: #3b82f6;
     }
 
     .dashboard-wrapper { background-color: var(--bg-deep); min-height: 100vh; padding: 2rem; color: var(--text-main); font-family: 'Inter', sans-serif; }
@@ -183,49 +206,126 @@
     .page-title { font-size: 1.75rem; font-weight: 700; margin: 0; color: #fff; }
     .page-subtitle { color: var(--text-muted); margin-top: 0.25rem; }
 
-    /* EXACT MATCH STAT CARDS */
+    /* STAT CARDS */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { 
         background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; 
         padding: 1.5rem; height: 160px; display: flex; flex-direction: column; box-sizing: border-box; 
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent-emerald), transparent);
+        transition: left 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+        left: 100%;
+        animation: pulse 1.5s ease-in-out;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 0; left: -100%; }
+        50% { opacity: 1; left: 0%; }
+        100% { opacity: 0; left: 100%; }
+    }
+
+    .stat-card:hover {
+        border-color: var(--accent-emerald);
+        transform: translateY(-3px);
+    }
+
     .stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .stat-icon-wrapper { 
-        background: rgba(16, 185, 129, 0.1); width: 38px; height: 38px; border-radius: 8px; 
-        display: flex; align-items: center; justify-content: center; 
-    }
+    .stat-icon-wrapper { background: rgba(16, 185, 129, 0.1); width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
     .stat-icon { width: 20px; height: 20px; color: var(--accent-emerald); stroke-width: 2px; }
     .stat-body { margin-top: 1.25rem; } 
     .stat-value { display: block; font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1; }
     .stat-label { color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; letter-spacing: 1px; margin-top: 6px; display: block; }
     .stat-trend { font-size: 0.7rem; color: var(--accent-emerald); background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
 
-    /* Content Styling & Indentation */
     .content-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
     .card-header { padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
     .indented-body { padding: 1.5rem 1.5rem 1.5rem 2.5rem; }
 
-    /* Action Buttons */
     .btn-emerald-action { 
         background: var(--accent-emerald); color: white; padding: 10px 20px; border-radius: 8px; 
         text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; transition: 0.2s; 
     }
 
-    /* Grid Items */
-    .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-    .unit-item-card { background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: 0.3s; }
+    .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .unit-item-card { background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: 0.3s; position: relative; }
     .unit-item-card:hover { border-color: var(--accent-emerald); transform: translateY(-4px); }
+    
     .unit-thumb { height: 150px; background-size: cover; background-position: center; padding: 1rem; position: relative; }
-    .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; color: #fff; }
+    
+    /* Status Badge - Top Left */
+    .status-badge { 
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 0.7rem; 
+        font-weight: 600; 
+        padding: 4px 10px; 
+        border-radius: 6px; 
+        color: #fff;
+        letter-spacing: 0.3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        z-index: 10;
+        text-transform: uppercase;
+    }
     .status-badge.vacant { background: var(--accent-emerald); }
     .status-badge.occupied { background: var(--accent-red); }
+    .status-badge.maintenance { background: var(--accent-warning); color: #000; }
+    .status-badge.reserved { background: var(--accent-blue); }
     
     .unit-details { padding: 1.25rem; }
-    .unit-details h3 { font-size: 1.1rem; margin: 0; color: #fff; font-weight: 700; }
-    .unit-details p { color: var(--text-muted); font-size: 0.85rem; margin: 5px 0 10px 0; }
     
-    .unit-specs { display: flex; gap: 12px; margin-bottom: 15px; font-size: 0.8rem; color: var(--text-muted); }
-    .unit-specs span { display: flex; align-items: center; }
+    .unit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+        gap: 10px;
+    }
+    .unit-header h3 { 
+        font-size: 1.1rem; 
+        margin: 0; 
+        color: #fff; 
+        font-weight: 700; 
+        flex: 1;
+    }
+    
+    .type-badge { 
+        font-size: 0.7rem; 
+        font-weight: 600; 
+        padding: 4px 10px; 
+        border-radius: 6px; 
+        color: #fff;
+        text-transform: capitalize;
+        display: inline-block;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+    }
+    
+    .unit-details p { color: var(--text-muted); font-size: 0.85rem; margin: 0 0 12px 0; }
+    
+    .unit-price {
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        padding: 0;
+    }
 
     .action-footer { display: flex; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 1rem; }
     .icon-link { background: #262626; border: none; color: #fff; padding: 8px; border-radius: 6px; cursor: pointer; text-decoration: none; flex: 1; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
@@ -233,17 +333,22 @@
     .delete-btn:hover { background: var(--accent-red); }
 
     .dark-filter, .dark-input { background: var(--bg-surface); border: 1px solid var(--border-color); color: #fff; padding: 8px 15px; border-radius: 8px; outline: none; }
-    .view-switcher { background: var(--bg-surface); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; }
-    .view-btn { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .view-switcher { background: var(--bg-surface); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; gap: 4px; }
+    .view-btn { background: transparent; border: none; color: var(--text-muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     .view-btn.active { background: var(--accent-emerald); color: white; }
 
-    /* Table Styles */
     .dark-table { width: 100%; border-collapse: collapse; }
     .dark-table th { text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; padding: 15px; border-bottom: 1px solid var(--border-color); }
     .dark-table td { padding: 15px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-    .status-pill { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; background: #2d2d2d; }
-    .status-pill.vacant { color: var(--accent-emerald); }
-    .status-pill.occupied { color: var(--accent-red); }
+    
+    .status-pill { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; display: inline-block; text-transform: uppercase; }
+    .status-pill.vacant { background: var(--accent-emerald); color: white; }
+    .status-pill.occupied { background: var(--accent-red); color: white; }
+    .status-pill.maintenance { background: var(--accent-warning); color: #000; }
+    .status-pill.reserved { background: var(--accent-blue); color: white; }
+    
+    .pagination-wrapper { margin-top: 2rem; display: flex; justify-content: center; }
+    .empty-state { text-align: center; padding: 4rem; color: var(--text-muted); }
     .hidden { display: none; }
 </style>
 

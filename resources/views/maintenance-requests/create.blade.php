@@ -39,12 +39,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Building <span class="required">*</span></label>
-                        <select name="building_id" id="building_id" class="form-control" required onchange="loadUnits()">
+                        <select name="building_id" id="building_id" class="form-control" required>
                             <option value="">Select Building</option>
                             @foreach($buildings as $building)
-                                <option value="{{ $building->id }}" {{ $selectedBuilding && $selectedBuilding->id == $building->id ? 'selected' : '' }}
-                                        data-units="{{ $building->units->count() }}">
-                                    {{ $building->name }} ({{ $building->units->count() }} units)
+                                <option value="{{ $building->id }}" {{ ($selectedBuilding && $selectedBuilding->id == $building->id) || old('building_id') == $building->id ? 'selected' : '' }}>
+                                    {{ $building->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -102,13 +101,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Category <span class="required">*</span></label>
-                        <select name="maintenance_category_id" class="form-control" required>
+                        <select name="maintenance_category_id" id="maintenance_category_id" class="form-control" required>
                             <option value="">Select Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('maintenance_category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }} 
-                                    @if($category->sla_hours) 
-                                        (SLA: {{ $category->formatted_sla }})
+                                    {{ $category->name }}
+                                    @if(isset($category->sla_hours) && $category->sla_hours)
+                                        (SLA: {{ $category->sla_hours }} hours)
                                     @endif
                                 </option>
                             @endforeach
@@ -236,17 +235,15 @@
                 <a href="{{ route('maintenance-requests.index') }}" class="btn btn-secondary">
                     Cancel
                 </a>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     Create Request
                 </button>
             </div>
         </form>
-        <!-- END CREATE FORM -->
     </div>
 </div>
 
 <style>
-/* Additional styles specific to create maintenance request form */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -365,21 +362,14 @@
 }
 
 .priority-option input[type="radio"]:checked + label {
-    border-color: #3498db;
-    background: #ebf5ff;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.priority-low label { border-color: #27ae60; color: #27ae60; }
-.priority-medium label { border-color: #f39c12; color: #f39c12; }
-.priority-high label { border-color: #e67e22; color: #e67e22; }
-.priority-emergency label { border-color: #e74c3c; color: #e74c3c; }
-
-.priority-low input[type="radio"]:checked + label { background: #e8f5e9; }
-.priority-medium input[type="radio"]:checked + label { background: #fff3e0; }
-.priority-high input[type="radio"]:checked + label { background: #fbe9e7; }
-.priority-emergency input[type="radio"]:checked + label { background: #ffebee; }
+.priority-low input[type="radio"]:checked + label { border-color: #27ae60; background: #e8f5e9; color: #27ae60; }
+.priority-medium input[type="radio"]:checked + label { border-color: #f39c12; background: #fff3e0; color: #f39c12; }
+.priority-high input[type="radio"]:checked + label { border-color: #e67e22; background: #fbe9e7; color: #e67e22; }
+.priority-emergency input[type="radio"]:checked + label { border-color: #e74c3c; background: #ffebee; color: #e74c3c; }
 
 .btn {
     display: inline-block;
@@ -412,15 +402,6 @@
     background: #7f8c8d;
 }
 
-.btn-danger {
-    background: #e74c3c;
-    color: white;
-}
-
-.btn-danger:hover {
-    background: #c0392b;
-}
-
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -444,7 +425,6 @@
     color: #e74c3c;
     font-size: 12px;
     margin-top: 5px;
-    display: none;
 }
 
 .info-box {
@@ -495,31 +475,22 @@
 </style>
 
 <script>
-// Store units and tenants data
-let unitsData = {};
-
 // Load units when building is selected
 function loadUnits() {
     const buildingId = document.getElementById('building_id').value;
     const unitSelect = document.getElementById('unit_id');
-    const tenantSelect = document.getElementById('tenant_id');
     const unitHelp = document.getElementById('unit-help');
     
-    // Clear current options
-    unitSelect.innerHTML = '<option value="">Select Unit</option>';
-    tenantSelect.innerHTML = '<option value="">Select Tenant (Optional)</option>';
-    
     if (!buildingId) {
+        unitSelect.innerHTML = '<option value="">Select Unit</option>';
         unitHelp.textContent = '';
         return;
     }
 
-    // Show loading
     unitSelect.disabled = true;
     unitSelect.innerHTML = '<option value="">Loading units...</option>';
     
-    // Fetch units for selected building
-    fetch(`/buildings/${buildingId}/units-json`)
+    fetch(`/maintenance-requests/get-units/${buildingId}`)
         .then(response => response.json())
         .then(units => {
             unitSelect.disabled = false;
@@ -530,178 +501,100 @@ function loadUnits() {
                 return;
             }
 
-            unitsData[buildingId] = units;
             unitHelp.textContent = `${units.length} units available`;
             
             units.forEach(unit => {
                 const option = document.createElement('option');
                 option.value = unit.id;
-                option.textContent = `Unit ${unit.unit_number} - ${unit.unit_type || 'Standard'} (₱${unit.monthly_rent?.toLocaleString() || '0'})`;
+                let text = `Unit ${unit.unit_number}`;
+                if (unit.unit_type) text += ` - ${unit.unit_type}`;
+                if (unit.monthly_rent) text += ` (₱${unit.monthly_rent.toLocaleString()})`;
                 if (unit.status !== 'vacant' && unit.status !== 'ready') {
-                    option.textContent += ' [Occupied]';
+                    text += ` [${unit.status.toUpperCase()}]`;
                 }
+                option.textContent = text;
                 unitSelect.appendChild(option);
             });
-
-            // If there's a selected unit from the controller, preselect it
-            @if(isset($selectedUnit) && $selectedUnit)
-                const selectedUnitId = {{ $selectedUnit->id }};
-                if (unitSelect.querySelector(`option[value="${selectedUnitId}"]`)) {
-                    unitSelect.value = selectedUnitId;
-                    loadTenants(buildingId, selectedUnitId);
-                }
-            @endif
         })
         .catch(error => {
-            console.error('Error loading units:', error);
+            console.error('Error:', error);
             unitSelect.disabled = false;
             unitSelect.innerHTML = '<option value="">Error loading units</option>';
             unitHelp.textContent = 'Failed to load units';
         });
 }
 
-// Load tenants for selected unit
-function loadTenants(buildingId, unitId) {
+// Load tenants when unit is selected
+function loadTenants() {
+    const unitId = document.getElementById('unit_id').value;
     const tenantSelect = document.getElementById('tenant_id');
     
-    if (!buildingId || !unitId) {
+    if (!unitId) {
+        tenantSelect.innerHTML = '<option value="">Select Tenant (Optional)</option>';
         return;
     }
 
-    // Show loading
     tenantSelect.disabled = true;
     tenantSelect.innerHTML = '<option value="">Loading tenants...</option>';
     
-    // Fetch tenants for selected unit
-    fetch(`/api/unit/${unitId}/tenants`)
+    fetch(`/maintenance-requests/get-tenants/${unitId}`)
         .then(response => response.json())
         .then(tenants => {
             tenantSelect.disabled = false;
             tenantSelect.innerHTML = '<option value="">Select Tenant (Optional)</option>';
             
-            tenants.forEach(tenant => {
-                const option = document.createElement('option');
-                option.value = tenant.id;
-                option.textContent = `${tenant.full_name} - ${tenant.email}`;
-                tenantSelect.appendChild(option);
-            });
+            if (tenants && tenants.length > 0) {
+                tenants.forEach(tenant => {
+                    const option = document.createElement('option');
+                    option.value = tenant.id;
+                    option.textContent = `${tenant.full_name} - ${tenant.email}`;
+                    tenantSelect.appendChild(option);
+                });
+            }
         })
         .catch(error => {
-            console.error('Error loading tenants:', error);
+            console.error('Error:', error);
             tenantSelect.disabled = false;
-            tenantSelect.innerHTML = '<option value="">No tenants found for this unit</option>';
+            tenantSelect.innerHTML = '<option value="">Select Tenant (Optional)</option>';
         });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // When unit is selected, load its tenants
-    document.getElementById('unit_id').addEventListener('change', function() {
-        const buildingId = document.getElementById('building_id').value;
-        const unitId = this.value;
-        if (unitId) {
-            loadTenants(buildingId, unitId);
-        }
-    });
-
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.transition = 'opacity 0.5s';
-            alert.style.opacity = '0';
-            setTimeout(() => alert.remove(), 500);
-        }, 5000);
-    });
-
-    // Check if building is preselected
-    @if(isset($selectedBuilding) && $selectedBuilding)
-        const buildingSelect = document.getElementById('building_id');
-        if (buildingSelect) {
-            loadUnits();
-        }
-    @endif
-
-    // Format currency input
-    const costInput = document.querySelector('input[name="estimated_cost"]');
-    if (costInput) {
-        costInput.addEventListener('blur', function() {
-            if (this.value) {
-                const value = parseFloat(this.value).toFixed(2);
-                this.value = value;
+    const buildingSelect = document.getElementById('building_id');
+    const unitSelect = document.getElementById('unit_id');
+    
+    if (buildingSelect) {
+        buildingSelect.addEventListener('change', loadUnits);
+        if (buildingSelect.value) loadUnits();
+    }
+    
+    if (unitSelect) {
+        unitSelect.addEventListener('change', loadTenants);
+    }
+    
+    // Form validation
+    const form = document.getElementById('createForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (!buildingSelect?.value) {
+                e.preventDefault();
+                alert('Please select a building');
+                return false;
             }
+            if (!unitSelect?.value) {
+                e.preventDefault();
+                alert('Please select a unit');
+                return false;
+            }
+            const categorySelect = document.getElementById('maintenance_category_id');
+            if (!categorySelect?.value) {
+                e.preventDefault();
+                alert('Please select a category');
+                return false;
+            }
+            return true;
         });
     }
 });
-
-// Toast notification system - use layout's Utilities if available
-window.showToast = function(message, type = 'success') {
-    if (window.Utilities && typeof window.Utilities.showToast === 'function') {
-        window.Utilities.showToast(message, type);
-    } else {
-        // Fallback to original implementation
-        let container = document.querySelector('.toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-        }
-
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.style.cssText = `
-            background: white;
-            border-radius: 4px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
-            display: flex;
-            align-items: center;
-            min-width: 300px;
-            max-width: 400px;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid ${type === 'success' ? '#28a745' : 
-                                  type === 'error' ? '#dc3545' : 
-                                  type === 'warning' ? '#ffc107' : '#17a2b8'};
-        `;
-        
-        toast.innerHTML = `
-            <div style="flex-grow: 1;">${message}</div>
-            <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; font-size: 18px; color: #666;">&times;</button>
-        `;
-
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.remove();
-            }
-        }, 5000);
-    }
-};
-
-// Show session messages as toasts
-@if(session('success'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("success") }}', 'success');
-    });
-@endif
-
-@if(session('error'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("error") }}', 'error');
-    });
-@endif
-
-@if(session('warning'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("warning") }}', 'warning');
-    });
-@endif
-
-@if(session('info'))
-    document.addEventListener('DOMContentLoaded', function() {
-        showToast('{{ session("info") }}', 'info');
-    });
-@endif
 </script>
 @endsection
